@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.springframework.data.annotation.Id;
 
-public class Action extends BaseDomain implements Serializable {
+public class Action extends DomainObject implements Serializable {
 
 	private static final long serialVersionUID = -3686654230565046107L;
 	

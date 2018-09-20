@@ -1,10 +1,10 @@
 package us.zacharymaddox.scorecard.domain;
 
-public abstract class BaseDomain {
+public abstract class DomainObject {
 	
 	private String type;
 	
-	public BaseDomain(String type) {
+	public DomainObject(String type) {
 		this.type = type;
 	}
 

@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 
-public class ScoreCard extends BaseDomain implements Serializable {
+public class ScoreCard extends DomainObject implements Serializable {
 
 	private static final long serialVersionUID = 3392668963392107413L;
 

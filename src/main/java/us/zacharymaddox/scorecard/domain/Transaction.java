@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 
-public class Transaction extends BaseDomain implements Serializable {
+public class Transaction extends DomainObject implements Serializable {
 
 	private static final long serialVersionUID = -7061621744060205125L;
 	
