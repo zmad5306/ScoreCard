@@ -26,8 +26,9 @@ repositories {
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-activemq')
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile("org.apache.activemq:activemq-broker")
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
+	
 }
