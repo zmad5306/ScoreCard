@@ -8,7 +8,7 @@ import us.zacharymaddox.scorecard.domain.Email;
 import us.zacharymaddox.scorecard.repository.EmailRepository;
 
 @Component
-public class Receiver {
+public class EmailReceiver {
 
 	@Autowired
 	private EmailRepository emailRepository;
