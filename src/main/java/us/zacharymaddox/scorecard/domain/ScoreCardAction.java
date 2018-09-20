@@ -4,13 +4,17 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ScoreCardAction implements Serializable {
 
 	private static final long serialVersionUID = 7351293958881594081L;
 
 	private String actionId;
 	private ScoreCardActionStatus status;
+	@JsonProperty("start_timestamp")
 	private LocalDateTime startTimestamp;
+	@JsonProperty("end_timestamp")
 	private LocalDateTime endTimestamp;
 	private List<String> dependencies;
 	

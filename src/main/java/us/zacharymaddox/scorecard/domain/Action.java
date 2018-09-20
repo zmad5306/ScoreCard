@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import org.springframework.data.annotation.Id;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Action extends DomainObject implements Serializable {
 
 	private static final long serialVersionUID = -3686654230565046107L;
@@ -11,6 +13,7 @@ public class Action extends DomainObject implements Serializable {
 	@Id
 	private String actionId;
 	private String name;
+	@JsonProperty("service_id")
 	private String serviceId;
 	private String path;
 	private Method method;
