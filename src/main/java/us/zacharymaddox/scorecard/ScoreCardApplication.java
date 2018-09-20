@@ -48,5 +48,7 @@ public class ScoreCardApplication {
         // Send a message with a POJO - the template reuse the message converter
         System.out.println("Sending an email message.");
         jmsTemplate.convertAndSend("mailbox", new Email("info@example.com", "Hello"));
+        jmsTemplate.convertAndSend("mailbox", new Email("info1@example.com", "Hello1"));
+        jmsTemplate.convertAndSend("mailbox", new Email("info2@example.com", "Hello2"));
     }
 }

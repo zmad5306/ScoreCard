@@ -1,7 +1,11 @@
 package us.zacharymaddox.scorecard.domain;
 
+import org.springframework.data.annotation.Id;
+
 public class Email {
 
+	@Id
+	private String emailId;
     private String to;
     private String body;
 

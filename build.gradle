@@ -29,6 +29,8 @@ dependencies {
 	compile("org.apache.activemq:activemq-broker")
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
+	compile('org.springframework.boot:spring-boot-starter-data-mongodb')
+	compile("org.springframework.boot:spring-boot-devtools")
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	
 }
