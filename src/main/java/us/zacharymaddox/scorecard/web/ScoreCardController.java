@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import us.zacharymaddox.scorecard.domain.AuthorizationResult;
 import us.zacharymaddox.scorecard.domain.ScoreCard;
+import us.zacharymaddox.scorecard.domain.ScoreCardAction;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 import us.zacharymaddox.scorecard.service.ScoreCardService;
 
@@ -38,8 +39,8 @@ public class ScoreCardController {
 	}
 	
 	@PatchMapping(value="/{score_card_id}", consumes="multipart/form-data", produces="application/json")
-	public void updateActionStatus(@PathVariable("score_card_id") String scoreCardId, @RequestParam("action_id") String actionId, @RequestParam("score_card_action_status") ScoreCardActionStatus actionStatus) {
-		
+	public ScoreCardAction updateActionStatus(@PathVariable("score_card_id") String scoreCardId, @RequestParam("action_id") String actionId, @RequestParam("score_card_action_status") ScoreCardActionStatus status) {
+		return scoreCardService.updateActionStatus(scoreCardId, actionId, status);
 	}
 	
 }
