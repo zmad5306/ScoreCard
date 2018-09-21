@@ -151,7 +151,6 @@ public class ScoreCardService {
 		return updateActionStatusInternal(scoreCardId, actionId, status, true);
 	}
 	
-	
 	private ScoreCardAction updateActionStatusInternal(String scoreCardId, String actionId, ScoreCardActionStatus status, Boolean mustBeProcessing) {
 		Optional<ScoreCard> sc = scoreCardRepository.findById(scoreCardId);
 		if (!sc.isPresent()) {
@@ -184,6 +183,12 @@ public class ScoreCardService {
 			sca.setEndTimestamp(LocalDateTime.now());
 		}
 		sca.setStatus(status);
+		
+		Long completedActions = scoreCard.getActions().stream().filter(atn -> ScoreCardActionStatus.CANCELLED.equals(atn.getStatus()) || ScoreCardActionStatus.FAILED.equals(atn.getStatus()) || ScoreCardActionStatus.COMPLETED.equals(atn.getStatus())).count();
+		if (completedActions == scoreCard.getActions().size()) {
+			scoreCard.setEndTimestamp(LocalDateTime.now());
+		}
+		
 		scoreCardRepository.save(scoreCard);
 		return sca;
 	}
