@@ -16,6 +16,7 @@ import us.zacharymaddox.scorecard.common.domain.Authorization;
 import us.zacharymaddox.scorecard.common.domain.AuthorizationRequest;
 import us.zacharymaddox.scorecard.common.domain.AuthorizationResult;
 import us.zacharymaddox.scorecard.common.domain.ScoreCardActionStatus;
+import us.zacharymaddox.scorecard.common.domain.ScoreCardId;
 import us.zacharymaddox.scorecard.common.domain.UpdateRequest;
 
 @Service
@@ -51,6 +52,12 @@ public class ScoreCardApiService {
 		ScoreCardHeader sch = convertHeader(scoreCardHeader);
 		UpdateRequest request = new UpdateRequest(sch.getScoreCardId(), sch.getActionId(), status);
 		jmsTemplate.convertAndSend("scorecard", request, new MessageSelectorPostProcessor("UPDATE"));
+	}
+	
+	public ScoreCardId getScoreCardId() {
+		RestTemplate restTemplate = new RestTemplate();
+        ScoreCardId id = restTemplate.getForObject(baseUrl + "/scorecard/id", ScoreCardId.class);
+        return id;
 	}
 
 }

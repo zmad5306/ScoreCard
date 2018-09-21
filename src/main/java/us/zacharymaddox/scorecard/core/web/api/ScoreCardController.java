@@ -25,7 +25,7 @@ public class ScoreCardController {
 	@Autowired
 	private ScoreCardService scoreCardService;
 	
-	@GetMapping(produces="application/json")
+	@GetMapping(value="/id", produces="application/json")
 	public ScoreCardId getScoreCardId() {
 		return scoreCardService.getNextScoreCardId();
 	}
