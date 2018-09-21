@@ -23,6 +23,10 @@ public class ScoreCardId implements Serializable {
 	@JsonProperty("score_card_id")
 	private Long scoreCardId;
 	
+	public ScoreCardId() {
+		super();
+	}
+
 	public ScoreCardId(Long scoreCardId) {
 		super();
 		this.scoreCardId = scoreCardId;

@@ -12,6 +12,16 @@ public class CreateRequest implements Serializable {
 	private Long scoreCardId;
 	@JsonProperty("transaction_id")
 	private Long transactionId;
+	
+	public CreateRequest() {
+		super();
+	}
+
+	public CreateRequest(Long scoreCardId, Long transactionId) {
+		super();
+		this.scoreCardId = scoreCardId;
+		this.transactionId = transactionId;
+	}
 
 	public Long getTransactionId() {
 		return transactionId;
