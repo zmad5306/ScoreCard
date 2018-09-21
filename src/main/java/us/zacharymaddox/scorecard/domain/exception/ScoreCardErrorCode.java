@@ -2,18 +2,17 @@ package us.zacharymaddox.scorecard.domain.exception;
 
 public enum ScoreCardErrorCode {
 	
-	CANNOT_GET_ID("SC-0001", "Unable to get next Score Card Id."),
-	CREATE_FAILED("SC-0002", "Unable to create Score Card."),
-	AUTHORIZATION_FAILED("SC-0003", "Unable to authorize Score Card."),
-	ILLEGAL_STATE_CHANGE("SC-0004", "Illegal state change requested."),
-	UPDATE_FAILED("SC-0005", "Unable to update Score Card.");
+	TRANSACTION_DNE("SC-0001", "The request Transaction does not exist.", 404),
+	SCORE_CARD_DNE("SC-0002", "The requested Score Card does not exist.", 404);
 	
 	private String errorCode;
 	private String message;
+	private Integer status;
 	
-	private ScoreCardErrorCode(String errorCode, String message) {
+	private ScoreCardErrorCode(String errorCode, String message, Integer status) {
 		this.errorCode = errorCode;
 		this.message = message;
+		this.status = status;
 	}
 
 	public String getMessage() {
@@ -22,6 +21,10 @@ public enum ScoreCardErrorCode {
 
 	public String getErrorCode() {
 		return errorCode;
+	}
+
+	public Integer getStatus() {
+		return status;
 	}
 	
 }
