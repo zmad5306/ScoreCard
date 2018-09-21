@@ -16,13 +16,13 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import us.zacharymaddox.scorecard.domain.CreateRequest;
-import us.zacharymaddox.scorecard.domain.ScoreCardId;
-import us.zacharymaddox.scorecard.example.domain.ApiAction;
-import us.zacharymaddox.scorecard.example.domain.ApiTransaction;
-import us.zacharymaddox.scorecard.example.service.MessageSelectorPostProcessor;
-import us.zacharymaddox.scorecard.example.service.ScoreCardHeader;
-import us.zacharymaddox.scorecard.example.service.ScoreCardPostProcessor;
+import us.zacharymaddox.scorecard.api.domain.ApiAction;
+import us.zacharymaddox.scorecard.api.domain.ApiTransaction;
+import us.zacharymaddox.scorecard.api.domain.ScoreCardHeader;
+import us.zacharymaddox.scorecard.api.service.MessageSelectorPostProcessor;
+import us.zacharymaddox.scorecard.api.service.ScoreCardPostProcessor;
+import us.zacharymaddox.scorecard.common.domain.CreateRequest;
+import us.zacharymaddox.scorecard.common.domain.ScoreCardId;
 
 @RestController
 @RequestMapping("/example")

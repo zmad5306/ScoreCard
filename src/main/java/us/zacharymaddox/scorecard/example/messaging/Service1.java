@@ -15,14 +15,14 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import us.zacharymaddox.scorecard.domain.Authorization;
-import us.zacharymaddox.scorecard.domain.AuthorizationRequest;
-import us.zacharymaddox.scorecard.domain.AuthorizationResult;
-import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
-import us.zacharymaddox.scorecard.domain.UpdateRequest;
-import us.zacharymaddox.scorecard.example.domain.WaitException;
-import us.zacharymaddox.scorecard.example.service.MessageSelectorPostProcessor;
-import us.zacharymaddox.scorecard.example.service.ScoreCardHeader;
+import us.zacharymaddox.scorecard.api.domain.ScoreCardHeader;
+import us.zacharymaddox.scorecard.api.domain.WaitException;
+import us.zacharymaddox.scorecard.api.service.MessageSelectorPostProcessor;
+import us.zacharymaddox.scorecard.common.domain.Authorization;
+import us.zacharymaddox.scorecard.common.domain.AuthorizationRequest;
+import us.zacharymaddox.scorecard.common.domain.AuthorizationResult;
+import us.zacharymaddox.scorecard.common.domain.ScoreCardActionStatus;
+import us.zacharymaddox.scorecard.common.domain.UpdateRequest;
 
 @Component
 public class Service1 {
