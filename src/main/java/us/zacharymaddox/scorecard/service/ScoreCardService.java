@@ -94,22 +94,22 @@ public class ScoreCardService {
 		
 		switch (sca.getStatus()) {
 			case PROCESSING:
-				return new AuthorizationResult(sca, Authorization.SKIP);
+				return new AuthorizationResult(Authorization.SKIP);
 			case COMPLETED:
-				return new AuthorizationResult(sca, Authorization.SKIP);
+				return new AuthorizationResult(Authorization.SKIP);
 			case FAILED:
-				return new AuthorizationResult(sca, Authorization.CANCEL);
+				return new AuthorizationResult(Authorization.CANCEL);
 			case CANCELLED:
-				return new AuthorizationResult(sca, Authorization.CANCEL);
+				return new AuthorizationResult(Authorization.CANCEL);
 			case UNKNOWN:
-				return new AuthorizationResult(sca, Authorization.WAIT);
+				return new AuthorizationResult(Authorization.WAIT);
 			case PENDING:
 				// action is pending, lets see if its authorized
 				Long failedActionsInScoreCard = scoreCard.getActions().stream().filter(atn -> ScoreCardActionStatus.CANCELLED.equals(atn.getStatus()) || ScoreCardActionStatus.FAILED.equals(atn.getStatus())).count();
 				
 				// check for other actions that ended abnormally, cancel all further actions
 				if (failedActionsInScoreCard > 0) {
-					return new AuthorizationResult(sca, Authorization.CANCEL);
+					return new AuthorizationResult(Authorization.CANCEL);
 				} else {
 					// check for dependencies status
 					List<String> dependencies = sca.getDependencies();
@@ -128,30 +128,30 @@ public class ScoreCardService {
 						// check that all dependencies are finished before returning PROCESS
 						if (finishedDepsCount == dependencies.size()) {
 							updateActionStatusInternal(scoreCardId, actionId, ScoreCardActionStatus.PROCESSING, false);
-							return new AuthorizationResult(sca,  Authorization.PROCESS);
+							return new AuthorizationResult(Authorization.PROCESS);
 						} 
 						// a dependency isn't finished, WAIT on it
 						else {
-							return new AuthorizationResult(sca, Authorization.WAIT);
+							return new AuthorizationResult(Authorization.WAIT);
 						}
 					} 
 					// there aren't any dependencies so go ahead and process
 					else {
 						updateActionStatusInternal(scoreCardId, actionId, ScoreCardActionStatus.PROCESSING, false);
-						return new AuthorizationResult(sca,  Authorization.PROCESS);
+						return new AuthorizationResult(Authorization.PROCESS);
 					}
 				}
 			default:
-				return new AuthorizationResult(sca, Authorization.WAIT);
+				return new AuthorizationResult(Authorization.WAIT);
 		}
 		
 	}
 	
-	public ScoreCardAction updateActionStatus(String scoreCardId, String actionId, ScoreCardActionStatus status) {
-		return updateActionStatusInternal(scoreCardId, actionId, status, true);
+	public void updateActionStatus(String scoreCardId, String actionId, ScoreCardActionStatus status) {
+		updateActionStatusInternal(scoreCardId, actionId, status, true);
 	}
 	
-	private ScoreCardAction updateActionStatusInternal(String scoreCardId, String actionId, ScoreCardActionStatus status, Boolean mustBeProcessing) {
+	private void updateActionStatusInternal(String scoreCardId, String actionId, ScoreCardActionStatus status, Boolean mustBeProcessing) {
 		Optional<ScoreCard> sc = scoreCardRepository.findById(scoreCardId);
 		if (!sc.isPresent()) {
 			throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_DNE);
@@ -190,7 +190,6 @@ public class ScoreCardService {
 		}
 		
 		scoreCardRepository.save(scoreCard);
-		return sca;
 	}
 	
 }

@@ -6,14 +6,15 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import us.zacharymaddox.scorecard.domain.AuthorizationRequest;
 import us.zacharymaddox.scorecard.domain.AuthorizationResult;
 import us.zacharymaddox.scorecard.domain.ScoreCard;
-import us.zacharymaddox.scorecard.domain.ScoreCardAction;
-import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
+import us.zacharymaddox.scorecard.domain.UpdateRequest;
 import us.zacharymaddox.scorecard.service.ScoreCardService;
 
 @RestController
@@ -33,14 +34,14 @@ public class ScoreCardController {
 		return scoreCardService.getScoreCard(scoreCardId);
 	}
 	
-	@PostMapping(value="/{score_card_id}", consumes="multipart/form-data", produces="application/json")
-	public AuthorizationResult authorize(@PathVariable("score_card_id") String scoreCardId, @RequestParam("action_id") String actionId) {
-		return scoreCardService.authorize(scoreCardId, actionId);
+	@PostMapping(consumes="application/json", produces="application/json")
+	public AuthorizationResult authorize(@RequestBody AuthorizationRequest request) {
+		return scoreCardService.authorize(request.getScoreCardId(), request.getActionId());
 	}
 	
-	@PatchMapping(value="/{score_card_id}", consumes="multipart/form-data", produces="application/json")
-	public ScoreCardAction updateActionStatus(@PathVariable("score_card_id") String scoreCardId, @RequestParam("action_id") String actionId, @RequestParam("score_card_action_status") ScoreCardActionStatus status) {
-		return scoreCardService.updateActionStatus(scoreCardId, actionId, status);
+	@PatchMapping(consumes="application/json", produces="application/json")
+	public void updateActionStatus(@RequestBody UpdateRequest request) {
+		scoreCardService.updateActionStatus(request.getScoreCardId(), request.getActionId(), request.getStatus());
 	}
 	
 }
