@@ -3,6 +3,7 @@ package us.zacharymaddox.scorecard.domain;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.annotation.Id;
 
@@ -27,6 +28,9 @@ public class ScoreCard extends DomainObject implements Serializable {
 	private LocalDateTime endTimestamp;
 	private List<ScoreCardAction> actions;
 
+	public Optional<ScoreCardAction> getAction(String actionId) {
+		return actions.stream().filter(actn -> actn.getActionId().equalsIgnoreCase(actionId)).findFirst();
+	}
 	public String getScoreCardId() {
 		return scoreCardId;
 	}

@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import us.zacharymaddox.scorecard.domain.Authorization;
+import us.zacharymaddox.scorecard.domain.AuthorizationResult;
 import us.zacharymaddox.scorecard.domain.ScoreCard;
 import us.zacharymaddox.scorecard.domain.ScoreCardAction;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
@@ -57,6 +59,81 @@ public class ScoreCardService {
 		}
 		
 		return sc.get();
+	}
+	
+	public AuthorizationResult authorize(String scoreCardId, String actionId) {
+		Optional<ScoreCard> sc = scoreCardRepository.findById(scoreCardId);
+		if (!sc.isPresent()) {
+			// TODO need to respond WAIT here if score card creation is async
+			throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_DNE);
+		}
+		ScoreCard scoreCard = sc.get();		
+		
+		Optional<ScoreCardAction> a = scoreCard.getActions().stream().filter(s -> s.getActionId().equalsIgnoreCase(actionId)).findFirst();
+		if (!a.isPresent()) {
+			// TODO need to respond WAIT here if score card creation is async
+			throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_ACTION_DNE);
+		}
+		
+		ScoreCardAction sca = a.get();
+		
+		switch (sca.getStatus()) {
+			case PROCESSING:
+				return new AuthorizationResult(sca, Authorization.SKIP);
+			case COMPLETED:
+				return new AuthorizationResult(sca, Authorization.SKIP);
+			case FAILED:
+				return new AuthorizationResult(sca, Authorization.CANCEL);
+			case CANCELLED:
+				return new AuthorizationResult(sca, Authorization.CANCEL);
+			case UNKNOWN:
+				return new AuthorizationResult(sca, Authorization.WAIT);
+			case PENDING:
+				// action is pending, lets see if its authorized
+				Long failedActionsInScoreCard = scoreCard.getActions().stream().filter(atn -> ScoreCardActionStatus.CANCELLED.equals(atn.getStatus()) || ScoreCardActionStatus.FAILED.equals(atn.getStatus())).count();
+				
+				// check for other actions that ended abnormally, cancel all further actions
+				if (failedActionsInScoreCard > 0) {
+					return new AuthorizationResult(sca, Authorization.CANCEL);
+				} else {
+					// check for dependencies status
+					List<String> dependencies = sca.getDependencies();
+					
+					if (dependencies != null && !dependencies.isEmpty()) {
+						// count the finished dependencies
+						Long finishedDepsCount = dependencies.stream().map(dep -> {
+							Optional<ScoreCardAction> actn = scoreCard.getAction(dep);
+							if (!actn.isPresent()) {
+								// TODO need to respond WAIT here if score card creation is async
+								throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_ACTION_DEPENDENCY_DNE);
+							}
+							return actn.get();
+						}).filter(actn -> ScoreCardActionStatus.COMPLETED.equals(actn.getStatus())).count();
+						
+						// check that all dependencies are finished before returning PROCESS
+						if (finishedDepsCount == dependencies.size()) {
+							sca.setStatus(ScoreCardActionStatus.PROCESSING);
+							sca.setStartTimestamp(LocalDateTime.now());
+							scoreCardRepository.save(scoreCard);
+							return new AuthorizationResult(sca,  Authorization.PROCESS);
+						} 
+						// a dependency isn't finished, WAIT on it
+						else {
+							return new AuthorizationResult(sca, Authorization.WAIT);
+						}
+					} 
+					// there aren't any dependencies so go ahead and process
+					else {
+						sca.setStatus(ScoreCardActionStatus.PROCESSING);
+						sca.setStartTimestamp(LocalDateTime.now());
+						scoreCardRepository.save(scoreCard);
+						return new AuthorizationResult(sca,  Authorization.PROCESS);
+					}
+				}
+			default:
+				return new AuthorizationResult(sca, Authorization.WAIT);
+		}
+		
 	}
 	
 }

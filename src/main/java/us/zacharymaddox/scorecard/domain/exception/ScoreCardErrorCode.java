@@ -3,7 +3,9 @@ package us.zacharymaddox.scorecard.domain.exception;
 public enum ScoreCardErrorCode {
 	
 	TRANSACTION_DNE("SC-0001", "The request Transaction does not exist.", 404),
-	SCORE_CARD_DNE("SC-0002", "The requested Score Card does not exist.", 404);
+	SCORE_CARD_DNE("SC-0002", "The requested Score Card does not exist.", 404),
+	SCORE_CARD_ACTION_DNE("SC-0003", "The requested Score Card Action does not exist.", 404),
+	SCORE_CARD_ACTION_DEPENDENCY_DNE("SC-0004", "The requested Score Card Action Dependency does not exist.", 404);
 	
 	private String errorCode;
 	private String message;
