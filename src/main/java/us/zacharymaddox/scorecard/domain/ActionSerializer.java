@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 public class ActionSerializer extends StdSerializer<Action>{
 
+	private static final long serialVersionUID = 2809965674514059273L;
+
 	public ActionSerializer() {
 		this(null);
 	}
@@ -15,9 +17,7 @@ public class ActionSerializer extends StdSerializer<Action>{
 	public ActionSerializer(Class<Action> t) {
 		super(t);
 	}
-
-	private static final long serialVersionUID = 2809965674514059273L;
-
+	
 	@Override
 	public void serialize(Action value, JsonGenerator gen, SerializerProvider provider)
 			throws IOException {

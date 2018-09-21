@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -32,6 +33,7 @@ public class Service extends DomainObject implements Serializable {
 	private Transport transport;
 	private String path;
 	@OneToMany(mappedBy="service")
+	@JsonIgnore
 	private List<Action> actions;
 	
 	public Service() {

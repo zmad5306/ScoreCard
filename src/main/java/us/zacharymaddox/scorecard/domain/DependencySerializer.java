@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 public class DependencySerializer extends StdSerializer<Set<ScoreCardAction>>{
 
+	private static final long serialVersionUID = 2809965674514059273L;
+	
 	public DependencySerializer() {
 		this(null);
 	}
@@ -18,8 +20,6 @@ public class DependencySerializer extends StdSerializer<Set<ScoreCardAction>>{
 	public DependencySerializer(Class<Set<ScoreCardAction>> t) {
 		super(t);
 	}
-
-	private static final long serialVersionUID = 2809965674514059273L;
 
 	@Override
 	public void serialize(Set<ScoreCardAction> value, JsonGenerator gen, SerializerProvider provider)

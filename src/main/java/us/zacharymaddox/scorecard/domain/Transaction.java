@@ -14,6 +14,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
 @Table(name="TRANSACTION")
@@ -27,6 +28,7 @@ public class Transaction extends DomainObject implements Serializable {
 	private Long transactionId;
 	private String name;
 	@OneToMany(mappedBy="transaction")
+	@JsonSerialize(using=TransactionActionListSerializer.class)
 	private List<TransactionAction> actions;
 	
 	public Transaction() {
