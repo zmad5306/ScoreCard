@@ -3,6 +3,7 @@ package us.zacharymaddox.scorecard.api.service;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ import us.zacharymaddox.scorecard.common.domain.UpdateRequest;
 @Service
 public class ScoreCardApiService {
 	
+	@Value("${scorecard.api.baseurl}")
+	private String baseUrl;
 	@Autowired
 	private JmsTemplate jmsTemplate;
 	@Autowired
@@ -39,7 +42,7 @@ public class ScoreCardApiService {
 		req.setActionId(sch.getActionId());
 		req.setScoreCardId(sch.getScoreCardId());
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<AuthorizationResult> result = restTemplate.postForEntity("http://localhost:8080/api/v1/scorecard", req, AuthorizationResult.class);
+		ResponseEntity<AuthorizationResult> result = restTemplate.postForEntity(baseUrl + "/scorecard", req, AuthorizationResult.class);
 		AuthorizationResult aResult = result.getBody();
 		return aResult.getAuthorization();
 	}

@@ -1,11 +1,11 @@
 package us.zacharymaddox.scorecard.example.web;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +29,8 @@ import us.zacharymaddox.scorecard.common.domain.ScoreCardId;
 @Profile({"test-app"})
 public class ExampleController {
 	
+	@Value("${scorecard.example.baseurl}")
+	private String baseUrl;
 	private final Long transactionId = 5L;
 	private Logger logger = LoggerFactory.getLogger(ExampleController.class);
 	
@@ -41,11 +43,11 @@ public class ExampleController {
 	@GetMapping
 	public void startExampleFlow() throws RestClientException, URISyntaxException {
 		RestTemplate restTemplate = new RestTemplate();
-        ScoreCardId id = restTemplate.getForObject(new URI("http://localhost:8080/api/v1/scorecard"), ScoreCardId.class);
+        ScoreCardId id = restTemplate.getForObject(baseUrl + "/scorecard", ScoreCardId.class);
         logger.info("got Score Card Id {}", id.getScoreCardId());
         jmsTemplate.convertAndSend("scorecard", new CreateRequest(id.getScoreCardId(), transactionId), new MessageSelectorPostProcessor("CREATE"));
         
-        ApiTransaction transaction = restTemplate.getForObject("http://localhost:8080/api/v1/transaction/" + transactionId, ApiTransaction.class);
+        ApiTransaction transaction = restTemplate.getForObject(baseUrl + "/transaction/" + transactionId, ApiTransaction.class);
         logger.info("got Transaction Id {}", transaction.getTransactionId());
         
         for (ApiAction action : transaction.getActions()) {
