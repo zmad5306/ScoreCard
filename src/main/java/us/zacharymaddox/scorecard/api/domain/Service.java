@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ApiService implements Serializable {
+public class Service implements Serializable {
 	
 	private static final long serialVersionUID = -3552021332001667682L;
 	@JsonProperty("service_id")

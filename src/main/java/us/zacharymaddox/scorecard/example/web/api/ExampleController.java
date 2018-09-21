@@ -12,8 +12,8 @@ import org.springframework.web.client.RestClientException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import us.zacharymaddox.scorecard.api.domain.ApiAction;
-import us.zacharymaddox.scorecard.api.domain.ApiTransaction;
+import us.zacharymaddox.scorecard.api.domain.Action;
+import us.zacharymaddox.scorecard.api.domain.Transaction;
 import us.zacharymaddox.scorecard.api.domain.ScoreCardHeader;
 import us.zacharymaddox.scorecard.api.service.MessageSelectorPostProcessor;
 import us.zacharymaddox.scorecard.api.service.ScoreCardApiService;
@@ -43,8 +43,8 @@ public class ExampleController {
 	public void startExampleFlow() throws RestClientException, URISyntaxException {
 		ScoreCardId id = scoreCardApiService.getScoreCardId();
         jmsTemplate.convertAndSend("scorecard", new CreateRequest(id.getScoreCardId(), transactionId), new MessageSelectorPostProcessor("CREATE"));
-        ApiTransaction transaction = transactionApiService.getTransaction(transactionId);
-        for (ApiAction action : transaction.getActions()) {
+        Transaction transaction = transactionApiService.getTransaction(transactionId);
+        for (Action action : transaction.getActions()) {
         	jmsTemplate.convertAndSend(action.getService().getPath(), "", new ScoreCardPostProcessor(new ScoreCardHeader(id.getScoreCardId(), action.getActionId(), action.getPath()), mapper));
         }
 	}

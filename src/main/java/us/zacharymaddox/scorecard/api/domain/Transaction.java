@@ -5,14 +5,14 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ApiTransaction implements Serializable {
+public class Transaction implements Serializable {
 	
 	private static final long serialVersionUID = 5234809023328851117L;
 	@JsonProperty("transaction_id")
 	private Long transactionId;
 	private String type;
 	private String name;
-	private List<ApiAction> actions;
+	private List<Action> actions;
 	public Long getTransactionId() {
 		return transactionId;
 	}
@@ -31,10 +31,10 @@ public class ApiTransaction implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public List<ApiAction> getActions() {
+	public List<Action> getActions() {
 		return actions;
 	}
-	public void setActions(List<ApiAction> actions) {
+	public void setActions(List<Action> actions) {
 		this.actions = actions;
 	}
 	

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ApiAction implements Serializable {
+public class Action implements Serializable {
 	
 	private static final long serialVersionUID = -5834592838132576186L;
 	@JsonProperty("action_id")
@@ -13,7 +13,7 @@ public class ApiAction implements Serializable {
 	private String name;
 	private String path;
 	private String method;
-	private ApiService service;
+	private Service service;
 	public Long getActionId() {
 		return actionId;
 	}
@@ -44,10 +44,10 @@ public class ApiAction implements Serializable {
 	public void setMethod(String method) {
 		this.method = method;
 	}
-	public ApiService getService() {
+	public Service getService() {
 		return service;
 	}
-	public void setService(ApiService service) {
+	public void setService(Service service) {
 		this.service = service;
 	}
 	
