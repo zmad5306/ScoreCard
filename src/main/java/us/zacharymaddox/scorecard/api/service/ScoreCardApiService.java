@@ -1,9 +1,12 @@
 package us.zacharymaddox.scorecard.api.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,8 @@ import us.zacharymaddox.scorecard.common.domain.AuthorizationRequest;
 import us.zacharymaddox.scorecard.common.domain.AuthorizationResult;
 import us.zacharymaddox.scorecard.common.domain.ScoreCardActionStatus;
 import us.zacharymaddox.scorecard.common.domain.ScoreCardId;
+import us.zacharymaddox.scorecard.api.domain.ScoreCard;
+import us.zacharymaddox.scorecard.common.domain.ScoreCardStatus;
 import us.zacharymaddox.scorecard.common.domain.UpdateRequest;
 
 @Service
@@ -58,6 +63,12 @@ public class ScoreCardApiService {
 		RestTemplate restTemplate = new RestTemplate();
         ScoreCardId id = restTemplate.getForObject(baseUrl + "/scorecard/id", ScoreCardId.class);
         return id;
+	}
+	
+	public List<ScoreCard> getScoreCards(ScoreCardStatus scoreCardStatus) {
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<List<ScoreCard>> response = restTemplate.exchange(baseUrl + "/scorecard?score_card_status="+scoreCardStatus.name(), HttpMethod.GET, null, new ParameterizedTypeReference<List<ScoreCard>>() {});
+		return response.getBody();
 	}
 
 }

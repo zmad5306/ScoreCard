@@ -13,8 +13,8 @@ import org.springframework.web.client.RestClientException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import us.zacharymaddox.scorecard.api.domain.Action;
-import us.zacharymaddox.scorecard.api.domain.Transaction;
 import us.zacharymaddox.scorecard.api.domain.ScoreCardHeader;
+import us.zacharymaddox.scorecard.api.domain.Transaction;
 import us.zacharymaddox.scorecard.api.service.MessageSelectorPostProcessor;
 import us.zacharymaddox.scorecard.api.service.ScoreCardApiService;
 import us.zacharymaddox.scorecard.api.service.ScoreCardPostProcessor;

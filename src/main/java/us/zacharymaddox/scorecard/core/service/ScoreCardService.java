@@ -125,28 +125,12 @@ public class ScoreCardService {
 			throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_DNE);
 		}
 		
-		ScoreCard scoreCard = sc.get();
-		
-		List<ScoreCardActionStatus> failedStatus = Arrays.asList(new ScoreCardActionStatus[]{ScoreCardActionStatus.CANCELLED, ScoreCardActionStatus.FAILED});
-		Long failedActionsInScoreCard = scoreCardActionRepository.countByScoreCardAndStatusIn(scoreCard, failedStatus);
-		
-		List<ScoreCardActionStatus> processingStatus = Arrays.asList(new ScoreCardActionStatus[]{ScoreCardActionStatus.PENDING, ScoreCardActionStatus.PROCESSING});
-		Long processingActionsInScoreCard = scoreCardActionRepository.countByScoreCardAndStatusIn(scoreCard, processingStatus);
-		
-		List<ScoreCardActionStatus> completedStatus = Arrays.asList(new ScoreCardActionStatus[]{ScoreCardActionStatus.COMPLETED});
-		Long completedActionsInScoreCard = scoreCardActionRepository.countByScoreCardAndStatusIn(scoreCard, completedStatus);
-		
-		if (failedActionsInScoreCard  > 0) {
-			scoreCard.setScoreCardStatus(ScoreCardStatus.FAILED);
-		} else if (failedActionsInScoreCard == 0 && processingActionsInScoreCard > 0) {
-			scoreCard.setScoreCardStatus(ScoreCardStatus.PROCESSING);
-		} else if (completedActionsInScoreCard == scoreCard.getActions().size()) {
-			scoreCard.setScoreCardStatus(ScoreCardStatus.COMPLETED);
-		} else {
-			scoreCard.setScoreCardStatus(ScoreCardStatus.UNKNOWN);
-		}
-		
-		return scoreCard;
+		return sc.get();
+	}
+	
+	@Transactional(readOnly=true)
+	public List<ScoreCard> getScoreCards(ScoreCardStatus scoreCardStatus) {
+		return this.scoreCardRepository.findByScoreCardStatus(scoreCardStatus);
 	}
 	
 	@Transactional
@@ -157,7 +141,9 @@ public class ScoreCardService {
 			// to retry... how can I know that its async if it hasn't been created yet...
 			throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_DNE);
 		}
+		
 		ScoreCard scoreCard = sc.get();
+		
 		Optional<ScoreCardAction> a = scoreCardActionRepository.findByScoreCardIdAndActionId(scoreCardId, actionId);
 		
 		if (!a.isPresent()) {
@@ -260,6 +246,7 @@ public class ScoreCardService {
 
 		if (completedActions == scoreCard.getActions().size()) {
 			scoreCard.setEndTimestamp(LocalDateTime.now());
+			scoreCard.setScoreCardStatus(ScoreCardStatus.COMPLETED);
 		}
 		
 		scoreCardRepository.save(scoreCard);

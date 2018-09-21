@@ -5,13 +5,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -42,8 +43,8 @@ public class ScoreCard extends DomainObject implements Serializable {
 	@OneToMany(mappedBy="scoreCard", fetch=FetchType.EAGER)
 	private List<ScoreCardAction> actions;
 	@JsonProperty("score_card_status")
-	@Transient
-	private ScoreCardStatus scoreCardStatus;
+	@Enumerated(EnumType.STRING)
+	private ScoreCardStatus scoreCardStatus = ScoreCardStatus.PROCESSING;
 	
 	public ScoreCard() {
 		super("score_card");

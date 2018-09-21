@@ -1,5 +1,7 @@
 package us.zacharymaddox.scorecard.core.web.api;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -8,12 +10,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import us.zacharymaddox.scorecard.common.domain.AuthorizationRequest;
 import us.zacharymaddox.scorecard.common.domain.AuthorizationResult;
 import us.zacharymaddox.scorecard.common.domain.CreateRequest;
 import us.zacharymaddox.scorecard.common.domain.ScoreCardId;
+import us.zacharymaddox.scorecard.common.domain.ScoreCardStatus;
 import us.zacharymaddox.scorecard.common.domain.UpdateRequest;
 import us.zacharymaddox.scorecard.core.domain.ScoreCard;
 import us.zacharymaddox.scorecard.core.service.ScoreCardService;
@@ -24,6 +28,11 @@ public class ScoreCardController {
 
 	@Autowired
 	private ScoreCardService scoreCardService;
+	
+	@GetMapping(produces="application/json")
+	public List<ScoreCard> getScoreCards(@RequestParam("score_card_status") ScoreCardStatus scoreCardStatus) {
+		return scoreCardService.getScoreCards(scoreCardStatus);
+	}
 	
 	@GetMapping(value="/id", produces="application/json")
 	public ScoreCardId getScoreCardId() {
