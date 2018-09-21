@@ -11,12 +11,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import us.zacharymaddox.scorecard.common.domain.ScoreCardStatus;
 
 @Entity
 @Table(name="SCORE_CARD")
@@ -38,6 +41,9 @@ public class ScoreCard extends DomainObject implements Serializable {
 	private LocalDateTime endTimestamp;
 	@OneToMany(mappedBy="scoreCard", fetch=FetchType.EAGER)
 	private List<ScoreCardAction> actions;
+	@JsonProperty("score_card_status")
+	@Transient
+	private ScoreCardStatus scoreCardStatus;
 	
 	public ScoreCard() {
 		super("score_card");
@@ -89,6 +95,12 @@ public class ScoreCard extends DomainObject implements Serializable {
 	}
 	public void setTransaction(Transaction transaction) {
 		this.transaction = transaction;
+	}
+	public ScoreCardStatus getScoreCardStatus() {
+		return scoreCardStatus;
+	}
+	public void setScoreCardStatus(ScoreCardStatus scoreCardStatus) {
+		this.scoreCardStatus = scoreCardStatus;
 	}
 	
 }

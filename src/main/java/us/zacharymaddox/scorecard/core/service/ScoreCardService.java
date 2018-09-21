@@ -18,6 +18,7 @@ import us.zacharymaddox.scorecard.common.domain.Authorization;
 import us.zacharymaddox.scorecard.common.domain.AuthorizationResult;
 import us.zacharymaddox.scorecard.common.domain.ScoreCardActionStatus;
 import us.zacharymaddox.scorecard.common.domain.ScoreCardId;
+import us.zacharymaddox.scorecard.common.domain.ScoreCardStatus;
 import us.zacharymaddox.scorecard.core.domain.Action;
 import us.zacharymaddox.scorecard.core.domain.ScoreCard;
 import us.zacharymaddox.scorecard.core.domain.ScoreCardAction;
@@ -124,7 +125,28 @@ public class ScoreCardService {
 			throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_DNE);
 		}
 		
-		return sc.get();
+		ScoreCard scoreCard = sc.get();
+		
+		List<ScoreCardActionStatus> failedStatus = Arrays.asList(new ScoreCardActionStatus[]{ScoreCardActionStatus.CANCELLED, ScoreCardActionStatus.FAILED});
+		Long failedActionsInScoreCard = scoreCardActionRepository.countByScoreCardAndStatusIn(scoreCard, failedStatus);
+		
+		List<ScoreCardActionStatus> processingStatus = Arrays.asList(new ScoreCardActionStatus[]{ScoreCardActionStatus.PENDING, ScoreCardActionStatus.PROCESSING});
+		Long processingActionsInScoreCard = scoreCardActionRepository.countByScoreCardAndStatusIn(scoreCard, processingStatus);
+		
+		List<ScoreCardActionStatus> completedStatus = Arrays.asList(new ScoreCardActionStatus[]{ScoreCardActionStatus.COMPLETED});
+		Long completedActionsInScoreCard = scoreCardActionRepository.countByScoreCardAndStatusIn(scoreCard, completedStatus);
+		
+		if (failedActionsInScoreCard  > 0) {
+			scoreCard.setScoreCardStatus(ScoreCardStatus.FAILED);
+		} else if (failedActionsInScoreCard == 0 && processingActionsInScoreCard > 0) {
+			scoreCard.setScoreCardStatus(ScoreCardStatus.PROCESSING);
+		} else if (completedActionsInScoreCard == scoreCard.getActions().size()) {
+			scoreCard.setScoreCardStatus(ScoreCardStatus.COMPLETED);
+		} else {
+			scoreCard.setScoreCardStatus(ScoreCardStatus.UNKNOWN);
+		}
+		
+		return scoreCard;
 	}
 	
 	@Transactional
