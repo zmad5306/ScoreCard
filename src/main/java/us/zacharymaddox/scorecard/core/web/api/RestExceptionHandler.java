@@ -1,4 +1,4 @@
-package us.zacharymaddox.scorecard.core.web;
+package us.zacharymaddox.scorecard.core.web.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -25,7 +25,7 @@ import us.zacharymaddox.scorecard.common.domain.CreateRequest;
 import us.zacharymaddox.scorecard.common.domain.ScoreCardId;
 
 @RestController
-@RequestMapping("/example")
+@RequestMapping("/app/example")
 @Profile({"test-app"})
 public class ExampleController {
 	

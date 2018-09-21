@@ -6,8 +6,10 @@ import javax.jms.ConnectionFactory;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
@@ -18,6 +20,8 @@ import org.springframework.web.client.RestClientException;
 
 @SpringBootApplication
 @EnableJms
+@ComponentScan(basePackages="us.zacharymaddox.scorecard")
+@EntityScan(basePackages="us.zacharymaddox.scorecard")
 public class ScoreCardApplication {
 
 	@Bean

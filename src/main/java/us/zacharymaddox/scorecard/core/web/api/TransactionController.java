@@ -1,4 +1,4 @@
-package us.zacharymaddox.scorecard.core.web;
+package us.zacharymaddox.scorecard.core.web.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +10,7 @@ import us.zacharymaddox.scorecard.core.domain.Transaction;
 import us.zacharymaddox.scorecard.core.service.TransactionService;
 
 @RestController
-@RequestMapping("/transaction")
+@RequestMapping("/api/v1/transaction")
 public class TransactionController {
 	
 	@Autowired
