@@ -1,44 +1,59 @@
 package us.zacharymaddox.scorecard.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.springframework.data.annotation.Id;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@Entity
+@Table(name="TRANSACTION")
 public class Transaction extends DomainObject implements Serializable {
 
 	private static final long serialVersionUID = -7061621744060205125L;
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@JsonProperty("transaction_id")
+	private Long transactionId;
+	private String name;
+	@OneToMany(mappedBy="transaction")
+	private List<TransactionAction> actions;
 	
 	public Transaction() {
 		super("transaction");
 	}
 	
-	@Id
-	@JsonProperty("transaction_id")
-	private String transactionId;
-	private String name;
-	private List<TransactionAction> actions;
-	
-	public void addAction(Action action, Action... dependencies) {
-		if (actions == null) {
-			actions = new ArrayList<>();
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof Transaction) {
+			Transaction other = (Transaction) obj;
+			return new EqualsBuilder().append(this.transactionId, other.getTransactionId()).build();
+		} else {
+			return false;
 		}
-		List<String> depActionIds = Stream.of(dependencies).map(a -> a.getActionId()).collect(Collectors.toList());
-		TransactionAction a = new TransactionAction();
-		a.setActionId(action.getActionId());
-		a.setDependencies(depActionIds);
-		actions.add(a);
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(transactionId).build();
 	}
 
-	public String getTransactionId() {
+	public Long getTransactionId() {
 		return transactionId;
 	}
-	public void setTransactionId(String transactionId) {
+	public void setTransactionId(Long transactionId) {
 		this.transactionId = transactionId;
 	}
 	public String getName() {

@@ -1,7 +1,10 @@
 package us.zacharymaddox.scorecard.domain;
 
+import javax.persistence.Transient;
+
 public abstract class DomainObject {
 	
+	@Transient
 	private String type;
 	
 	public DomainObject(String type) {

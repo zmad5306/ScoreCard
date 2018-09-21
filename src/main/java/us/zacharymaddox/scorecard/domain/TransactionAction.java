@@ -1,28 +1,97 @@
 package us.zacharymaddox.scorecard.domain;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class TransactionAction implements Serializable {
+@Entity
+@Table(name="TRANSACTION_ACTION")
+public class TransactionAction extends DomainObject implements Serializable {
 
 	private static final long serialVersionUID = -561620117019671908L;
-	@JsonProperty("action_id")
-	private String actionId;
-	private List<String> dependencies;
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@JsonProperty("transaction_action_id")
+	private Long transactionActionId;
+	@ManyToOne
+	@JoinColumn(name="TRANSACTION_ID")
+	private Transaction transaction;
+	@ManyToOne
+	@JoinColumn(name="ACTION_ID")
+	private Action action;
+	@ManyToMany()
+	@JoinTable(name="TRANSACTION_ACTION_DEPENDENCY",
+		joinColumns={@JoinColumn(name="TRANSACTION_ACTION_ID")},
+		inverseJoinColumns={@JoinColumn(name="DEPENDS_ON_TRANSACTION_ACTION_ID")})
+	private Set<TransactionAction> dependsOn;
+	@ManyToMany(mappedBy="dependsOn")
+	private Set<TransactionAction> dependencyOf = new HashSet<TransactionAction>();
 	
-	public String getActionId() {
-		return actionId;
+	public TransactionAction() {
+		super("transaction_action");
 	}
-	public void setActionId(String actionId) {
-		this.actionId = actionId;
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof TransactionAction) {
+			TransactionAction other = (TransactionAction) obj;
+			return new EqualsBuilder().append(this.transactionActionId, other.getTransactionActionId()).build();
+		} else {
+			return false;
+		}
 	}
-	public List<String> getDependencies() {
-		return dependencies;
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(transactionActionId).build();
 	}
-	public void setDependencies(List<String> dependencies) {
-		this.dependencies = dependencies;
+	
+	public Transaction getTransaction() {
+		return transaction;
 	}
-
+	public void setTransaction(Transaction transaction) {
+		this.transaction = transaction;
+	}
+	public Set<TransactionAction> getDependsOn() {
+		return dependsOn;
+	}
+	public void setDependsOn(Set<TransactionAction> dependsOn) {
+		this.dependsOn = dependsOn;
+	}
+	public Set<TransactionAction> getDependencyOf() {
+		return dependencyOf;
+	}
+	public void setDependencyOf(Set<TransactionAction> dependencyOf) {
+		this.dependencyOf = dependencyOf;
+	}
+	public Action getAction() {
+		return action;
+	}
+	public void setAction(Action action) {
+		this.action = action;
+	}
+	public Long getTransactionActionId() {
+		return transactionActionId;
+	}
+	public void setTransactionActionId(Long transactionActionId) {
+		this.transactionActionId = transactionActionId;
+	}
+	
 }

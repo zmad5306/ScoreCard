@@ -1,9 +1,9 @@
 package us.zacharymaddox.scorecard.repository;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import us.zacharymaddox.scorecard.domain.Action;
 
-public interface ActionRepository extends MongoRepository<Action, String> {
+public interface ActionRepository extends JpaRepository<Action, Long> {
 
 }

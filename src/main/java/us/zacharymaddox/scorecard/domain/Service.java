@@ -1,30 +1,64 @@
 package us.zacharymaddox.scorecard.domain;
 
 import java.io.Serializable;
+import java.util.List;
 
-import org.springframework.data.annotation.Id;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@Entity
+@Table(name="SERVICE")
 public class Service extends DomainObject implements Serializable {
 	
 	private static final long serialVersionUID = 4081098177527594840L;
 	
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	@JsonProperty("service_id")
-	private String serviceId;
+	private Long serviceId;
 	private String name;
+	@Enumerated(EnumType.STRING)
 	private Transport transport;
 	private String path;
+	@OneToMany(mappedBy="service")
+	private List<Action> actions;
 	
 	public Service() {
 		super("service");
 	}
 	
-	public String getServiceId() {
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof Service) {
+			Service other = (Service) obj;
+			return new EqualsBuilder().append(this.serviceId, other.getServiceId()).build();
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(serviceId).build();
+	}
+	
+	public Long getServiceId() {
 		return serviceId;
 	}
-	public void setServiceId(String serviceId) {
+	public void setServiceId(Long serviceId) {
 		this.serviceId = serviceId;
 	}
 	public String getName() {
@@ -44,6 +78,14 @@ public class Service extends DomainObject implements Serializable {
 	}
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	public List<Action> getActions() {
+		return actions;
+	}
+
+	public void setActions(List<Action> actions) {
+		this.actions = actions;
 	}
 	
 }

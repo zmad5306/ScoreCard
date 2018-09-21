@@ -3,45 +3,70 @@ package us.zacharymaddox.scorecard.domain;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.data.annotation.Id;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@Entity
+@Table(name="SCORE_CARD")
 public class ScoreCard extends DomainObject implements Serializable {
 
 	private static final long serialVersionUID = 3392668963392107413L;
-
-	public ScoreCard() {
-		super("score_card");
-	}
 	
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	@JsonProperty("score_card_id")
-	private String scoreCardId;
-	@JsonProperty("transaction_id")
-	private String transactionId;
+	private Long scoreCardId;
+	@ManyToOne
+	@JoinColumn(name="TRANSACTION_ID")
+	@JsonIgnore
+	private Transaction transaction;
 	@JsonProperty("start_timestamp")
 	private LocalDateTime startTimestamp;
 	@JsonProperty("end_timestamp")
 	private LocalDateTime endTimestamp;
+	@OneToMany(mappedBy="scoreCard", fetch=FetchType.EAGER)
 	private List<ScoreCardAction> actions;
-
-	public Optional<ScoreCardAction> getAction(String actionId) {
-		return actions.stream().filter(actn -> actn.getActionId().equalsIgnoreCase(actionId)).findFirst();
+	
+	public ScoreCard() {
+		super("score_card");
 	}
-	public String getScoreCardId() {
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof ScoreCard) {
+			ScoreCard other = (ScoreCard) obj;
+			return new EqualsBuilder().append(this.scoreCardId, other.getScoreCardId()).build();
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(scoreCardId).build();
+	}
+
+	public Long getScoreCardId() {
 		return scoreCardId;
 	}
-	public void setScoreCardId(String scoreCardId) {
+	public void setScoreCardId(Long scoreCardId) {
 		this.scoreCardId = scoreCardId;
-	}
-	public String getTransactionId() {
-		return transactionId;
-	}
-	public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
 	}
 	public LocalDateTime getStartTimestamp() {
 		return startTimestamp;
@@ -60,6 +85,12 @@ public class ScoreCard extends DomainObject implements Serializable {
 	}
 	public void setActions(List<ScoreCardAction> actions) {
 		this.actions = actions;
+	}
+	public Transaction getTransaction() {
+		return transaction;
+	}
+	public void setTransaction(Transaction transaction) {
+		this.transaction = transaction;
 	}
 	
 }

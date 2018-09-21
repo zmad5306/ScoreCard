@@ -1,18 +1,24 @@
 package us.zacharymaddox.scorecard.example.service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import us.zacharymaddox.scorecard.domain.Action;
 import us.zacharymaddox.scorecard.domain.Method;
 import us.zacharymaddox.scorecard.domain.Service;
 import us.zacharymaddox.scorecard.domain.Transaction;
+import us.zacharymaddox.scorecard.domain.TransactionAction;
 import us.zacharymaddox.scorecard.domain.Transport;
 import us.zacharymaddox.scorecard.repository.ActionRepository;
 import us.zacharymaddox.scorecard.repository.ServiceRepository;
+import us.zacharymaddox.scorecard.repository.TransactionActionRepository;
 import us.zacharymaddox.scorecard.repository.TransactionRepository;
 
 @Component
@@ -28,7 +34,11 @@ public class DataSetupService {
 	@Autowired
 	private TransactionRepository transactionRepository;
 	
+	@Autowired
+	private TransactionActionRepository transactionActionRepository;
+	
 	@PostConstruct
+	@Transactional
 	public void init() {
 		System.out.println("Setting up test transaction...");
 		Service s1 = new Service();
@@ -41,7 +51,7 @@ public class DataSetupService {
 		a1.setMethod(Method.POST);
 		a1.setName("action1");
 		a1.setPath("action1");
-		a1.setServiceId(s1.getServiceId());
+		a1.setService(s1);
 		
 		a1 = actionRepository.save(a1);
 		
@@ -49,7 +59,7 @@ public class DataSetupService {
 		a2.setMethod(Method.POST);
 		a2.setName("action2");
 		a2.setPath("action2");
-		a2.setServiceId(s1.getServiceId());
+		a2.setService(s1);
 		
 		a2 = actionRepository.save(a2);
 		
@@ -57,18 +67,38 @@ public class DataSetupService {
 		a3.setMethod(Method.POST);
 		a3.setName("action3");
 		a3.setPath("action3");
-		a3.setServiceId(s1.getServiceId());
+		a3.setService(s1);
 		
 		a3 = actionRepository.save(a3);
 		
 		Transaction t1 = new Transaction();
 		t1.setName("transaction1");
-		t1.addAction(a1);
-		t1.addAction(a2, a1);
-		t1.addAction(a3, a1);
-		t1.setTransactionId("1");
 		
 		t1 = transactionRepository.save(t1);
+		
+		TransactionAction ta1 = new TransactionAction();
+		ta1.setAction(a1);
+		ta1.setDependsOn(null);
+		ta1.setTransaction(t1);
+		
+		ta1 = transactionActionRepository.save(ta1);
+		
+		Set<TransactionAction> dependsOn = new HashSet<>();
+		dependsOn.add(ta1);
+		
+		TransactionAction ta2 = new TransactionAction();
+		ta2.setAction(a2);
+		ta2.setDependsOn(dependsOn);
+		ta2.setTransaction(t1);
+		
+		ta2 = transactionActionRepository.save(ta2);
+		
+		TransactionAction ta3 = new TransactionAction();
+		ta3.setAction(a3);
+		ta3.setDependsOn(dependsOn);
+		ta3.setTransaction(t1);
+		
+		ta3 = transactionActionRepository.save(ta3);
 	}
 
 }

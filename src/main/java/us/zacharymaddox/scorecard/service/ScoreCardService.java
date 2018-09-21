@@ -3,23 +3,30 @@ package us.zacharymaddox.scorecard.service;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import us.zacharymaddox.scorecard.domain.Action;
 import us.zacharymaddox.scorecard.domain.Authorization;
 import us.zacharymaddox.scorecard.domain.AuthorizationResult;
 import us.zacharymaddox.scorecard.domain.ScoreCard;
 import us.zacharymaddox.scorecard.domain.ScoreCardAction;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 import us.zacharymaddox.scorecard.domain.Transaction;
+import us.zacharymaddox.scorecard.domain.TransactionAction;
 import us.zacharymaddox.scorecard.domain.exception.ScoreCardClientException;
 import us.zacharymaddox.scorecard.domain.exception.ScoreCardErrorCode;
+import us.zacharymaddox.scorecard.repository.ScoreCardActionRepository;
 import us.zacharymaddox.scorecard.repository.ScoreCardRepository;
+import us.zacharymaddox.scorecard.repository.TransactionActionRepository;
 import us.zacharymaddox.scorecard.repository.TransactionRepository;
 	
 @Service
@@ -30,6 +37,12 @@ public class ScoreCardService {
 	
 	@Autowired
 	private TransactionRepository transactionRepository;
+	
+	@Autowired
+	private ScoreCardActionRepository scoreCardActionRepository;
+	
+	@Autowired
+	private TransactionActionRepository transactionActionRepository;
 	
 	private static final Map<ScoreCardActionStatus, List<ScoreCardActionStatus>> VALID_STATE_CHANGES;
 	
@@ -43,31 +56,61 @@ public class ScoreCardService {
 		VALID_STATE_CHANGES.put(ScoreCardActionStatus.COMPLETED, Arrays.asList(new ScoreCardActionStatus[0]));
 	}
 	
-	private List<ScoreCardAction> buildActions(Transaction t) {
-		return t.getActions().stream().map(a -> {
+	private List<ScoreCardAction> createScoreCardActions(List<TransactionAction> actions, ScoreCard scoreCard) {
+		List<ScoreCardAction> scActions = actions.stream().map(a -> {
 			ScoreCardAction act = new ScoreCardAction();
-			act.setActionId(a.getActionId());
-			act.setDependencies(a.getDependencies());
+			act.setAction(a.getAction());
+			act.setScoreCard(scoreCard);
 			act.setStatus(ScoreCardActionStatus.PENDING);
 			return act;
 		}).collect(Collectors.toList());
+		return scActions;
 	}
 	
-	public ScoreCard createScoreCard(String transactionId) {
+	@Transactional
+	public ScoreCard createScoreCard(Long transactionId) {
 		Optional<Transaction> t = transactionRepository.findById(transactionId);
 		if (!t.isPresent()) {
 			throw new ScoreCardClientException(ScoreCardErrorCode.TRANSACTION_DNE);
 		}
 		
+		Transaction transaction = t.get();
+		
 		ScoreCard sc = new ScoreCard();
 		sc.setStartTimestamp(LocalDateTime.now());
-		sc.setTransactionId(transactionId);
-		sc.setActions(buildActions(t.get()));
+		sc.setTransaction(t.get());
 		
-		return scoreCardRepository.save(sc);
+		sc = scoreCardRepository.save(sc);
+		
+		List<ScoreCardAction> actions = createScoreCardActions(t.get().getActions(), sc);
+		
+		actions = scoreCardActionRepository.saveAll(actions);
+		
+		sc.setActions(actions);
+		
+		for (ScoreCardAction sca : actions) {
+			Set<ScoreCardAction> dependsOn = new HashSet<>(); 
+			List<TransactionAction> tas = transactionActionRepository.findByTransactionAndAction(transaction, sca.getAction());
+			for (TransactionAction ta : tas) {
+				for (TransactionAction dta : ta.getDependsOn()) {
+					Action action = dta.getAction();
+					Optional<ScoreCardAction> dependency = scoreCardActionRepository.findByScoreCardIdAndActionId(sc.getScoreCardId(), action.getActionId());
+					if (dependency.isPresent()) {
+						dependsOn.add(dependency.get());
+					}
+				}
+			}
+			sca.setDependsOn(dependsOn);
+			scoreCardActionRepository.save(sca);
+		}
+		
+		return sc;
 	}
 	
-	public ScoreCard getScoreCard(String scoreCardId) {
+
+
+	@Transactional(readOnly=true)
+	public ScoreCard getScoreCard(Long scoreCardId) {
 		Optional<ScoreCard> sc = scoreCardRepository.findById(scoreCardId);
 		if (!sc.isPresent()) {
 			throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_DNE);
@@ -76,14 +119,15 @@ public class ScoreCardService {
 		return sc.get();
 	}
 	
-	public AuthorizationResult authorize(String scoreCardId, String actionId) {
+	@Transactional
+	public AuthorizationResult authorize(Long scoreCardId, Long scoreCardActionId) {
 		Optional<ScoreCard> sc = scoreCardRepository.findById(scoreCardId);
 		if (!sc.isPresent()) {
 			// TODO need to respond WAIT here if score card creation is async
 			throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_DNE);
 		}
-		ScoreCard scoreCard = sc.get();		
-		Optional<ScoreCardAction> a = scoreCard.getAction(actionId);
+		ScoreCard scoreCard = sc.get();
+		Optional<ScoreCardAction> a = scoreCardActionRepository.findByScoreCardIdAndScoreCardActionId(scoreCardId, scoreCardActionId);
 		
 		if (!a.isPresent()) {
 			// TODO need to respond WAIT here if score card creation is async
@@ -105,29 +149,23 @@ public class ScoreCardService {
 				return new AuthorizationResult(Authorization.WAIT);
 			case PENDING:
 				// action is pending, lets see if its authorized
-				Long failedActionsInScoreCard = scoreCard.getActions().stream().filter(atn -> ScoreCardActionStatus.CANCELLED.equals(atn.getStatus()) || ScoreCardActionStatus.FAILED.equals(atn.getStatus())).count();
+				List<ScoreCardActionStatus> failedStatus = Arrays.asList(new ScoreCardActionStatus[]{ScoreCardActionStatus.CANCELLED, ScoreCardActionStatus.FAILED});
+				Long failedActionsInScoreCard = scoreCardActionRepository.countByScoreCardAndStatusIn(scoreCard, failedStatus);
 				
 				// check for other actions that ended abnormally, cancel all further actions
 				if (failedActionsInScoreCard > 0) {
 					return new AuthorizationResult(Authorization.CANCEL);
 				} else {
 					// check for dependencies status
-					List<String> dependencies = sca.getDependencies();
+					Set<ScoreCardAction> dependencies = sca.getDependsOn();
 					
 					if (dependencies != null && !dependencies.isEmpty()) {
 						// count the finished dependencies
-						Long finishedDepsCount = dependencies.stream().map(dep -> {
-							Optional<ScoreCardAction> actn = scoreCard.getAction(dep);
-							if (!actn.isPresent()) {
-								// TODO need to respond WAIT here if score card creation is async
-								throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_ACTION_DEPENDENCY_DNE);
-							}
-							return actn.get();
-						}).filter(actn -> ScoreCardActionStatus.COMPLETED.equals(actn.getStatus())).count();
+						Long completedActions = dependencies.stream().filter(dep -> ScoreCardActionStatus.COMPLETED.equals(dep.getStatus())).count();
 						
 						// check that all dependencies are finished before returning PROCESS
-						if (finishedDepsCount == dependencies.size()) {
-							updateActionStatusInternal(scoreCardId, actionId, ScoreCardActionStatus.PROCESSING, false);
+						if (completedActions == dependencies.size()) {
+							updateActionStatusInternal(scoreCardId, sca.getScoreCardActionId(), ScoreCardActionStatus.PROCESSING, false);
 							return new AuthorizationResult(Authorization.PROCESS);
 						} 
 						// a dependency isn't finished, WAIT on it
@@ -137,7 +175,7 @@ public class ScoreCardService {
 					} 
 					// there aren't any dependencies so go ahead and process
 					else {
-						updateActionStatusInternal(scoreCardId, actionId, ScoreCardActionStatus.PROCESSING, false);
+						updateActionStatusInternal(scoreCardId, sca.getScoreCardActionId(), ScoreCardActionStatus.PROCESSING, false);
 						return new AuthorizationResult(Authorization.PROCESS);
 					}
 				}
@@ -147,17 +185,18 @@ public class ScoreCardService {
 		
 	}
 	
-	public void updateActionStatus(String scoreCardId, String actionId, ScoreCardActionStatus status) {
-		updateActionStatusInternal(scoreCardId, actionId, status, true);
+	@Transactional
+	public void updateActionStatus(Long scoreCardId, Long scoreCardActionId, ScoreCardActionStatus status) {
+		updateActionStatusInternal(scoreCardId, scoreCardActionId, status, true);
 	}
 	
-	private void updateActionStatusInternal(String scoreCardId, String actionId, ScoreCardActionStatus status, Boolean mustBeProcessing) {
+	private void updateActionStatusInternal(Long scoreCardId, Long scoreCardActionId, ScoreCardActionStatus status, Boolean mustBeProcessing) {
 		Optional<ScoreCard> sc = scoreCardRepository.findById(scoreCardId);
 		if (!sc.isPresent()) {
 			throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_DNE);
 		}
 		ScoreCard scoreCard = sc.get();		
-		Optional<ScoreCardAction> a = scoreCard.getAction(actionId);
+		Optional<ScoreCardAction> a = scoreCardActionRepository.findById(scoreCardActionId);
 		
 		if (!a.isPresent()) {
 			throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_ACTION_DNE);
@@ -184,7 +223,9 @@ public class ScoreCardService {
 		}
 		sca.setStatus(status);
 		
-		Long completedActions = scoreCard.getActions().stream().filter(atn -> ScoreCardActionStatus.CANCELLED.equals(atn.getStatus()) || ScoreCardActionStatus.FAILED.equals(atn.getStatus()) || ScoreCardActionStatus.COMPLETED.equals(atn.getStatus())).count();
+		List<ScoreCardActionStatus> completedStatus = Arrays.asList(new ScoreCardActionStatus[]{ScoreCardActionStatus.CANCELLED, ScoreCardActionStatus.FAILED, ScoreCardActionStatus.COMPLETED});
+		Long completedActions = scoreCardActionRepository.countByScoreCardAndStatusIn(scoreCard, completedStatus);
+
 		if (completedActions == scoreCard.getActions().size()) {
 			scoreCard.setEndTimestamp(LocalDateTime.now());
 		}

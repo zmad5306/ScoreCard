@@ -8,23 +8,20 @@ public class AuthorizationRequest implements Serializable {
 	
 	private static final long serialVersionUID = -978370798490525967L;
 	@JsonProperty("score_card_id")
-	private String scoreCardId;
-	@JsonProperty("action_id")
-	private String actionId;
-	
-	public String getScoreCardId() {
+	private Long scoreCardId;
+	@JsonProperty("score_card_action_id")
+	private Long scoreCardActionId;
+	public Long getScoreCardId() {
 		return scoreCardId;
 	}
-	public void setScoreCardId(String scoreCardId) {
+	public void setScoreCardId(Long scoreCardId) {
 		this.scoreCardId = scoreCardId;
 	}
-	public String getActionId() {
-		return actionId;
+	public Long getScoreCardActionId() {
+		return scoreCardActionId;
 	}
-	public void setActionId(String actionId) {
-		this.actionId = actionId;
+	public void setScoreCardActionId(Long scoreCardActionId) {
+		this.scoreCardActionId = scoreCardActionId;
 	}
-	
-	
 
 }
