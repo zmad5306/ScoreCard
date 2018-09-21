@@ -19,7 +19,7 @@ public class ScoreCardId implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="score_card_id_generator")
-	@SequenceGenerator(name="score_card_id_generator", sequenceName="score_card_id_sequence")
+	@SequenceGenerator(name="score_card_id_generator", sequenceName="score_card_id_sequence", allocationSize=1, initialValue=1)
 	@JsonProperty("score_card_id")
 	private Long scoreCardId;
 	
