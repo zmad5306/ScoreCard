@@ -1,4 +1,4 @@
-package us.zacharymaddox.scorecard.service;
+package us.zacharymaddox.scorecard.example.service;
 
 import javax.annotation.PostConstruct;
 
