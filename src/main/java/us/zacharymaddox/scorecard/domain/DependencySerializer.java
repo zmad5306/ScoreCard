@@ -27,7 +27,7 @@ public class DependencySerializer extends StdSerializer<Set<ScoreCardAction>>{
 		if (null == value) {
 			gen.writeNull();
 		} else {
-			Long[] values = value.stream().map(v -> v.getScoreCardActionId()).toArray(Long[]::new);
+			Long[] values = value.stream().map(v -> v.getAction().getActionId()).toArray(Long[]::new);
 			gen.writeArray(ArrayUtils.toPrimitive(values), 0, values.length);
 		}
 	}

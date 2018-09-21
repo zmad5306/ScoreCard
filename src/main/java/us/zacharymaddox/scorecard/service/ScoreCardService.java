@@ -128,17 +128,19 @@ public class ScoreCardService {
 	}
 	
 	@Transactional
-	public AuthorizationResult authorize(Long scoreCardId, Long scoreCardActionId) {
+	public AuthorizationResult authorize(Long scoreCardId, Long actionId) {
 		Optional<ScoreCard> sc = scoreCardRepository.findById(scoreCardId);
 		if (!sc.isPresent()) {
-			// TODO need to respond WAIT here if score card creation is async
+			// TODO need to respond WAIT here if score card creation is async, might have to push this to the client 
+			// to retry... how can I know that its async if it hasn't been created yet...
 			throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_DNE);
 		}
 		ScoreCard scoreCard = sc.get();
-		Optional<ScoreCardAction> a = scoreCardActionRepository.findByScoreCardIdAndScoreCardActionId(scoreCardId, scoreCardActionId);
+		Optional<ScoreCardAction> a = scoreCardActionRepository.findByScoreCardIdAndActionId(scoreCardId, actionId);
 		
 		if (!a.isPresent()) {
-			// TODO need to respond WAIT here if score card creation is async
+			// TODO need to respond WAIT here if score card creation is async, might have to push this to the client 
+			// to retry... how can I know that its async if it hasn't been created yet...
 			throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_ACTION_DNE);
 		}
 		
@@ -173,7 +175,7 @@ public class ScoreCardService {
 						
 						// check that all dependencies are finished before returning PROCESS
 						if (completedActions == dependencies.size()) {
-							updateActionStatusInternal(scoreCardId, sca.getScoreCardActionId(), ScoreCardActionStatus.PROCESSING, false);
+							updateActionStatusInternal(scoreCardId, sca.getAction().getActionId(), ScoreCardActionStatus.PROCESSING, false);
 							return new AuthorizationResult(Authorization.PROCESS);
 						} 
 						// a dependency isn't finished, WAIT on it
@@ -183,7 +185,7 @@ public class ScoreCardService {
 					} 
 					// there aren't any dependencies so go ahead and process
 					else {
-						updateActionStatusInternal(scoreCardId, sca.getScoreCardActionId(), ScoreCardActionStatus.PROCESSING, false);
+						updateActionStatusInternal(scoreCardId, sca.getAction().getActionId(), ScoreCardActionStatus.PROCESSING, false);
 						return new AuthorizationResult(Authorization.PROCESS);
 					}
 				}
@@ -194,17 +196,17 @@ public class ScoreCardService {
 	}
 	
 	@Transactional
-	public void updateActionStatus(Long scoreCardId, Long scoreCardActionId, ScoreCardActionStatus status) {
-		updateActionStatusInternal(scoreCardId, scoreCardActionId, status, true);
+	public void updateActionStatus(Long scoreCardId, Long actionId, ScoreCardActionStatus status) {
+		updateActionStatusInternal(scoreCardId, actionId, status, true);
 	}
 	
-	private void updateActionStatusInternal(Long scoreCardId, Long scoreCardActionId, ScoreCardActionStatus status, Boolean mustBeProcessing) {
+	private void updateActionStatusInternal(Long scoreCardId, Long actionId, ScoreCardActionStatus status, Boolean mustBeProcessing) {
 		Optional<ScoreCard> sc = scoreCardRepository.findById(scoreCardId);
 		if (!sc.isPresent()) {
 			throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_DNE);
 		}
 		ScoreCard scoreCard = sc.get();		
-		Optional<ScoreCardAction> a = scoreCardActionRepository.findById(scoreCardActionId);
+		Optional<ScoreCardAction> a = scoreCardActionRepository.findByScoreCardIdAndActionId(scoreCardId, actionId);
 		
 		if (!a.isPresent()) {
 			throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_ACTION_DNE);

@@ -19,7 +19,6 @@ public interface ScoreCardActionRepository extends JpaRepository<ScoreCardAction
 	@Query("from ScoreCardAction where scoreCard.id = :score_card_id and scoreCardActionId = :score_card_action_id")
 	public Optional<ScoreCardAction> findByScoreCardIdAndScoreCardActionId(@Param("score_card_id") Long scoreCardId, @Param("score_card_action_id") Long actionId);
 	
-	
 	public Long countByScoreCardAndStatusIn(ScoreCard scoreCard, List<ScoreCardActionStatus> status);
 
 }

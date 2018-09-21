@@ -42,12 +42,12 @@ public class ScoreCardController {
 	
 	@PostMapping(consumes="application/json", produces="application/json")
 	public AuthorizationResult authorize(@RequestBody AuthorizationRequest request) {
-		return scoreCardService.authorize(request.getScoreCardId(), request.getScoreCardActionId());
+		return scoreCardService.authorize(request.getScoreCardId(), request.getActionId());
 	}
 	
 	@PatchMapping(consumes="application/json", produces="application/json")
 	public void updateActionStatus(@RequestBody UpdateRequest request) {
-		scoreCardService.updateActionStatus(request.getScoreCardId(), request.getScoreCardactionId(), request.getStatus());
+		scoreCardService.updateActionStatus(request.getScoreCardId(), request.getActionId(), request.getStatus());
 	}
 	
 }

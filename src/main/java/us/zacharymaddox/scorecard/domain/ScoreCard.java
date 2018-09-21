@@ -15,8 +15,8 @@ import javax.persistence.Table;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
 @Table(name="SCORE_CARD")
@@ -29,7 +29,8 @@ public class ScoreCard extends DomainObject implements Serializable {
 	private Long scoreCardId;
 	@ManyToOne
 	@JoinColumn(name="TRANSACTION_ID")
-	@JsonIgnore
+	@JsonSerialize(using = TransactionSerializer.class)
+	@JsonProperty("transaction_id")
 	private Transaction transaction;
 	@JsonProperty("start_timestamp")
 	private LocalDateTime startTimestamp;

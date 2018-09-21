@@ -33,14 +33,16 @@ public class ScoreCardAction extends DomainObject implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@JsonProperty("score_card_action_id")
+//	@JsonProperty("score_card_action_id")
+	@JsonIgnore
 	private Long scoreCardActionId;
 	@ManyToOne
 	@JoinColumn(name="SCORE_CARD_ID")
 	@JsonIgnore
 	private ScoreCard scoreCard;
 	@ManyToOne
-	@JsonIgnore
+	@JsonProperty("action_id")
+	@JsonSerialize(using = ActionSerializer.class)
 	private Action action;	
 	@Enumerated(EnumType.STRING)
 	private ScoreCardActionStatus status;
