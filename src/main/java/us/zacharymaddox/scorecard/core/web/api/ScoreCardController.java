@@ -30,8 +30,12 @@ public class ScoreCardController {
 	private ScoreCardService scoreCardService;
 	
 	@GetMapping(produces="application/json")
-	public List<ScoreCard> getScoreCards(@RequestParam("score_card_status") ScoreCardStatus scoreCardStatus) {
-		return scoreCardService.getScoreCards(scoreCardStatus);
+	public List<ScoreCard> getScoreCards(
+			@RequestParam(name="score_card_status", required=true) ScoreCardStatus scoreCardStatus,
+			@RequestParam(name="rows", required=false, defaultValue="100") Integer rows,
+			@RequestParam(name="page", required=false, defaultValue="1") Integer page 
+		) {
+		return scoreCardService.getScoreCards(scoreCardStatus, page, rows);
 	}
 	
 	@GetMapping(value="/id", produces="application/json")

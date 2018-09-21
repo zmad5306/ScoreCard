@@ -1,6 +1,8 @@
 package us.zacharymaddox.scorecard.api.domain;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -14,6 +16,13 @@ public class Action implements Serializable {
 	private String path;
 	private String method;
 	private Service service;
+	@JsonProperty("start_timestamp")
+	private LocalDateTime startTimestamp;
+	@JsonProperty("end_timestamp")
+	private LocalDateTime endTimestamp;
+	@JsonProperty("depends_on")
+	private List<Long> dependsOn;
+	
 	public Long getActionId() {
 		return actionId;
 	}
@@ -49,6 +58,24 @@ public class Action implements Serializable {
 	}
 	public void setService(Service service) {
 		this.service = service;
+	}
+	public LocalDateTime getStartTimestamp() {
+		return startTimestamp;
+	}
+	public void setStartTimestamp(LocalDateTime startTimestamp) {
+		this.startTimestamp = startTimestamp;
+	}
+	public LocalDateTime getEndTimestamp() {
+		return endTimestamp;
+	}
+	public void setEndTimestamp(LocalDateTime endTimestamp) {
+		this.endTimestamp = endTimestamp;
+	}
+	public List<Long> getDependsOn() {
+		return dependsOn;
+	}
+	public void setDependsOn(List<Long> dependsOn) {
+		this.dependsOn = dependsOn;
 	}
 	
 }

@@ -11,6 +11,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -129,8 +131,17 @@ public class ScoreCardService {
 	}
 	
 	@Transactional(readOnly=true)
-	public List<ScoreCard> getScoreCards(ScoreCardStatus scoreCardStatus) {
-		return this.scoreCardRepository.findByScoreCardStatus(scoreCardStatus);
+	public List<ScoreCard> getScoreCards(
+				ScoreCardStatus scoreCardStatus,
+				Integer page,
+				Integer rows
+			) {
+		ScoreCard scoreCard = new ScoreCard();
+		scoreCard.setScoreCardStatus(scoreCardStatus);
+		
+		Pageable pageable = PageRequest.of(page, rows);
+		
+		return scoreCardRepository.findByScoreCardStatusOrderByScoreCardIdDesc(scoreCardStatus, pageable);
 	}
 	
 	@Transactional

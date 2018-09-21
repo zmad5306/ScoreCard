@@ -65,9 +65,15 @@ public class ScoreCardApiService {
         return id;
 	}
 	
-	public List<ScoreCard> getScoreCards(ScoreCardStatus scoreCardStatus) {
+	public List<ScoreCard> getScoreCards(ScoreCardStatus scoreCardStatus, Integer rows, Integer page) {
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<List<ScoreCard>> response = restTemplate.exchange(baseUrl + "/scorecard?score_card_status="+scoreCardStatus.name(), HttpMethod.GET, null, new ParameterizedTypeReference<List<ScoreCard>>() {});
+		ResponseEntity<List<ScoreCard>> response = restTemplate.exchange(
+				baseUrl + "/scorecard?score_card_status={status}&rows={rows}&page={page}", 
+				HttpMethod.GET, 
+				null, //requestEntity
+				new ParameterizedTypeReference<List<ScoreCard>>() {},
+				scoreCardStatus, rows, page
+			);
 		return response.getBody();
 	}
 
