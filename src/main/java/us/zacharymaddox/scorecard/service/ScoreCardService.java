@@ -20,6 +20,7 @@ import us.zacharymaddox.scorecard.domain.AuthorizationResult;
 import us.zacharymaddox.scorecard.domain.ScoreCard;
 import us.zacharymaddox.scorecard.domain.ScoreCardAction;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
+import us.zacharymaddox.scorecard.domain.ScoreCardId;
 import us.zacharymaddox.scorecard.domain.Transaction;
 import us.zacharymaddox.scorecard.domain.TransactionAction;
 import us.zacharymaddox.scorecard.domain.exception.ScoreCardClientException;
@@ -68,7 +69,13 @@ public class ScoreCardService {
 	}
 	
 	@Transactional
-	public ScoreCard createScoreCard(Long transactionId) {
+	public ScoreCardId getNextScoreCardId() {
+		Long sci = scoreCardRepository.fetchNextScoreCardId();
+		return new ScoreCardId(sci);
+	}
+	
+	@Transactional
+	public ScoreCard createScoreCard(Long scoreCardId, Long transactionId) {
 		Optional<Transaction> t = transactionRepository.findById(transactionId);
 		if (!t.isPresent()) {
 			throw new ScoreCardClientException(ScoreCardErrorCode.TRANSACTION_DNE);
@@ -77,6 +84,7 @@ public class ScoreCardService {
 		Transaction transaction = t.get();
 		
 		ScoreCard sc = new ScoreCard();
+		sc.setScoreCardId(scoreCardId);
 		sc.setStartTimestamp(LocalDateTime.now());
 		sc.setTransaction(t.get());
 		

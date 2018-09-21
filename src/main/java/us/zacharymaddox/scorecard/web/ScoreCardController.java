@@ -14,6 +14,7 @@ import us.zacharymaddox.scorecard.domain.AuthorizationRequest;
 import us.zacharymaddox.scorecard.domain.AuthorizationResult;
 import us.zacharymaddox.scorecard.domain.CreateRequest;
 import us.zacharymaddox.scorecard.domain.ScoreCard;
+import us.zacharymaddox.scorecard.domain.ScoreCardId;
 import us.zacharymaddox.scorecard.domain.UpdateRequest;
 import us.zacharymaddox.scorecard.service.ScoreCardService;
 
@@ -24,9 +25,14 @@ public class ScoreCardController {
 	@Autowired
 	private ScoreCardService scoreCardService;
 	
+	@GetMapping(produces="application/json")
+	public ScoreCardId getScoreCardId() {
+		return scoreCardService.getNextScoreCardId();
+	}
+	
 	@PutMapping(consumes="application/json", produces="application/json")
 	public ScoreCard createScoreCard(@RequestBody CreateRequest request) {
-		return scoreCardService.createScoreCard(request.getTransactionId());
+		return scoreCardService.createScoreCard(request.getScoreCardId(), request.getTransactionId());
 	}
 	
 	@GetMapping(value="/{score_card_id}", produces="application/json")

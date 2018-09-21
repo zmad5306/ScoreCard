@@ -6,8 +6,6 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -27,7 +25,6 @@ public class ScoreCard extends DomainObject implements Serializable {
 	private static final long serialVersionUID = 3392668963392107413L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	@JsonProperty("score_card_id")
 	private Long scoreCardId;
 	@ManyToOne

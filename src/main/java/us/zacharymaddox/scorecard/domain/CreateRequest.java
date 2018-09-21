@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class CreateRequest implements Serializable {
 	
 	private static final long serialVersionUID = 1130517004726960608L;
+	
+	@JsonProperty("score_card_id")
+	private Long scoreCardId;
 	@JsonProperty("transaction_id")
 	private Long transactionId;
 
@@ -16,6 +19,14 @@ public class CreateRequest implements Serializable {
 
 	public void setTransactionId(Long transactionId) {
 		this.transactionId = transactionId;
+	}
+
+	public Long getScoreCardId() {
+		return scoreCardId;
+	}
+
+	public void setScoreCardId(Long scoreCardId) {
+		this.scoreCardId = scoreCardId;
 	}
 	
 }
