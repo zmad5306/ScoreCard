@@ -43,6 +43,7 @@ public class DataSetupService {
 		System.out.println("Setting up test transaction...");
 		Service s1 = new Service();
 		s1.setName("service1");
+		s1.setPath("service1");
 		s1.setTransport(Transport.QUEUE);
 		
 		s1 = serviceRepository.save(s1);

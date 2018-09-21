@@ -1,44 +1,54 @@
-package us.zacharymaddox.scorecard.domain;
+package us.zacharymaddox.scorecard.example.service;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class UpdateRequest implements Serializable {
-	
-	private static final long serialVersionUID = -451969971803193333L;
+public class ScoreCardHeader implements Serializable {
+
+	private static final long serialVersionUID = -7526764743694248208L;
 	@JsonProperty("score_card_id")
 	private Long scoreCardId;
 	@JsonProperty("action_id")
 	private Long actionId;
-	private ScoreCardActionStatus status;
+	@JsonIgnore
+	private String path;
 	
-	public UpdateRequest() {
+	public ScoreCardHeader() {
 		super();
 	}
-	public UpdateRequest(Long scoreCardId, Long actionId, ScoreCardActionStatus status) {
+
+	public ScoreCardHeader(Long scoreCardId, Long actionId, String path) {
 		super();
 		this.scoreCardId = scoreCardId;
 		this.actionId = actionId;
-		this.status = status;
+		this.path = path;
 	}
+
 	public Long getScoreCardId() {
 		return scoreCardId;
 	}
+
 	public void setScoreCardId(Long scoreCardId) {
 		this.scoreCardId = scoreCardId;
 	}
-	public ScoreCardActionStatus getStatus() {
-		return status;
-	}
-	public void setStatus(ScoreCardActionStatus status) {
-		this.status = status;
-	}
+
 	public Long getActionId() {
 		return actionId;
 	}
+
 	public void setActionId(Long actionId) {
 		this.actionId = actionId;
 	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+	
 	
 }

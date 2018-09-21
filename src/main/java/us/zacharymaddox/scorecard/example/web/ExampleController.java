@@ -14,10 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import us.zacharymaddox.scorecard.domain.CreateRequest;
 import us.zacharymaddox.scorecard.domain.ScoreCardId;
-import us.zacharymaddox.scorecard.domain.Transaction;
+import us.zacharymaddox.scorecard.example.domain.ApiAction;
+import us.zacharymaddox.scorecard.example.domain.ApiTransaction;
 import us.zacharymaddox.scorecard.example.service.MessageSelectorPostProcessor;
+import us.zacharymaddox.scorecard.example.service.ScoreCardHeader;
+import us.zacharymaddox.scorecard.example.service.ScoreCardPostProcessor;
 
 @RestController
 @RequestMapping("/example")
@@ -30,6 +35,9 @@ public class ExampleController {
 	@Autowired
 	private JmsTemplate jmsTemplate;
 	
+	@Autowired
+	private ObjectMapper mapper;
+	
 	@GetMapping
 	public void startExampleFlow() throws RestClientException, URISyntaxException {
 		RestTemplate restTemplate = new RestTemplate();
@@ -37,8 +45,12 @@ public class ExampleController {
         logger.info("got Score Card Id {}", id.getScoreCardId());
         jmsTemplate.convertAndSend("scorecard", new CreateRequest(id.getScoreCardId(), transactionId), new MessageSelectorPostProcessor("CREATE"));
         
-        Transaction transaction = restTemplate.getForObject("http://localhost:8080/api/v1/transaction/" + transactionId, Transaction.class);
+        ApiTransaction transaction = restTemplate.getForObject("http://localhost:8080/api/v1/transaction/" + transactionId, ApiTransaction.class);
         logger.info("got Transaction Id {}", transaction.getTransactionId());
+        
+        for (ApiAction action : transaction.getActions()) {
+        	jmsTemplate.convertAndSend(action.getService().getPath(), "", new ScoreCardPostProcessor(new ScoreCardHeader(id.getScoreCardId(), action.getActionId(), action.getPath()), mapper));
+        }
 	}
 
 }
