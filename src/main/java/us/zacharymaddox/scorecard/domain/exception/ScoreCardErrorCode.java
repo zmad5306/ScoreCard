@@ -6,7 +6,7 @@ public enum ScoreCardErrorCode {
 	CREATE_FAILED("SC-0002", "Unable to create Score Card."),
 	AUTHORIZATION_FAILED("SC-0003", "Unable to authorize Score Card."),
 	ILLEGAL_STATE_CHANGE("SC-0004", "Illegal state change requested."),
-	UPDATE_FAILED("SC-0005", "Unable to update Score Card."),;
+	UPDATE_FAILED("SC-0005", "Unable to update Score Card.");
 	
 	private String errorCode;
 	private String message;
