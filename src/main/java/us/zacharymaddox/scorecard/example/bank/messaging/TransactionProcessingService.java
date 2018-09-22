@@ -18,10 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import us.zacharymaddox.scorecard.api.domain.Action;
 import us.zacharymaddox.scorecard.api.domain.ScoreCard;
 import us.zacharymaddox.scorecard.api.domain.ScoreCardHeader;
-import us.zacharymaddox.scorecard.api.domain.Transaction;
 import us.zacharymaddox.scorecard.api.domain.WaitException;
 import us.zacharymaddox.scorecard.api.service.ScoreCardApiService;
-import us.zacharymaddox.scorecard.api.service.TransactionApiService;
 import us.zacharymaddox.scorecard.domain.Authorization;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 import us.zacharymaddox.scorecard.domain.ScoreCardStatus;
@@ -39,8 +37,6 @@ public class TransactionProcessingService {
 	private ScoreCardApiService scoreCardApiService;
 	@Autowired
 	private AccountService accountService;
-	@Autowired
-	private TransactionApiService transactionApiService;
 	private Logger logger = LoggerFactory.getLogger(TransactionProcessingService.class);
 	private String errorKey = "error_code";
 	
@@ -118,31 +114,28 @@ public class TransactionProcessingService {
 		
 	}
 	
-	private void cancelCredit(ScoreCard scoreCard, Transaction transaction) {
-		Action creditAction = scoreCard.getAction(transaction.getAction("credit").getActionId());
-		if (ScoreCardActionStatus.PENDING.equals(creditAction.getStatus())) {
-			ScoreCardHeader scoreCardHeader = new ScoreCardHeader(scoreCard.getScoreCardId(), creditAction.getActionId(), creditAction.getPath());
+	private void cancelCredit(ScoreCard scoreCard, Action action) {
+		if (ScoreCardActionStatus.PENDING.equals(action.getStatus())) {
+			ScoreCardHeader scoreCardHeader = new ScoreCardHeader(scoreCard.getScoreCardId(), action.getActionId(), action.getPath());
 			scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.CANCELLED);	
 		}
 	}
 	
-	
-	@Scheduled(fixedDelay=60000) // sixty seconds between runs
+	@Scheduled(fixedDelay=60000)
 	public void repairFailedTransfers() {
+		// only query score cards for the trans in question
 		List<ScoreCard> scoreCards = scoreCardApiService.getScoreCards(ScoreCardStatus.PROCESSING, 100, 0);
 		for (ScoreCard scoreCard : scoreCards) {
-			Transaction transaction = transactionApiService.getTransaction(scoreCard.getTransactionId());
 			for (Action action : scoreCard.getActions()) {
-				if (ScoreCardActionStatus.FAILED.equals(action.getStatus())) {
-					if ("debit".equals(action.getName())) {
-						// debit failed, mark credit action as cancelled
-						cancelCredit(scoreCard, transaction);
-					}	
+				if (ScoreCardActionStatus.FAILED.equals(action.getStatus()) && "debit".equals(action.getName())) {
+					// debit failed, mark credit action as cancelled
+					cancelCredit(scoreCard, scoreCard.getAction("credit"));
 				}
 				
 			}
 		}
-		
 	}
+
+	
 
 }

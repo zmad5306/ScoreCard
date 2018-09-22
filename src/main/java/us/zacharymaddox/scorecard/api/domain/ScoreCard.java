@@ -17,6 +17,8 @@ public class ScoreCard implements Serializable {
 	private Long scoreCardId;
 	@JsonProperty("transaction_id")
 	private Long transactionId;
+	@JsonProperty("transaction_name")
+	private String transactionName;
 	@JsonProperty("start_timestamp")
 	private LocalDateTime startTimestamp;
 	@JsonProperty("end_timestamp")

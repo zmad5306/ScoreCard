@@ -93,7 +93,8 @@ public class ScoreCardService {
 		ScoreCard sc = new ScoreCard();
 		sc.setScoreCardId(scoreCardId);
 		sc.setStartTimestamp(LocalDateTime.now());
-		sc.setTransaction(t.get());
+		sc.setTransactionId(transactionId);
+		sc.setTransactionName(transaction.getName());
 		
 		sc = scoreCardRepository.save(sc);
 		

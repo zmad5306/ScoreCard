@@ -9,8 +9,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -18,7 +16,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import us.zacharymaddox.scorecard.domain.ScoreCardStatus;
 
@@ -31,11 +28,10 @@ public class ScoreCard extends DomainObject implements Serializable {
 	@Id
 	@JsonProperty("score_card_id")
 	private Long scoreCardId;
-	@ManyToOne
-	@JoinColumn(name="TRANSACTION_ID")
-	@JsonSerialize(using = TransactionSerializer.class)
 	@JsonProperty("transaction_id")
-	private Transaction transaction;
+	private Long transactionId;
+	@JsonProperty("transaction_name")
+	private String transactionName;
 	@JsonProperty("start_timestamp")
 	private LocalDateTime startTimestamp;
 	@JsonProperty("end_timestamp")
@@ -91,17 +87,23 @@ public class ScoreCard extends DomainObject implements Serializable {
 	public void setActions(List<ScoreCardAction> actions) {
 		this.actions = actions;
 	}
-	public Transaction getTransaction() {
-		return transaction;
-	}
-	public void setTransaction(Transaction transaction) {
-		this.transaction = transaction;
-	}
 	public ScoreCardStatus getScoreCardStatus() {
 		return scoreCardStatus;
 	}
 	public void setScoreCardStatus(ScoreCardStatus scoreCardStatus) {
 		this.scoreCardStatus = scoreCardStatus;
+	}
+	public Long getTransactionId() {
+		return transactionId;
+	}
+	public void setTransactionId(Long transactionId) {
+		this.transactionId = transactionId;
+	}
+	public String getTransactionName() {
+		return transactionName;
+	}
+	public void setTransactionName(String transactionName) {
+		this.transactionName = transactionName;
 	}
 	
 }
