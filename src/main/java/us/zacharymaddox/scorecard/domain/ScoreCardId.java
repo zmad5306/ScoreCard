@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity // this is only an entity to generate the sequence
-@Table(name="SCORE_CARD_ID")
+@Table(name="SCORE_CARD_ID", schema="SCORE_CARD")
 public class ScoreCardId implements Serializable {
 	
 	private static final long serialVersionUID = 631834385163738001L;

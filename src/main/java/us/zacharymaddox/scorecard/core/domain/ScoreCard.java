@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import us.zacharymaddox.scorecard.domain.ScoreCardStatus;
 
 @Entity
-@Table(name="SCORE_CARD")
+@Table(name="SCORE_CARD", schema="SCORE_CARD")
 public class ScoreCard extends DomainObject implements Serializable {
 
 	private static final long serialVersionUID = 3392668963392107413L;

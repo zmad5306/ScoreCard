@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
-@Table(name="TRANSACTION")
+@Table(name="TRANSACTION", schema="SCORE_CARD")
 public class Transaction extends DomainObject implements Serializable {
 
 	private static final long serialVersionUID = -7061621744060205125L;

@@ -20,7 +20,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-@Table(name="TRANSACTION_ACTION")
+@Table(name="TRANSACTION_ACTION", schema="SCORE_CARD")
 public class TransactionAction extends DomainObject implements Serializable {
 
 	private static final long serialVersionUID = -561620117019671908L;
@@ -36,6 +36,7 @@ public class TransactionAction extends DomainObject implements Serializable {
 	private Action action;
 	@ManyToMany()
 	@JoinTable(name="TRANSACTION_ACTION_DEPENDENCY",
+		schema="SCORE_CARD",
 		joinColumns={@JoinColumn(name="TRANSACTION_ACTION_ID")},
 		inverseJoinColumns={@JoinColumn(name="DEPENDS_ON_TRANSACTION_ACTION_ID")})
 	private Set<TransactionAction> dependsOn;

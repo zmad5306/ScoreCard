@@ -20,8 +20,6 @@ import org.springframework.web.client.RestClientException;
 
 @SpringBootApplication
 @EnableJms
-@ComponentScan(basePackages="us.zacharymaddox.scorecard")
-@EntityScan(basePackages="us.zacharymaddox.scorecard")
 public class ScoreCardApplication {
 
 	@Bean

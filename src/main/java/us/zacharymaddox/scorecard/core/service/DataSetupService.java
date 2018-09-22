@@ -40,7 +40,11 @@ public class DataSetupService {
 	@PostConstruct
 	@Transactional
 	public void init() {
-		System.out.println("Setting up test transaction...");
+		basic();
+		bankTransfer();
+	}
+
+	private void basic() {
 		Service s1 = new Service();
 		s1.setName("service1");
 		s1.setPath("service1");
@@ -100,6 +104,53 @@ public class DataSetupService {
 		ta3.setTransaction(t1);
 		
 		ta3 = transactionActionRepository.save(ta3);
+	}
+	
+	private void bankTransfer() {
+		Service s1 = new Service();
+		s1.setName("account-service");
+		s1.setPath("account");
+		s1.setTransport(Transport.QUEUE);
+		
+		s1 = serviceRepository.save(s1);
+		
+		Action a1 = new Action();
+		a1.setMethod(Method.POST);
+		a1.setName("debit");
+		a1.setPath("debit");
+		a1.setService(s1);
+		
+		a1 = actionRepository.save(a1);
+		
+		Action a2 = new Action();
+		a2.setMethod(Method.POST);
+		a2.setName("credit");
+		a2.setPath("credit");
+		a2.setService(s1);
+		
+		a2 = actionRepository.save(a2);
+		
+		Transaction t1 = new Transaction();
+		t1.setName("bank-transfer");
+		
+		t1 = transactionRepository.save(t1);
+		
+		TransactionAction ta1 = new TransactionAction();
+		ta1.setAction(a1);
+		ta1.setDependsOn(null);
+		ta1.setTransaction(t1);
+		
+		ta1 = transactionActionRepository.save(ta1);
+		
+		Set<TransactionAction> dependsOn = new HashSet<>();
+		dependsOn.add(ta1);
+		
+		TransactionAction ta2 = new TransactionAction();
+		ta2.setAction(a2);
+		ta2.setDependsOn(dependsOn);
+		ta2.setTransaction(t1);
+		
+		ta2 = transactionActionRepository.save(ta2);
 	}
 
 }

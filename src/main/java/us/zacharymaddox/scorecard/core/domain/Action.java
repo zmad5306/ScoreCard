@@ -19,7 +19,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-@Table(name="ACTION")
+@Table(name="ACTION", schema="SCORE_CARD")
 public class Action extends DomainObject implements Serializable {
 
 	private static final long serialVersionUID = -3686654230565046107L;

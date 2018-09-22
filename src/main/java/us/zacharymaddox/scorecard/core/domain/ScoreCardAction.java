@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 
 @Entity
-@Table(name="SCORE_CARD_ACTION")
+@Table(name="SCORE_CARD_ACTION", schema="SCORE_CARD")
 public class ScoreCardAction extends DomainObject implements Serializable {
 
 	private static final long serialVersionUID = 7351293958881594081L;
@@ -54,6 +54,7 @@ public class ScoreCardAction extends DomainObject implements Serializable {
 	private LocalDateTime endTimestamp;
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name="SCORE_CARD_ACTION_DEPENDENCY",
+		schema="SCORE_CARD",
 		joinColumns={@JoinColumn(name="SCORE_CARD_ACTION_ID")},
 		inverseJoinColumns={@JoinColumn(name="DEPENDS_ON_SCORE_CARD_ACTION_ID")})
 	@JsonSerialize(using = DependencySerializer.class)

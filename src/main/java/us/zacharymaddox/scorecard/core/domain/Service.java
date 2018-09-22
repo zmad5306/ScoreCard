@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import us.zacharymaddox.scorecard.domain.Transport;
 
 @Entity
-@Table(name="SERVICE")
+@Table(name="SERVICE", schema="SCORE_CARD")
 public class Service extends DomainObject implements Serializable {
 	
 	private static final long serialVersionUID = 4081098177527594840L;
