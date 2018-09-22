@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import us.zacharymaddox.scorecard.api.domain.Action;
 import us.zacharymaddox.scorecard.api.domain.ScoreCard;
 import us.zacharymaddox.scorecard.api.domain.ScoreCardHeader;
 import us.zacharymaddox.scorecard.api.domain.Transaction;
@@ -27,6 +28,7 @@ import us.zacharymaddox.scorecard.common.domain.CreateRequest;
 import us.zacharymaddox.scorecard.common.domain.ScoreCardActionStatus;
 import us.zacharymaddox.scorecard.common.domain.ScoreCardId;
 import us.zacharymaddox.scorecard.common.domain.ScoreCardStatus;
+import us.zacharymaddox.scorecard.common.domain.Transport;
 import us.zacharymaddox.scorecard.common.domain.UpdateRequest;
 
 @Service
@@ -125,6 +127,20 @@ public class ScoreCardApiService {
 			restTemplate.put(baseUrl + "/scorecard", request);
 		}
 		return id;
+	}
+	
+	public void wrapAndSend(ScoreCardId id, Transaction transaction, Action action, Object message) {
+		if (Transport.QUEUE.equals(action.getService().getTransport())) {
+			jmsTemplate.convertAndSend(
+					action.getService().getPath(),
+					message,
+					new ScoreCardPostProcessor(new ScoreCardHeader(id.getScoreCardId(), action.getActionId(), action.getPath()), mapper)
+				);
+		}
+		else {
+			// TODO implement HTTP
+			throw new IllegalArgumentException(String.format("Unsupported transport %s", action.getService().getTransport()));
+		}
 	}
 
 }

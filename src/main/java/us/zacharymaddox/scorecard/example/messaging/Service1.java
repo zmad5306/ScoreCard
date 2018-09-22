@@ -27,8 +27,8 @@ public class Service1 {
 			case CANCEL:
 				break;
 			case PROCESS:
-				System.out.println("Processing message 1! " + message);
-				scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.COMPLETED, true);
+				System.out.println("We have a message: " + message);
+				scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.COMPLETED);
 				break;
 			case SKIP:
 				break;

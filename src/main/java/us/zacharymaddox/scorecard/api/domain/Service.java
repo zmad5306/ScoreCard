@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import us.zacharymaddox.scorecard.common.domain.Transport;
+
 public class Service implements Serializable {
 	
 	private static final long serialVersionUID = -3552021332001667682L;
@@ -11,7 +13,7 @@ public class Service implements Serializable {
 	private Long serviceId;
 	private String type;
 	private String name;
-	private String transport;
+	private Transport transport;
 	private String path;
 	public Long getServiceId() {
 		return serviceId;
@@ -31,10 +33,10 @@ public class Service implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getTransport() {
+	public Transport getTransport() {
 		return transport;
 	}
-	public void setTransport(String transport) {
+	public void setTransport(Transport transport) {
 		this.transport = transport;
 	}
 	public String getPath() {

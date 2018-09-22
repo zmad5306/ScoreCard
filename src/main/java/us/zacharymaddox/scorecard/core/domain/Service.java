@@ -19,6 +19,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import us.zacharymaddox.scorecard.common.domain.Transport;
+
 @Entity
 @Table(name="SERVICE")
 public class Service extends DomainObject implements Serializable {

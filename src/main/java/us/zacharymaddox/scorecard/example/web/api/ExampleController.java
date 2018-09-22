@@ -4,19 +4,14 @@ import java.net.URISyntaxException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import us.zacharymaddox.scorecard.api.domain.Action;
-import us.zacharymaddox.scorecard.api.domain.ScoreCardHeader;
 import us.zacharymaddox.scorecard.api.domain.Transaction;
 import us.zacharymaddox.scorecard.api.service.ScoreCardApiService;
-import us.zacharymaddox.scorecard.api.service.ScoreCardPostProcessor;
 import us.zacharymaddox.scorecard.api.service.TransactionApiService;
 import us.zacharymaddox.scorecard.common.domain.ScoreCardId;
 
@@ -29,10 +24,6 @@ public class ExampleController {
 	private ScoreCardApiService scoreCardApiService;
 	@Autowired
 	private TransactionApiService transactionApiService;
-	@Autowired
-	private JmsTemplate jmsTemplate;
-	@Autowired
-	private ObjectMapper mapper;
 	
 	private final String transactionName = "transaction1";
 	
@@ -41,7 +32,8 @@ public class ExampleController {
 		Transaction transaction = transactionApiService.getTransactionByName(transactionName);
         ScoreCardId id = scoreCardApiService.createScoreCard(transaction);
         for (Action action : transaction.getActions()) {
-        	jmsTemplate.convertAndSend(action.getService().getPath(), "Hello world!", new ScoreCardPostProcessor(new ScoreCardHeader(id.getScoreCardId(), action.getActionId(), action.getPath()), mapper));
+        	String message = String.format("Hello world from %s, %s!", action.getService().getName(), action.getName());
+        	scoreCardApiService.wrapAndSend(id, transaction, action, message);
         }
 	}
 
