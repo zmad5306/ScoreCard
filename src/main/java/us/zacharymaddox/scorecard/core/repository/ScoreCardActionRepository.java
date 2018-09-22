@@ -13,7 +13,7 @@ import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 
 public interface ScoreCardActionRepository extends JpaRepository<ScoreCardAction, Long> {
 	
-	@Query("from ScoreCardAction where scoreCard.id = :score_card_id and action.id = :action_id")
+	@Query("from ScoreCardAction where scoreCard.id = :score_card_id and actionId = :action_id")
 	public Optional<ScoreCardAction> findByScoreCardIdAndActionId(@Param("score_card_id") Long scoreCardId, @Param("action_id") Long actionId);
 	
 	@Query("from ScoreCardAction where scoreCard.id = :score_card_id and scoreCardActionId = :score_card_action_id")

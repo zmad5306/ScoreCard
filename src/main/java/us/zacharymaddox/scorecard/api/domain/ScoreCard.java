@@ -66,11 +66,16 @@ public class ScoreCard implements Serializable {
 	public void setActions(List<Action> actions) {
 		this.actions = actions;
 	}
-//	public Action getAction(String name) {
-//		Optional<Action> action = actions.stream().filter(a -> name.equalsIgnoreCase(a.getName())).findFirst();
-//		return action.get();
-//	}
-	
+	public String getTransactionName() {
+		return transactionName;
+	}
+	public void setTransactionName(String transactionName) {
+		this.transactionName = transactionName;
+	}
+	public Action getAction(String name) {
+		Optional<Action> action = actions.stream().filter(a -> name.equalsIgnoreCase(a.getName())).findFirst();
+		return action.get();
+	}
 	public Action getAction(Long id) {
 		Optional<Action> action = actions.stream().filter(a -> id == a.getActionId()).findFirst();
 		return action.get();

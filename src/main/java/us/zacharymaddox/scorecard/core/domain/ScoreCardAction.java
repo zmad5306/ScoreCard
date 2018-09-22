@@ -47,10 +47,12 @@ public class ScoreCardAction extends DomainObject implements Serializable {
 	@JoinColumn(name="SCORE_CARD_ID")
 	@JsonIgnore
 	private ScoreCard scoreCard;
-	@ManyToOne
 	@JsonProperty("action_id")
-	@JsonSerialize(using = ActionSerializer.class)
-	private Action action;	
+	private Long actionId;
+	private String name;
+	private String path;
+	@Enumerated(EnumType.STRING)
+	private Method method;
 	@Enumerated(EnumType.STRING)
 	private ScoreCardActionStatus status;
 	@JsonProperty("start_timestamp")
@@ -125,12 +127,6 @@ public class ScoreCardAction extends DomainObject implements Serializable {
 	public void setScoreCard(ScoreCard scoreCard) {
 		this.scoreCard = scoreCard;
 	}
-	public Action getAction() {
-		return action;
-	}
-	public void setAction(Action action) {
-		this.action = action;
-	}
 	public Set<ScoreCardAction> getDependsOn() {
 		return dependsOn;
 	}
@@ -148,6 +144,38 @@ public class ScoreCardAction extends DomainObject implements Serializable {
 	}
 	public void setMetadata(Map<String, String> metadata) {
 		this.metadata = metadata;
+	}
+
+	public Long getActionId() {
+		return actionId;
+	}
+
+	public void setActionId(Long actionId) {
+		this.actionId = actionId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public Method getMethod() {
+		return method;
+	}
+
+	public void setMethod(Method method) {
+		this.method = method;
 	}
 	
 }

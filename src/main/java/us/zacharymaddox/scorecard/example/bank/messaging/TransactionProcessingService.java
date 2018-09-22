@@ -134,8 +134,7 @@ public class TransactionProcessingService {
 			Transaction transaction = transactionApiService.getTransaction(scoreCard.getTransactionId());
 			for (Action action : scoreCard.getActions()) {
 				if (ScoreCardActionStatus.FAILED.equals(action.getStatus())) {
-					String actionName = transaction.getAction(action.getActionId()).getName();
-					if ("debit".equals(actionName)) {
+					if ("debit".equals(action.getName())) {
 						// debit failed, mark credit action as cancelled
 						cancelCredit(scoreCard, transaction);
 					}	

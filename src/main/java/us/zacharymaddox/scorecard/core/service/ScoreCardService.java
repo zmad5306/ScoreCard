@@ -64,7 +64,10 @@ public class ScoreCardService {
 	private List<ScoreCardAction> createScoreCardActions(List<TransactionAction> actions, ScoreCard scoreCard) {
 		List<ScoreCardAction> scActions = actions.stream().map(a -> {
 			ScoreCardAction act = new ScoreCardAction();
-			act.setAction(a.getAction());
+			act.setActionId(a.getAction().getActionId());
+			act.setMethod(a.getAction().getMethod());
+			act.setName(a.getAction().getName());
+			act.setPath(a.getAction().getName());
 			act.setScoreCard(scoreCard);
 			act.setStatus(ScoreCardActionStatus.PENDING);
 			return act;
@@ -102,7 +105,7 @@ public class ScoreCardService {
 		
 		for (ScoreCardAction sca : actions) {
 			Set<ScoreCardAction> dependsOn = new HashSet<>(); 
-			List<TransactionAction> tas = transactionActionRepository.findByTransactionAndAction(transaction, sca.getAction());
+			List<TransactionAction> tas = transactionActionRepository.findByTransactionIdAndActionId(transaction.getTransactionId(), sca.getActionId());
 			for (TransactionAction ta : tas) {
 				for (TransactionAction dta : ta.getDependsOn()) {
 					Action action = dta.getAction();
@@ -192,7 +195,7 @@ public class ScoreCardService {
 						
 						// check that all dependencies are finished before returning PROCESS
 						if (completedActions == dependencies.size()) {							
-							updateActionStatusInternal(new UpdateRequest(scoreCardId, sca.getAction().getActionId(), ScoreCardActionStatus.PROCESSING), false);
+							updateActionStatusInternal(new UpdateRequest(scoreCardId, sca.getActionId(), ScoreCardActionStatus.PROCESSING), false);
 							return new AuthorizationResult(Authorization.PROCESS);
 						} 
 						// a dependency isn't finished, WAIT on it
@@ -202,7 +205,7 @@ public class ScoreCardService {
 					} 
 					// there aren't any dependencies so go ahead and process
 					else {
-						updateActionStatusInternal(new UpdateRequest(scoreCardId, sca.getAction().getActionId(), ScoreCardActionStatus.PROCESSING), false);
+						updateActionStatusInternal(new UpdateRequest(scoreCardId, sca.getActionId(), ScoreCardActionStatus.PROCESSING), false);
 						return new AuthorizationResult(Authorization.PROCESS);
 					}
 				}
