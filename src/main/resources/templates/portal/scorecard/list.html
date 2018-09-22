@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>List - Score Card</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+   <h1>Score Cards</h1>
+   <table>
+   		<thead>
+            <tr>
+                <th>Id</th>
+				<th>Transaction Id</th>
+                <th>Start Timestamp</th>
+                <th>End Timestamp</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        	<tr th:each="scoreCard : ${scorecards}">
+        		<td th:text="${scoreCard.scoreCardId}"></td>
+        		<td th:text="${scoreCard.transactionId}"></td>
+        		<td th:text="${scoreCard.startTimestamp}"></td>
+        		<td th:text="${scoreCard.endTimestamp}"></td>
+        		<td th:text="${scoreCard.scoreCardStatus}"></td>
+        	</tr>
+        </tbody>
+   </table> 
+</body>
+</html>
