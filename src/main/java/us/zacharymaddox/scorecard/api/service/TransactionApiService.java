@@ -17,5 +17,11 @@ public class TransactionApiService {
 		Transaction transaction = restTemplate.getForObject(baseUrl + "/transaction/" + transactionId, Transaction.class);
 		return transaction;
 	}
+	
+	public Transaction getTransactionByName(String name) {
+		RestTemplate restTemplate = new RestTemplate();
+		Transaction transaction = restTemplate.getForObject(baseUrl + "/transaction/?name={name}", Transaction.class, name);
+		return transaction;
+	}
 
 }

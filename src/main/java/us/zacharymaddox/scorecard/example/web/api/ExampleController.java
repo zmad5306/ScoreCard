@@ -31,7 +31,7 @@ public class ExampleController {
 	private ScoreCardApiService scoreCardApiService;
 	@Autowired
 	private TransactionApiService transactionApiService;
-	private final Long transactionId = 5L;
+	private final String transactionName = "transaction1";
 	
 	@Autowired
 	private JmsTemplate jmsTemplate;
@@ -41,9 +41,9 @@ public class ExampleController {
 	
 	@GetMapping
 	public void startExampleFlow() throws RestClientException, URISyntaxException {
+		Transaction transaction = transactionApiService.getTransactionByName(transactionName);
 		ScoreCardId id = scoreCardApiService.getScoreCardId();
-        jmsTemplate.convertAndSend("scorecard", new CreateRequest(id.getScoreCardId(), transactionId), new MessageSelectorPostProcessor("CREATE"));
-        Transaction transaction = transactionApiService.getTransaction(transactionId);
+        jmsTemplate.convertAndSend("scorecard", new CreateRequest(id.getScoreCardId(), transaction.getTransactionId()), new MessageSelectorPostProcessor("CREATE"));
         for (Action action : transaction.getActions()) {
         	jmsTemplate.convertAndSend(action.getService().getPath(), "", new ScoreCardPostProcessor(new ScoreCardHeader(id.getScoreCardId(), action.getActionId(), action.getPath()), mapper));
         }

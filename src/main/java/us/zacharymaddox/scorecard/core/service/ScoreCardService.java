@@ -136,9 +136,6 @@ public class ScoreCardService {
 				Integer page,
 				Integer rows
 			) {
-		ScoreCard scoreCard = new ScoreCard();
-		scoreCard.setScoreCardStatus(scoreCardStatus);
-		
 		Pageable pageable = PageRequest.of(page, rows);
 		
 		return scoreCardRepository.findByScoreCardStatusOrderByScoreCardIdDesc(scoreCardStatus, pageable);

@@ -26,4 +26,14 @@ public class TransactionService {
 		return t.get();
 	}
 	
+	@Transactional(readOnly=true)
+	public Transaction getTransactionByName(String name) {
+		Optional<Transaction> t = transactionRepository.findByName(name);
+		if (!t.isPresent()) {
+			throw new ScoreCardClientException(ScoreCardErrorCode.TRANSACTION_DNE);
+		}
+		
+		return t.get();
+	}
+	
 }
