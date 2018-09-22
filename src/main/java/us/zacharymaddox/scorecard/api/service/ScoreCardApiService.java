@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,16 +62,24 @@ public class ScoreCardApiService {
 	}
 	
 	public void updateStatus(String scoreCardHeader, ScoreCardActionStatus status) {
+		updateStatus(scoreCardHeader, status, null);
+	}
+	
+	public void updateStatus(String scoreCardHeader, ScoreCardActionStatus status, Map<String, String> metadata) {
 		ScoreCardHeader sch = convertHeader(scoreCardHeader);
-		UpdateRequest request = new UpdateRequest(sch.getScoreCardId(), sch.getActionId(), status);
+		UpdateRequest request = new UpdateRequest(sch.getScoreCardId(), sch.getActionId(), status, metadata);
 		jmsTemplate.convertAndSend("scorecard", request, new MessageSelectorPostProcessor("UPDATE"));
 	}
 	
 	public void updateStatus(String scoreCardHeader, ScoreCardActionStatus status, boolean useHttp) {
-		if (!useHttp) updateStatus(scoreCardHeader, status);
+		updateStatus(scoreCardHeader, status, null, useHttp);
+	}
+	
+	public void updateStatus(String scoreCardHeader, ScoreCardActionStatus status, Map<String, String> metadata, boolean useHttp) {
+		if (!useHttp) updateStatus(scoreCardHeader, status, metadata);
 		else {
 			ScoreCardHeader sch = convertHeader(scoreCardHeader);
-			UpdateRequest request = new UpdateRequest(sch.getScoreCardId(), sch.getActionId(), status);
+			UpdateRequest request = new UpdateRequest(sch.getScoreCardId(), sch.getActionId(), status, metadata);
 			RestTemplate restTemplate = new RestTemplate();
 			URI uri;
 			

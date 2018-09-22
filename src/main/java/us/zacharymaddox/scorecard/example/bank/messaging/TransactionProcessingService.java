@@ -27,6 +27,7 @@ public class TransactionProcessingService {
 	public void debit(CreditRequest request, @Header("SCORE_CARD") String scoreCardHeader) {
 		logger.info("processing credit reqeust");
 		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
+//		logic here
 //		process(auth, message, scoreCardHeader);
 	}
 	
@@ -35,6 +36,7 @@ public class TransactionProcessingService {
 	public void credit(DebitRequest debitRequest, @Header("SCORE_CARD") String scoreCardHeader) {
 		logger.info("processing debit reqeust");
 		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
+//		logic here
 //		process(auth, message, scoreCardHeader);
 		
 	}

@@ -34,7 +34,7 @@ public class ScoreCardReceiver {
 	@Transactional
 	public void updateStatus(UpdateRequest request) {
 		try {
-			scoreCardService.updateActionStatus(request.getScoreCardId(), request.getActionId(), request.getStatus());
+			scoreCardService.updateActionStatus(request);
 		} catch (ScoreCardException e) {
 			// TODO what should we do here?
 			logger.error(e.getError().getMessage(), e);

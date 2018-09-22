@@ -59,7 +59,7 @@ public class ScoreCardController {
 	
 	@PostMapping(value="/{score_card_id}", consumes="application/json", produces="application/json")
 	public void updateActionStatus(@RequestBody UpdateRequest request) {
-		scoreCardService.updateActionStatus(request.getScoreCardId(), request.getActionId(), request.getStatus());
+		scoreCardService.updateActionStatus(request);
 	}
 	
 }

@@ -32,6 +32,7 @@ import us.zacharymaddox.scorecard.domain.AuthorizationResult;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 import us.zacharymaddox.scorecard.domain.ScoreCardId;
 import us.zacharymaddox.scorecard.domain.ScoreCardStatus;
+import us.zacharymaddox.scorecard.domain.UpdateRequest;
 	
 @Service
 public class ScoreCardService {
@@ -190,8 +191,8 @@ public class ScoreCardService {
 						Long completedActions = dependencies.stream().filter(dep -> ScoreCardActionStatus.COMPLETED.equals(dep.getStatus())).count();
 						
 						// check that all dependencies are finished before returning PROCESS
-						if (completedActions == dependencies.size()) {
-							updateActionStatusInternal(scoreCardId, sca.getAction().getActionId(), ScoreCardActionStatus.PROCESSING, false);
+						if (completedActions == dependencies.size()) {							
+							updateActionStatusInternal(new UpdateRequest(scoreCardId, sca.getAction().getActionId(), ScoreCardActionStatus.PROCESSING), false);
 							return new AuthorizationResult(Authorization.PROCESS);
 						} 
 						// a dependency isn't finished, WAIT on it
@@ -201,7 +202,7 @@ public class ScoreCardService {
 					} 
 					// there aren't any dependencies so go ahead and process
 					else {
-						updateActionStatusInternal(scoreCardId, sca.getAction().getActionId(), ScoreCardActionStatus.PROCESSING, false);
+						updateActionStatusInternal(new UpdateRequest(scoreCardId, sca.getAction().getActionId(), ScoreCardActionStatus.PROCESSING), false);
 						return new AuthorizationResult(Authorization.PROCESS);
 					}
 				}
@@ -212,11 +213,14 @@ public class ScoreCardService {
 	}
 	
 	@Transactional
-	public void updateActionStatus(Long scoreCardId, Long actionId, ScoreCardActionStatus status) {
-		updateActionStatusInternal(scoreCardId, actionId, status, true);
+	public void updateActionStatus(UpdateRequest request) {
+		updateActionStatusInternal(request, true);
 	}
 	
-	private void updateActionStatusInternal(Long scoreCardId, Long actionId, ScoreCardActionStatus status, Boolean mustBeProcessing) {
+	private void updateActionStatusInternal(UpdateRequest request, Boolean mustBeProcessing) {
+		Long scoreCardId = request.getScoreCardId();
+		Long actionId = request.getActionId();
+		ScoreCardActionStatus status = request.getStatus();
 		Optional<ScoreCard> sc = scoreCardRepository.findById(scoreCardId);
 		if (!sc.isPresent()) {
 			throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_DNE);
@@ -248,6 +252,7 @@ public class ScoreCardService {
 			sca.setEndTimestamp(LocalDateTime.now());
 		}
 		sca.setStatus(status);
+		sca.setMetadata(request.getMetadata());
 		
 		// TODO there is a race condition when setting the score card status to COMPELTED, on occasion all actions are completed but score card is not marked completed
 		List<ScoreCardActionStatus> completedStatus = Arrays.asList(new ScoreCardActionStatus[]{ScoreCardActionStatus.CANCELLED, ScoreCardActionStatus.FAILED, ScoreCardActionStatus.COMPLETED});

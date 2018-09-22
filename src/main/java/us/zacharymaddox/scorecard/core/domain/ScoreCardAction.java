@@ -3,8 +3,12 @@ package us.zacharymaddox.scorecard.core.domain;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -16,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -63,6 +68,11 @@ public class ScoreCardAction extends DomainObject implements Serializable {
 	@ManyToMany(mappedBy="dependsOn")
 	@JsonIgnore
 	private Set<ScoreCardAction> dependencyOf = new HashSet<ScoreCardAction>();
+	@ElementCollection(targetClass=String.class, fetch=FetchType.EAGER)
+	@CollectionTable(name="SCORE_CARD_ACTION_METADATA", schema="SCORE_CARD")
+	@MapKeyColumn(name="name")
+	@Column(name="value")
+	private Map<String, String> metadata;
 	
 	public ScoreCardAction() {
 		super("score_card_action");
@@ -132,6 +142,12 @@ public class ScoreCardAction extends DomainObject implements Serializable {
 	}
 	public void setDependencyOf(Set<ScoreCardAction> dependencyOf) {
 		this.dependencyOf = dependencyOf;
+	}
+	public Map<String, String> getMetadata() {
+		return metadata;
+	}
+	public void setMetadata(Map<String, String> metadata) {
+		this.metadata = metadata;
 	}
 	
 }

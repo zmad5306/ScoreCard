@@ -1,5 +1,9 @@
 package us.zacharymaddox.scorecard.example.messaging;
 
+import java.util.Map;
+
+import java.util.HashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +26,13 @@ public class Service1 {
 	private ScoreCardApiService scoreCardApiService;
 	private Logger logger = LoggerFactory.getLogger(Service1.class);
 	
-	private void process(Authorization auth, String message, String scoreCardHeader) {
+	private void process(Authorization auth, String message, String scoreCardHeader, Map<String, String> metadata) {
 		switch (auth) {
 			case CANCEL:
 				break;
 			case PROCESS:
 				System.out.println("We have a message: " + message);
-				scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.COMPLETED);
+				scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.COMPLETED, metadata);
 				break;
 			case SKIP:
 				break;
@@ -42,7 +46,9 @@ public class Service1 {
 	public void action1(String message, @Header("SCORE_CARD") String scoreCardHeader) {
 		logger.info("service1/action1 invoked");
 		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
-		process(auth, message, scoreCardHeader);
+		Map<String, String> metadata = new HashMap<>();
+		metadata.put("test", "data");
+		process(auth, message, scoreCardHeader, metadata);
 	}
 	
 	@JmsListener(destination="service1", selector="ACTION='action2'", containerFactory="myFactory")
@@ -50,7 +56,7 @@ public class Service1 {
 	public void action2(String message, @Header("SCORE_CARD") String scoreCardHeader) {
 		logger.info("service1/action2 invoked");
 		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
-		process(auth, message, scoreCardHeader);
+		process(auth, message, scoreCardHeader, null);
 		
 	}
 	
@@ -59,7 +65,7 @@ public class Service1 {
 	public void action3(String message, @Header("SCORE_CARD") String scoreCardHeader) {
 		logger.info("service1/action3 invoked");
 		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
-		process(auth, message, scoreCardHeader);
+		process(auth, message, scoreCardHeader, null);
 		
 	}
 
