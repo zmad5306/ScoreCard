@@ -28,13 +28,14 @@ public class ExampleController {
 	private final String transactionName = "transaction1";
 	
 	@GetMapping
-	public void startExampleFlow() throws RestClientException, URISyntaxException {
+	public ScoreCardId startExampleFlow() throws RestClientException, URISyntaxException {
 		Transaction transaction = transactionApiService.getTransactionByName(transactionName);
         ScoreCardId id = scoreCardApiService.createScoreCard(transaction);
         for (Action action : transaction.getActions()) {
         	String message = String.format("Hello world from %s, %s!", action.getService().getName(), action.getName());
         	scoreCardApiService.wrapAndSend(id, transaction, action, message);
         }
+        return id;
 	}
 
 }

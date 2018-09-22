@@ -2,6 +2,7 @@ package us.zacharymaddox.scorecard.api.domain;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -36,6 +37,10 @@ public class Transaction implements Serializable {
 	}
 	public void setActions(List<Action> actions) {
 		this.actions = actions;
+	}
+	public Action getAction(String name) {
+		Optional<Action> action = actions.stream().filter(a -> name.equalsIgnoreCase(a.getName())).findFirst();
+		return action.get();
 	}
 	
 }

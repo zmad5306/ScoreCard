@@ -28,6 +28,9 @@ public class TransactionActionListSerializer extends StdSerializer<List<Transact
 			gen.writeStartArray();
 			for (TransactionAction a : value) {
 				gen.writeObject(a.getAction());
+				// TODO write out depends on
+//				gen.writeArrayFieldStart("depends_on");
+//				gen.writeEndArray();
 			}
 			gen.writeEndArray();
 		}

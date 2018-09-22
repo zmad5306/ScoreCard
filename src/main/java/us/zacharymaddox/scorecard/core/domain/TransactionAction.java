@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,7 +35,7 @@ public class TransactionAction extends DomainObject implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="ACTION_ID")
 	private Action action;
-	@ManyToMany()
+	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name="TRANSACTION_ACTION_DEPENDENCY",
 		schema="SCORE_CARD",
 		joinColumns={@JoinColumn(name="TRANSACTION_ACTION_ID")},
