@@ -20,7 +20,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import us.zacharymaddox.scorecard.common.domain.ScoreCardStatus;
+import us.zacharymaddox.scorecard.domain.ScoreCardStatus;
 
 @Entity
 @Table(name="SCORE_CARD")

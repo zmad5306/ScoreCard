@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import us.zacharymaddox.scorecard.common.domain.ScoreCardActionStatus;
+import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 
 @Entity
 @Table(name="SCORE_CARD_ACTION")

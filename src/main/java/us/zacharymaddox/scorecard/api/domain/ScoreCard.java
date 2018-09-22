@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import us.zacharymaddox.scorecard.common.domain.ScoreCardStatus;
+import us.zacharymaddox.scorecard.domain.ScoreCardStatus;
 
 public class ScoreCard implements Serializable {
 

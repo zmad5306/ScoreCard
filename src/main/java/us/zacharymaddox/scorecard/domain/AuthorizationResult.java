@@ -1,4 +1,4 @@
-package us.zacharymaddox.scorecard.common.domain;
+package us.zacharymaddox.scorecard.domain;
 
 import java.io.Serializable;
 

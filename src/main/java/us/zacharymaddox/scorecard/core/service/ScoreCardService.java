@@ -16,11 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import us.zacharymaddox.scorecard.common.domain.Authorization;
-import us.zacharymaddox.scorecard.common.domain.AuthorizationResult;
-import us.zacharymaddox.scorecard.common.domain.ScoreCardActionStatus;
-import us.zacharymaddox.scorecard.common.domain.ScoreCardId;
-import us.zacharymaddox.scorecard.common.domain.ScoreCardStatus;
 import us.zacharymaddox.scorecard.core.domain.Action;
 import us.zacharymaddox.scorecard.core.domain.ScoreCard;
 import us.zacharymaddox.scorecard.core.domain.ScoreCardAction;
@@ -32,6 +27,11 @@ import us.zacharymaddox.scorecard.core.repository.ScoreCardActionRepository;
 import us.zacharymaddox.scorecard.core.repository.ScoreCardRepository;
 import us.zacharymaddox.scorecard.core.repository.TransactionActionRepository;
 import us.zacharymaddox.scorecard.core.repository.TransactionRepository;
+import us.zacharymaddox.scorecard.domain.Authorization;
+import us.zacharymaddox.scorecard.domain.AuthorizationResult;
+import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
+import us.zacharymaddox.scorecard.domain.ScoreCardId;
+import us.zacharymaddox.scorecard.domain.ScoreCardStatus;
 	
 @Service
 public class ScoreCardService {

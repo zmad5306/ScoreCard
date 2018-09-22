@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import us.zacharymaddox.scorecard.common.domain.Transport;
+import us.zacharymaddox.scorecard.domain.Transport;
 
 public class Service implements Serializable {
 	

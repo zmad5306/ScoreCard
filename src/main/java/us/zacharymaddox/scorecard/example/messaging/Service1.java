@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import us.zacharymaddox.scorecard.api.domain.WaitException;
 import us.zacharymaddox.scorecard.api.service.ScoreCardApiService;
-import us.zacharymaddox.scorecard.common.domain.Authorization;
-import us.zacharymaddox.scorecard.common.domain.ScoreCardActionStatus;
+import us.zacharymaddox.scorecard.domain.Authorization;
+import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 
 @Component
 @Profile({"test-app"})

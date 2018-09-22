@@ -13,7 +13,7 @@ import us.zacharymaddox.scorecard.api.domain.Action;
 import us.zacharymaddox.scorecard.api.domain.Transaction;
 import us.zacharymaddox.scorecard.api.service.ScoreCardApiService;
 import us.zacharymaddox.scorecard.api.service.TransactionApiService;
-import us.zacharymaddox.scorecard.common.domain.ScoreCardId;
+import us.zacharymaddox.scorecard.domain.ScoreCardId;
 
 @RestController
 @RequestMapping("/app/example")

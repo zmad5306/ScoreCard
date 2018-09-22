@@ -7,10 +7,10 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import us.zacharymaddox.scorecard.common.domain.CreateRequest;
-import us.zacharymaddox.scorecard.common.domain.UpdateRequest;
 import us.zacharymaddox.scorecard.core.domain.exception.ScoreCardException;
 import us.zacharymaddox.scorecard.core.service.ScoreCardService;
+import us.zacharymaddox.scorecard.domain.CreateRequest;
+import us.zacharymaddox.scorecard.domain.UpdateRequest;
 
 @Component
 public class ScoreCardReceiver {

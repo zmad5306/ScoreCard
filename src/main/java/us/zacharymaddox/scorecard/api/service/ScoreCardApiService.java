@@ -21,15 +21,15 @@ import us.zacharymaddox.scorecard.api.domain.Action;
 import us.zacharymaddox.scorecard.api.domain.ScoreCard;
 import us.zacharymaddox.scorecard.api.domain.ScoreCardHeader;
 import us.zacharymaddox.scorecard.api.domain.Transaction;
-import us.zacharymaddox.scorecard.common.domain.Authorization;
-import us.zacharymaddox.scorecard.common.domain.AuthorizationRequest;
-import us.zacharymaddox.scorecard.common.domain.AuthorizationResult;
-import us.zacharymaddox.scorecard.common.domain.CreateRequest;
-import us.zacharymaddox.scorecard.common.domain.ScoreCardActionStatus;
-import us.zacharymaddox.scorecard.common.domain.ScoreCardId;
-import us.zacharymaddox.scorecard.common.domain.ScoreCardStatus;
-import us.zacharymaddox.scorecard.common.domain.Transport;
-import us.zacharymaddox.scorecard.common.domain.UpdateRequest;
+import us.zacharymaddox.scorecard.domain.Authorization;
+import us.zacharymaddox.scorecard.domain.AuthorizationRequest;
+import us.zacharymaddox.scorecard.domain.AuthorizationResult;
+import us.zacharymaddox.scorecard.domain.CreateRequest;
+import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
+import us.zacharymaddox.scorecard.domain.ScoreCardId;
+import us.zacharymaddox.scorecard.domain.ScoreCardStatus;
+import us.zacharymaddox.scorecard.domain.Transport;
+import us.zacharymaddox.scorecard.domain.UpdateRequest;
 
 @Service
 public class ScoreCardApiService {

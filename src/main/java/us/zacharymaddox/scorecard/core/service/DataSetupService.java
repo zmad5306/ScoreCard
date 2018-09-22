@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import us.zacharymaddox.scorecard.common.domain.Transport;
 import us.zacharymaddox.scorecard.core.domain.Action;
 import us.zacharymaddox.scorecard.core.domain.Method;
 import us.zacharymaddox.scorecard.core.domain.Service;
@@ -20,6 +19,7 @@ import us.zacharymaddox.scorecard.core.repository.ActionRepository;
 import us.zacharymaddox.scorecard.core.repository.ServiceRepository;
 import us.zacharymaddox.scorecard.core.repository.TransactionActionRepository;
 import us.zacharymaddox.scorecard.core.repository.TransactionRepository;
+import us.zacharymaddox.scorecard.domain.Transport;
 
 @Component
 @Profile({"test-app"})

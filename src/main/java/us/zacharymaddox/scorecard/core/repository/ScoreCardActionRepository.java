@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import us.zacharymaddox.scorecard.common.domain.ScoreCardActionStatus;
 import us.zacharymaddox.scorecard.core.domain.ScoreCard;
 import us.zacharymaddox.scorecard.core.domain.ScoreCardAction;
+import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 
 public interface ScoreCardActionRepository extends JpaRepository<ScoreCardAction, Long> {
 	

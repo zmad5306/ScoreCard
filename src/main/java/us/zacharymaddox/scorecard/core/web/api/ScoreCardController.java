@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import us.zacharymaddox.scorecard.common.domain.AuthorizationRequest;
-import us.zacharymaddox.scorecard.common.domain.AuthorizationResult;
-import us.zacharymaddox.scorecard.common.domain.CreateRequest;
-import us.zacharymaddox.scorecard.common.domain.ScoreCardId;
-import us.zacharymaddox.scorecard.common.domain.ScoreCardStatus;
-import us.zacharymaddox.scorecard.common.domain.UpdateRequest;
 import us.zacharymaddox.scorecard.core.domain.ScoreCard;
 import us.zacharymaddox.scorecard.core.service.ScoreCardService;
+import us.zacharymaddox.scorecard.domain.AuthorizationRequest;
+import us.zacharymaddox.scorecard.domain.AuthorizationResult;
+import us.zacharymaddox.scorecard.domain.CreateRequest;
+import us.zacharymaddox.scorecard.domain.ScoreCardId;
+import us.zacharymaddox.scorecard.domain.ScoreCardStatus;
+import us.zacharymaddox.scorecard.domain.UpdateRequest;
 
 @RestController
 @RequestMapping("/api/v1/scorecard")

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import us.zacharymaddox.scorecard.api.service.ScoreCardApiService;
-import us.zacharymaddox.scorecard.common.domain.ScoreCardStatus;
+import us.zacharymaddox.scorecard.domain.ScoreCardStatus;
 
 @Controller
 @RequestMapping("/portal/scorecard")

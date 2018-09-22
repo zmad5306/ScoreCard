@@ -1,4 +1,4 @@
-package us.zacharymaddox.scorecard.core;
+package us.zacharymaddox.scorecard;
 
 import java.net.URISyntaxException;
 
