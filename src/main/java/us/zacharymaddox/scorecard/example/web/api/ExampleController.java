@@ -36,13 +36,10 @@ public class ExampleController {
 	
 	private final String transactionName = "transaction1";
 	
-
-	
 	@GetMapping
 	public void startExampleFlow() throws RestClientException, URISyntaxException {
 		Transaction transaction = transactionApiService.getTransactionByName(transactionName);
-		ScoreCardId id = scoreCardApiService.getScoreCardId();
-        scoreCardApiService.createScoreCard(id, transaction, true);
+        ScoreCardId id = scoreCardApiService.createScoreCard(transaction);
         for (Action action : transaction.getActions()) {
         	jmsTemplate.convertAndSend(action.getService().getPath(), "Hello world!", new ScoreCardPostProcessor(new ScoreCardHeader(id.getScoreCardId(), action.getActionId(), action.getPath()), mapper));
         }

@@ -100,18 +100,31 @@ public class ScoreCardApiService {
 			);
 		return response.getBody();
 	}
+	
+	public ScoreCardId createScoreCard(Transaction transaction) {
+		ScoreCardId id = getScoreCardId();
+		return createScoreCard(id, transaction);
+	}
 
-	public void createScoreCard(ScoreCardId id, Transaction transaction) {
+	public ScoreCardId createScoreCard(ScoreCardId id, Transaction transaction) {
 		jmsTemplate.convertAndSend("scorecard", new CreateRequest(id.getScoreCardId(), transaction.getTransactionId()), new MessageSelectorPostProcessor("CREATE"));
+		return id;
 	}
 	
-	public void createScoreCard(ScoreCardId id, Transaction transaction, boolean useHttp) {
+	public ScoreCardId createScoreCard(Transaction transaction, boolean useHttp) {
+		ScoreCardId id = getScoreCardId();
+		return createScoreCard(id, transaction, useHttp);
+	}
+	
+	public ScoreCardId createScoreCard(ScoreCardId id, Transaction transaction, boolean useHttp) {
 		if (!useHttp) createScoreCard(id, transaction);
 		else {
 			RestTemplate restTemplate = new RestTemplate();
 			CreateRequest request = new CreateRequest(id.getScoreCardId(), transaction.getTransactionId());
+			
 			restTemplate.put(baseUrl + "/scorecard", request);
 		}
+		return id;
 	}
 
 }
