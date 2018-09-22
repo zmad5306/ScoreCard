@@ -1,4 +1,4 @@
-package us.zacharymaddox.scorecard.portal;
+package us.zacharymaddox.scorecard.portal.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
