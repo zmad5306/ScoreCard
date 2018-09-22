@@ -45,7 +45,7 @@ public class ExampleController {
 		ScoreCardId id = scoreCardApiService.getScoreCardId();
         jmsTemplate.convertAndSend("scorecard", new CreateRequest(id.getScoreCardId(), transaction.getTransactionId()), new MessageSelectorPostProcessor("CREATE"));
         for (Action action : transaction.getActions()) {
-        	jmsTemplate.convertAndSend(action.getService().getPath(), "", new ScoreCardPostProcessor(new ScoreCardHeader(id.getScoreCardId(), action.getActionId(), action.getPath()), mapper));
+        	jmsTemplate.convertAndSend(action.getService().getPath(), "Hello world!", new ScoreCardPostProcessor(new ScoreCardHeader(id.getScoreCardId(), action.getActionId(), action.getPath()), mapper));
         }
 	}
 
