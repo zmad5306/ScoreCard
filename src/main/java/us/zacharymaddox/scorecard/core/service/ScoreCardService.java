@@ -234,9 +234,9 @@ public class ScoreCardService {
 		
 		ScoreCardAction sca = a.get();
 		
-//		if (mustBeProcessing && !ScoreCardActionStatus.PROCESSING.equals(sca.getStatus())) {
-//			throw new ScoreCardClientException(ScoreCardErrorCode.ILLEGAL_STATE_CHANGE_NOT_AUTHORIZED);
-//		}
+		if (mustBeProcessing && ScoreCardActionStatus.COMPLETED.equals(status) && !ScoreCardActionStatus.PROCESSING.equals(sca.getStatus())) {
+			throw new ScoreCardClientException(ScoreCardErrorCode.ILLEGAL_STATE_CHANGE_NOT_AUTHORIZED);
+		}
 		
 		List<ScoreCardActionStatus> valid = ScoreCardService.VALID_STATE_CHANGES.get(sca.getStatus());
 		if (!valid.contains(status)) {
@@ -255,6 +255,7 @@ public class ScoreCardService {
 		sca.setMetadata(request.getMetadata());
 		
 		// TODO there is a race condition when setting the score card status to COMPELTED, on occasion all actions are completed but score card is not marked completed
+		// this seems to be when using HTTP based Score Card Services
 		List<ScoreCardActionStatus> completedStatus = Arrays.asList(new ScoreCardActionStatus[]{ScoreCardActionStatus.CANCELLED, ScoreCardActionStatus.FAILED, ScoreCardActionStatus.COMPLETED});
 		Long completedActions = scoreCardActionRepository.countByScoreCardAndStatusIn(scoreCard, completedStatus);
 
