@@ -249,6 +249,7 @@ public class ScoreCardService {
 		}
 		sca.setStatus(status);
 		
+		// TODO there is a race condition when setting the score card status to COMPELTED, on occasion all actions are completed but score card is not marked completed
 		List<ScoreCardActionStatus> completedStatus = Arrays.asList(new ScoreCardActionStatus[]{ScoreCardActionStatus.CANCELLED, ScoreCardActionStatus.FAILED, ScoreCardActionStatus.COMPLETED});
 		Long completedActions = scoreCardActionRepository.countByScoreCardAndStatusIn(scoreCard, completedStatus);
 

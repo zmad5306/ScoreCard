@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -58,7 +57,7 @@ public class ScoreCardController {
 		return scoreCardService.authorize(request.getScoreCardId(), request.getActionId());
 	}
 	
-	@PatchMapping(consumes="application/json", produces="application/json")
+	@PostMapping(value="/{score_card_id}", consumes="application/json", produces="application/json")
 	public void updateActionStatus(@RequestBody UpdateRequest request) {
 		scoreCardService.updateActionStatus(request.getScoreCardId(), request.getActionId(), request.getStatus());
 	}

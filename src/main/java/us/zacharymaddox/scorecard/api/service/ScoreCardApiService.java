@@ -1,12 +1,15 @@
 package us.zacharymaddox.scorecard.api.service;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
@@ -14,13 +17,15 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import us.zacharymaddox.scorecard.api.domain.ScoreCard;
 import us.zacharymaddox.scorecard.api.domain.ScoreCardHeader;
+import us.zacharymaddox.scorecard.api.domain.Transaction;
 import us.zacharymaddox.scorecard.common.domain.Authorization;
 import us.zacharymaddox.scorecard.common.domain.AuthorizationRequest;
 import us.zacharymaddox.scorecard.common.domain.AuthorizationResult;
+import us.zacharymaddox.scorecard.common.domain.CreateRequest;
 import us.zacharymaddox.scorecard.common.domain.ScoreCardActionStatus;
 import us.zacharymaddox.scorecard.common.domain.ScoreCardId;
-import us.zacharymaddox.scorecard.api.domain.ScoreCard;
 import us.zacharymaddox.scorecard.common.domain.ScoreCardStatus;
 import us.zacharymaddox.scorecard.common.domain.UpdateRequest;
 
@@ -59,6 +64,25 @@ public class ScoreCardApiService {
 		jmsTemplate.convertAndSend("scorecard", request, new MessageSelectorPostProcessor("UPDATE"));
 	}
 	
+	public void updateStatus(String scoreCardHeader, ScoreCardActionStatus status, boolean useHttp) {
+		if (!useHttp) updateStatus(scoreCardHeader, status);
+		else {
+			ScoreCardHeader sch = convertHeader(scoreCardHeader);
+			UpdateRequest request = new UpdateRequest(sch.getScoreCardId(), sch.getActionId(), status);
+			RestTemplate restTemplate = new RestTemplate();
+			URI uri;
+			
+			try {
+				uri = new URI(baseUrl + "/scorecard/" + sch.getScoreCardId());
+			} catch (URISyntaxException e) {
+				throw new RuntimeException(e);
+			}
+			
+			RequestEntity<UpdateRequest> requestEntity = RequestEntity.post(uri).body(request);
+			restTemplate.exchange(requestEntity, new ParameterizedTypeReference<Object>() {});
+		}
+	}
+	
 	public ScoreCardId getScoreCardId() {
 		RestTemplate restTemplate = new RestTemplate();
         ScoreCardId id = restTemplate.getForObject(baseUrl + "/scorecard/id", ScoreCardId.class);
@@ -75,6 +99,19 @@ public class ScoreCardApiService {
 				scoreCardStatus, rows, page
 			);
 		return response.getBody();
+	}
+
+	public void createScoreCard(ScoreCardId id, Transaction transaction) {
+		jmsTemplate.convertAndSend("scorecard", new CreateRequest(id.getScoreCardId(), transaction.getTransactionId()), new MessageSelectorPostProcessor("CREATE"));
+	}
+	
+	public void createScoreCard(ScoreCardId id, Transaction transaction, boolean useHttp) {
+		if (!useHttp) createScoreCard(id, transaction);
+		else {
+			RestTemplate restTemplate = new RestTemplate();
+			CreateRequest request = new CreateRequest(id.getScoreCardId(), transaction.getTransactionId());
+			restTemplate.put(baseUrl + "/scorecard", request);
+		}
 	}
 
 }

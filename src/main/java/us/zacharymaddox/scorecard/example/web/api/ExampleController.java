@@ -15,11 +15,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import us.zacharymaddox.scorecard.api.domain.Action;
 import us.zacharymaddox.scorecard.api.domain.ScoreCardHeader;
 import us.zacharymaddox.scorecard.api.domain.Transaction;
-import us.zacharymaddox.scorecard.api.service.MessageSelectorPostProcessor;
 import us.zacharymaddox.scorecard.api.service.ScoreCardApiService;
 import us.zacharymaddox.scorecard.api.service.ScoreCardPostProcessor;
 import us.zacharymaddox.scorecard.api.service.TransactionApiService;
-import us.zacharymaddox.scorecard.common.domain.CreateRequest;
 import us.zacharymaddox.scorecard.common.domain.ScoreCardId;
 
 @RestController
@@ -31,19 +29,20 @@ public class ExampleController {
 	private ScoreCardApiService scoreCardApiService;
 	@Autowired
 	private TransactionApiService transactionApiService;
-	private final String transactionName = "transaction1";
-	
 	@Autowired
 	private JmsTemplate jmsTemplate;
-	
 	@Autowired
 	private ObjectMapper mapper;
+	
+	private final String transactionName = "transaction1";
+	
+
 	
 	@GetMapping
 	public void startExampleFlow() throws RestClientException, URISyntaxException {
 		Transaction transaction = transactionApiService.getTransactionByName(transactionName);
 		ScoreCardId id = scoreCardApiService.getScoreCardId();
-        jmsTemplate.convertAndSend("scorecard", new CreateRequest(id.getScoreCardId(), transaction.getTransactionId()), new MessageSelectorPostProcessor("CREATE"));
+        scoreCardApiService.createScoreCard(id, transaction, true);
         for (Action action : transaction.getActions()) {
         	jmsTemplate.convertAndSend(action.getService().getPath(), "Hello world!", new ScoreCardPostProcessor(new ScoreCardHeader(id.getScoreCardId(), action.getActionId(), action.getPath()), mapper));
         }
