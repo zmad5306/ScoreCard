@@ -3,6 +3,7 @@ package us.zacharymaddox.scorecard.core.domain;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,6 +27,7 @@ public class Transaction extends DomainObject implements Serializable {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@JsonProperty("transaction_id")
 	private Long transactionId;
+	@Column(unique=true)
 	private String name;
 	@OneToMany(mappedBy="transaction")
 	@JsonSerialize(using=TransactionActionListSerializer.class)

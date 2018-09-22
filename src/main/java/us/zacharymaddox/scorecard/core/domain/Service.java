@@ -3,6 +3,7 @@ package us.zacharymaddox.scorecard.core.domain;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -28,6 +29,7 @@ public class Service extends DomainObject implements Serializable {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@JsonProperty("service_id")
 	private Long serviceId;
+	@Column(unique=true)
 	private String name;
 	@Enumerated(EnumType.STRING)
 	private Transport transport;

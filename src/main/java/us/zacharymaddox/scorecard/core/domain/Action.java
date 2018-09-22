@@ -2,6 +2,7 @@ package us.zacharymaddox.scorecard.core.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -27,6 +28,7 @@ public class Action extends DomainObject implements Serializable {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@JsonProperty("action_id")
 	private Long actionId;
+	@Column(unique=true)
 	private String name;
 	@ManyToOne
 	@JoinColumn(name="SERVICE_ID")
