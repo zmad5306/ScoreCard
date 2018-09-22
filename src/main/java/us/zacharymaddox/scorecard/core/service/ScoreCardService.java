@@ -234,9 +234,9 @@ public class ScoreCardService {
 		
 		ScoreCardAction sca = a.get();
 		
-		if (mustBeProcessing && !ScoreCardActionStatus.PROCESSING.equals(sca.getStatus())) {
-			throw new ScoreCardClientException(ScoreCardErrorCode.ILLEGAL_STATE_CHANGE_NOT_AUTHORIZED);
-		}
+//		if (mustBeProcessing && !ScoreCardActionStatus.PROCESSING.equals(sca.getStatus())) {
+//			throw new ScoreCardClientException(ScoreCardErrorCode.ILLEGAL_STATE_CHANGE_NOT_AUTHORIZED);
+//		}
 		
 		List<ScoreCardActionStatus> valid = ScoreCardService.VALID_STATE_CHANGES.get(sca.getStatus());
 		if (!valid.contains(status)) {

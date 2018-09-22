@@ -3,6 +3,7 @@ package us.zacharymaddox.scorecard.api.domain;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -64,6 +65,15 @@ public class ScoreCard implements Serializable {
 	}
 	public void setActions(List<Action> actions) {
 		this.actions = actions;
+	}
+//	public Action getAction(String name) {
+//		Optional<Action> action = actions.stream().filter(a -> name.equalsIgnoreCase(a.getName())).findFirst();
+//		return action.get();
+//	}
+	
+	public Action getAction(Long id) {
+		Optional<Action> action = actions.stream().filter(a -> id == a.getActionId()).findFirst();
+		return action.get();
 	}
 	
 }

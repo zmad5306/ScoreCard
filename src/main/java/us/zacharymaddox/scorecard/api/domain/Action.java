@@ -3,8 +3,11 @@ package us.zacharymaddox.scorecard.api.domain;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 
 public class Action implements Serializable {
 	
@@ -16,12 +19,14 @@ public class Action implements Serializable {
 	private String path;
 	private String method;
 	private Service service;
+	private ScoreCardActionStatus status;
 	@JsonProperty("start_timestamp")
 	private LocalDateTime startTimestamp;
 	@JsonProperty("end_timestamp")
 	private LocalDateTime endTimestamp;
 	@JsonProperty("depends_on")
 	private List<Long> dependsOn;
+	private Map<String, String> metadata;
 	
 	public Long getActionId() {
 		return actionId;
@@ -76,6 +81,18 @@ public class Action implements Serializable {
 	}
 	public void setDependsOn(List<Long> dependsOn) {
 		this.dependsOn = dependsOn;
+	}
+	public ScoreCardActionStatus getStatus() {
+		return status;
+	}
+	public void setStatus(ScoreCardActionStatus status) {
+		this.status = status;
+	}
+	public Map<String, String> getMetadata() {
+		return metadata;
+	}
+	public void setMetadata(Map<String, String> metadata) {
+		this.metadata = metadata;
 	}
 	
 }

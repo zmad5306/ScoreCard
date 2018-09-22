@@ -62,29 +62,39 @@ public class ScoreCardApiService {
 	}
 	
 	public void updateStatus(String scoreCardHeader, ScoreCardActionStatus status) {
+		updateStatus(convertHeader(scoreCardHeader), status, null);
+	}
+	
+	public void updateStatus(ScoreCardHeader scoreCardHeader, ScoreCardActionStatus status) {
 		updateStatus(scoreCardHeader, status, null);
 	}
 	
 	public void updateStatus(String scoreCardHeader, ScoreCardActionStatus status, Map<String, String> metadata) {
-		ScoreCardHeader sch = convertHeader(scoreCardHeader);
-		UpdateRequest request = new UpdateRequest(sch.getScoreCardId(), sch.getActionId(), status, metadata);
+		updateStatus(convertHeader(scoreCardHeader), status, metadata);
+	}
+	
+	public void updateStatus(ScoreCardHeader scoreCardHeader, ScoreCardActionStatus status, Map<String, String> metadata) {
+		UpdateRequest request = new UpdateRequest(scoreCardHeader.getScoreCardId(), scoreCardHeader.getActionId(), status, metadata);
 		jmsTemplate.convertAndSend("scorecard", request, new MessageSelectorPostProcessor("UPDATE"));
 	}
 	
 	public void updateStatus(String scoreCardHeader, ScoreCardActionStatus status, boolean useHttp) {
-		updateStatus(scoreCardHeader, status, null, useHttp);
+		updateStatus(convertHeader(scoreCardHeader), status, null, useHttp);
 	}
 	
 	public void updateStatus(String scoreCardHeader, ScoreCardActionStatus status, Map<String, String> metadata, boolean useHttp) {
+		updateStatus(convertHeader(scoreCardHeader), status, metadata, useHttp);
+	}
+	
+	public void updateStatus(ScoreCardHeader scoreCardHeader, ScoreCardActionStatus status, Map<String, String> metadata, boolean useHttp) {
 		if (!useHttp) updateStatus(scoreCardHeader, status, metadata);
 		else {
-			ScoreCardHeader sch = convertHeader(scoreCardHeader);
-			UpdateRequest request = new UpdateRequest(sch.getScoreCardId(), sch.getActionId(), status, metadata);
+			UpdateRequest request = new UpdateRequest(scoreCardHeader.getScoreCardId(), scoreCardHeader.getActionId(), status, metadata);
 			RestTemplate restTemplate = new RestTemplate();
 			URI uri;
 			
 			try {
-				uri = new URI(baseUrl + "/scorecard/" + sch.getScoreCardId());
+				uri = new URI(baseUrl + "/scorecard/" + scoreCardHeader.getScoreCardId());
 			} catch (URISyntaxException e) {
 				throw new RuntimeException(e);
 			}

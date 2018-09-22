@@ -43,4 +43,9 @@ public class Transaction implements Serializable {
 		return action.get();
 	}
 	
+	public Action getAction(Long id) {
+		Optional<Action> action = actions.stream().filter(a -> id == a.getActionId()).findFirst();
+		return action.get();
+	}
+	
 }
