@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 import us.zacharymaddox.scorecard.domain.ScoreCardStatus;
 
 public class ScoreCard implements Serializable {
@@ -76,5 +77,14 @@ public class ScoreCard implements Serializable {
 		Optional<Action> action = actions.stream().filter(a -> id == a.getActionId()).findFirst();
 		return action.get();
 	}
-	
+	public boolean hadFailedActions() {
+		Long failedActionCount = actions.stream().filter(a -> ScoreCardActionStatus.FAILED.equals(a.getStatus())).count();
+		return failedActionCount > 0;
+	}
+	public String getTransactionName() {
+		return transactionName;
+	}
+	public void setTransactionName(String transactionName) {
+		this.transactionName = transactionName;
+	}
 }
