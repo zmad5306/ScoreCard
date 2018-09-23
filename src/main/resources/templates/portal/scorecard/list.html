@@ -42,37 +42,30 @@
 			<div class="row">
 				<h1>Cards</h1>
 			</div>
-			<div class="row">
-				<ul class="nav nav-pills pull-right">
-					<li role="presentation"
-						th:classappend="${scoreCardStatus == T(us.zacharymaddox.scorecard.domain.ScoreCardStatus).COMPLETED} ? active"><a
-						href="?score_card_status=COMPLETED">COMPLETED</a></li>
-					<li role="presentation"
-						th:classappend="${scoreCardStatus == T(us.zacharymaddox.scorecard.domain.ScoreCardStatus).PROCESSING} ? active"><a
-						href="?score_card_status=PROCESSING">PROCESSING</a></li>
-					<li role="presentation"
-						th:classappend="${scoreCardStatus == T(us.zacharymaddox.scorecard.domain.ScoreCardStatus).UNKNOWN} ? active"><a
-						href="?score_card_status=UNKNOWN">UNKNOWN</a></li>
-				</ul>
-			</div>
+				<div class="row">
+					<div class="dropdown pull-right">
+						  <button class="btn btn-default dropdown-toggle" type="button" id="transactionDropDownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" th:text="${transactionName == null ? 'Select Transaction' : transactionName}">
+						    <span class="caret"></span>
+						  </button>
+						  <ul class="dropdown-menu" aria-labelledby="transactionDropDownMenu">
+						  	<li><a th:href="|?|">Show All</a></li>
+						  	<li role="separator" class="divider"></li>
+						    <li th:each="transaction : ${transactions}"><a th:href="|?transaction_name=${transaction.name}|" th:text="${transaction.name}"></a></li>
+						  </ul>
+						</div>				
+				</div>
 			<div class="row">
 				<table class="table">
 					<thead>
 						<tr>
-							<th>Id</th>
+							<th>Score Card Id</th>
 							<th>Transaction Name</th>
-							<th>Start Timestamp</th>
-							<th>End Timestamp</th>
-							<th>Status</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="scoreCard : ${scorecards}" th:classappend="${scoreCard.hadFailedActions()} ? danger">
 							<td th:text="${scoreCard.scoreCardId}"></td>
 							<td th:text="${scoreCard.transactionName}"></td>
-							<td th:text="${scoreCard.startTimestamp}"></td>
-							<td th:text="${scoreCard.endTimestamp}"></td>
-							<td th:text="${scoreCard.scoreCardStatus}"></td>
 						</tr>
 					</tbody>
 				</table>

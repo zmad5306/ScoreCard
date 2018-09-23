@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import us.zacharymaddox.scorecard.api.service.ScoreCardApiService;
-import us.zacharymaddox.scorecard.domain.ScoreCardStatus;
+import us.zacharymaddox.scorecard.api.service.TransactionApiService;
 
 @Controller
 @RequestMapping("/portal/scorecard")
@@ -17,15 +17,25 @@ public class ScoreCardPortalController {
 	@Autowired
 	private ScoreCardApiService scoreCardApiService;
 	
+	@Autowired TransactionApiService transactionApiService;
+	
 	@GetMapping("/list")
 	public String list(
-			@RequestParam(name="score_card_status", required=false, defaultValue="COMPLETED") ScoreCardStatus scoreCardStatus,
+			@RequestParam(name="transaction_name", required=false) String transactionName,
 			@RequestParam(name="rows", required=false, defaultValue="10") Integer rows,
 			@RequestParam(name="page", required=false, defaultValue="0") Integer page,
 			Model model
 		) {
-		model.addAttribute("scorecards", scoreCardApiService.getScoreCards(scoreCardStatus, rows, page));
-		model.addAttribute("scoreCardStatus", scoreCardStatus);
+		
+		if (null == transactionName) {
+			model.addAttribute("scorecards", scoreCardApiService.getScoreCards(rows, page));
+		} else {
+			model.addAttribute("scorecards", scoreCardApiService.getScoreCards(transactionName, rows, page));
+			model.addAttribute("transactionName", transactionName);
+		}
+		
+		
+		model.addAttribute("transactions", transactionApiService.getTransactions());
 		return "portal/scorecard/list";
 	}
 

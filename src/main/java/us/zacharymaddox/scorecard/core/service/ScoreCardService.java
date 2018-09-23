@@ -31,7 +31,6 @@ import us.zacharymaddox.scorecard.domain.Authorization;
 import us.zacharymaddox.scorecard.domain.AuthorizationResult;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 import us.zacharymaddox.scorecard.domain.ScoreCardId;
-import us.zacharymaddox.scorecard.domain.ScoreCardStatus;
 import us.zacharymaddox.scorecard.domain.UpdateRequest;
 	
 @Service
@@ -92,7 +91,6 @@ public class ScoreCardService {
 		
 		ScoreCard sc = new ScoreCard();
 		sc.setScoreCardId(scoreCardId);
-		sc.setStartTimestamp(LocalDateTime.now());
 		sc.setTransactionId(transactionId);
 		sc.setTransactionName(transaction.getName());
 		
@@ -136,20 +134,21 @@ public class ScoreCardService {
 	}
 	
 	@Transactional(readOnly=true)
-	public List<ScoreCard> getScoreCards(
-				ScoreCardStatus scoreCardStatus,
-				Integer page,
-				Integer rows
-			) {
+	public List<ScoreCard> getScoreCards(String transactionName, Integer page, Integer rows) {
 		Pageable pageable = PageRequest.of(page, rows);
-		
-		return scoreCardRepository.findByScoreCardStatusOrderByScoreCardIdDesc(scoreCardStatus, pageable);
+		return scoreCardRepository.findByTransactionNameOrderByScoreCardIdDesc(transactionName, pageable);
 	}
 	
 	@Transactional(readOnly=true)
-	public List<ScoreCard> getFailedScoreCards(String transactionName, Integer page, Integer rows) {
+	public List<ScoreCard> getScoreCards(Integer page, Integer rows) {
 		Pageable pageable = PageRequest.of(page, rows);
-		return scoreCardRepository.findByFaliedScoreCards(transactionName, pageable);
+		return scoreCardRepository.findAllOrderByScoreCardIdDesc(pageable);
+	}
+	
+	@Transactional(readOnly=true)
+	public List<ScoreCard> getScoreCards(ScoreCardActionStatus status, String transactionName, Integer page, Integer rows) {
+		Pageable pageable = PageRequest.of(page, rows);
+		return scoreCardRepository.findByActionStatusAndTransactionnameOrderByScoreCardIdDesc(status, transactionName, pageable);
 	}
 	
 	@Transactional
@@ -230,12 +229,7 @@ public class ScoreCardService {
 	private void updateActionStatusInternal(UpdateRequest request, Boolean mustBeProcessing) {
 		Long scoreCardId = request.getScoreCardId();
 		Long actionId = request.getActionId();
-		ScoreCardActionStatus status = request.getStatus();
-		Optional<ScoreCard> sc = scoreCardRepository.findById(scoreCardId);
-		if (!sc.isPresent()) {
-			throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_DNE);
-		}
-		ScoreCard scoreCard = sc.get();		
+		ScoreCardActionStatus status = request.getStatus();	
 		Optional<ScoreCardAction> a = scoreCardActionRepository.findByScoreCardIdAndActionId(scoreCardId, actionId);
 		
 		if (!a.isPresent()) {
@@ -263,18 +257,8 @@ public class ScoreCardService {
 		}
 		sca.setStatus(status);
 		sca.setMetadata(request.getMetadata());
-		
-		// TODO there is a race condition when setting the score card status to COMPELTED, on occasion all actions are completed but score card is not marked completed
-		// this seems to be when using HTTP based Score Card Services
-		List<ScoreCardActionStatus> completedStatus = Arrays.asList(new ScoreCardActionStatus[]{ScoreCardActionStatus.CANCELLED, ScoreCardActionStatus.FAILED, ScoreCardActionStatus.COMPLETED});
-		Long completedActions = scoreCardActionRepository.countByScoreCardAndStatusIn(scoreCard, completedStatus);
-
-		if (completedActions == scoreCard.getActions().size()) {
-			scoreCard.setEndTimestamp(LocalDateTime.now());
-			scoreCard.setScoreCardStatus(ScoreCardStatus.COMPLETED);
-		}
-		
-		scoreCardRepository.save(scoreCard);
 	}
+
+	
 	
 }

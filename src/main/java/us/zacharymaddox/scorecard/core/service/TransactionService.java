@@ -1,5 +1,6 @@
 package us.zacharymaddox.scorecard.core.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,11 @@ public class TransactionService {
 
 	@Autowired
 	private TransactionRepository transactionRepository;
+	
+	@Transactional(readOnly=true)
+	public List<Transaction> getTransactions() {
+		return transactionRepository.findAll();
+	}
 	
 	@Transactional(readOnly=true)
 	public Transaction getTransaction(Long transactionId) {

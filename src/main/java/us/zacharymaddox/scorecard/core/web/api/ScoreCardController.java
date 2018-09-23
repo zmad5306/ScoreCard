@@ -17,8 +17,8 @@ import us.zacharymaddox.scorecard.core.service.ScoreCardService;
 import us.zacharymaddox.scorecard.domain.AuthorizationRequest;
 import us.zacharymaddox.scorecard.domain.AuthorizationResult;
 import us.zacharymaddox.scorecard.domain.CreateRequest;
+import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 import us.zacharymaddox.scorecard.domain.ScoreCardId;
-import us.zacharymaddox.scorecard.domain.ScoreCardStatus;
 import us.zacharymaddox.scorecard.domain.UpdateRequest;
 
 @RestController
@@ -30,21 +30,29 @@ public class ScoreCardController {
 	
 	@GetMapping(produces="application/json")
 	public List<ScoreCard> getScoreCards(
-			@RequestParam(name="score_card_status", required=true) ScoreCardStatus scoreCardStatus,
 			@RequestParam(name="rows", required=false, defaultValue="100") Integer rows,
 			@RequestParam(name="page", required=false, defaultValue="1") Integer page 
 		) {
-		return scoreCardService.getScoreCards(scoreCardStatus, page, rows);
+		return scoreCardService.getScoreCards(page, rows);
 	}
 	
-	@GetMapping(value="/failed", produces="application/json")
-	public List<ScoreCard> getFailedScoreCards(
+	@GetMapping(value="/filter", produces="application/json")
+	public List<ScoreCard> getScoreCardsFilterByTransactionName(
 			@RequestParam(name="transaction_name", required=true) String transactionName,
 			@RequestParam(name="rows", required=false, defaultValue="100") Integer rows,
 			@RequestParam(name="page", required		=false, defaultValue="1") Integer page
 		) {
-		List<ScoreCard> cards = scoreCardService.getFailedScoreCards(transactionName, page, rows);
-		return cards;
+		return scoreCardService.getScoreCards(transactionName, page, rows);
+	}
+	
+	@GetMapping(value="/status", produces="application/json")
+	public List<ScoreCard> getScoreCardsFilterByTransactionNameAndActionStatus(
+			@RequestParam(name="score_card_action_status", required=true) ScoreCardActionStatus status,
+			@RequestParam(name="transaction_name", required=true) String transactionName,
+			@RequestParam(name="rows", required=false, defaultValue="100") Integer rows,
+			@RequestParam(name="page", required		=false, defaultValue="1") Integer page
+		) {
+		return scoreCardService.getScoreCards(status, transactionName, page, rows);
 	}
 	
 	@GetMapping(value="/id", produces="application/json")

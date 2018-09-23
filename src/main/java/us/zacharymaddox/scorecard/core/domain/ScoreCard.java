@@ -1,12 +1,9 @@
 package us.zacharymaddox.scorecard.core.domain;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -16,8 +13,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import us.zacharymaddox.scorecard.domain.ScoreCardStatus;
 
 @Entity
 @Table(name="SCORE_CARD", schema="SCORE_CARD")
@@ -32,15 +27,8 @@ public class ScoreCard extends DomainObject implements Serializable {
 	private Long transactionId;
 	@JsonProperty("transaction_name")
 	private String transactionName;
-	@JsonProperty("start_timestamp")
-	private LocalDateTime startTimestamp;
-	@JsonProperty("end_timestamp")
-	private LocalDateTime endTimestamp;
 	@OneToMany(mappedBy="scoreCard", fetch=FetchType.EAGER)
 	private List<ScoreCardAction> actions;
-	@JsonProperty("score_card_status")
-	@Enumerated(EnumType.STRING)
-	private ScoreCardStatus scoreCardStatus = ScoreCardStatus.PROCESSING;
 	
 	public ScoreCard() {
 		super("score_card");
@@ -69,29 +57,11 @@ public class ScoreCard extends DomainObject implements Serializable {
 	public void setScoreCardId(Long scoreCardId) {
 		this.scoreCardId = scoreCardId;
 	}
-	public LocalDateTime getStartTimestamp() {
-		return startTimestamp;
-	}
-	public void setStartTimestamp(LocalDateTime startTimestamp) {
-		this.startTimestamp = startTimestamp;
-	}
-	public LocalDateTime getEndTimestamp() {
-		return endTimestamp;
-	}
-	public void setEndTimestamp(LocalDateTime endTimestamp) {
-		this.endTimestamp = endTimestamp;
-	}
 	public List<ScoreCardAction> getActions() {
 		return actions;
 	}
 	public void setActions(List<ScoreCardAction> actions) {
 		this.actions = actions;
-	}
-	public ScoreCardStatus getScoreCardStatus() {
-		return scoreCardStatus;
-	}
-	public void setScoreCardStatus(ScoreCardStatus scoreCardStatus) {
-		this.scoreCardStatus = scoreCardStatus;
 	}
 	public Long getTransactionId() {
 		return transactionId;

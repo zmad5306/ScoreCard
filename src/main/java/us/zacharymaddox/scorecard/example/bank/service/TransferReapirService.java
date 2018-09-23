@@ -45,6 +45,13 @@ public class TransferReapirService {
 		}
 	}
 	
+	private void cancelDebit(ScoreCard scoreCard, Action action) {
+		if (ScoreCardActionStatus.FAILED.equals(action.getStatus())) {
+			ScoreCardHeader scoreCardHeader = new ScoreCardHeader(scoreCard.getScoreCardId(), action.getActionId(), action.getPath());
+			scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.CANCELLED);
+		}
+	}
+	
 	private void reverseDebit(ScoreCard scoreCard, Action action) {
 		Transaction transaction = transactionApiService.getTransactionByName(creditTransactionName);
 		ScoreCardId id = scoreCardApiService.getScoreCardId(transaction);
@@ -62,12 +69,13 @@ public class TransferReapirService {
 	@Scheduled(fixedDelay=60000)
 	@Transactional
 	public void repairFailedTransfers() {
-		List<ScoreCard> scoreCards = scoreCardApiService.getFailedScoreCards(transferTransactionName, 100, 0);
+		List<ScoreCard> scoreCards = scoreCardApiService.getScoreCards(ScoreCardActionStatus.FAILED, transferTransactionName, 100, 0);
 		for (ScoreCard scoreCard : scoreCards) {
 			for (Action action : scoreCard.getActions()) {
 				if (ScoreCardActionStatus.FAILED.equals(action.getStatus()) && "debit".equals(action.getName())) {
-					// debit failed, mark credit action as cancelled
+					// debit failed, mark credit & debit action as cancelled
 					cancelCredit(scoreCard, scoreCard.getAction("credit"));
+					cancelDebit(scoreCard, action);
 				}
 				else if (ScoreCardActionStatus.FAILED.equals(action.getStatus()) && "credit".equals(action.getName())) {
 					//credit failed, reverse debit (using score card transaction), mark credit as cancelled

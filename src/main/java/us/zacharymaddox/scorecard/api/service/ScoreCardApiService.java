@@ -28,7 +28,6 @@ import us.zacharymaddox.scorecard.domain.AuthorizationResult;
 import us.zacharymaddox.scorecard.domain.CreateRequest;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 import us.zacharymaddox.scorecard.domain.ScoreCardId;
-import us.zacharymaddox.scorecard.domain.ScoreCardStatus;
 import us.zacharymaddox.scorecard.domain.Transport;
 import us.zacharymaddox.scorecard.domain.UpdateRequest;
 
@@ -110,26 +109,38 @@ public class ScoreCardApiService {
         return id;
 	}
 	
-	public List<ScoreCard> getScoreCards(ScoreCardStatus scoreCardStatus, Integer rows, Integer page) {
+	public List<ScoreCard> getScoreCards(Integer rows, Integer page) {
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<List<ScoreCard>> response = restTemplate.exchange(
-				baseUrl + "/scorecard?score_card_status={status}&rows={rows}&page={page}", 
+				baseUrl + "/scorecard?rows={rows}&page={page}", 
 				HttpMethod.GET, 
 				null, //requestEntity
 				new ParameterizedTypeReference<List<ScoreCard>>() {},
-				scoreCardStatus, rows, page
+				rows, page
 			);
 		return response.getBody();
 	}
 	
-	public List<ScoreCard> getFailedScoreCards(String transactionName, Integer rows, Integer page) {
+	public List<ScoreCard> getScoreCards(String transactionName, Integer rows, Integer page) {
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<List<ScoreCard>> response = restTemplate.exchange(
-				baseUrl + "/scorecard/failed?transaction_name={transactionName}&rows={rows}&page={page}", 
+				baseUrl + "/scorecard/filter?transaction_name={transactionName}&rows={rows}&page={page}", 
 				HttpMethod.GET, 
 				null, //requestEntity
 				new ParameterizedTypeReference<List<ScoreCard>>() {},
 				transactionName, rows, page
+			);
+		return response.getBody();
+	}
+	
+	public List<ScoreCard> getScoreCards(ScoreCardActionStatus status, String transactionName, Integer rows, Integer page) {
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<List<ScoreCard>> response = restTemplate.exchange(
+				baseUrl + "/scorecard/status?score_card_action_status={status}&transaction_name={transactionName}&rows={rows}&page={page}", 
+				HttpMethod.GET, 
+				null, //requestEntity
+				new ParameterizedTypeReference<List<ScoreCard>>() {},
+				status, transactionName, rows, page
 			);
 		return response.getBody();
 	}

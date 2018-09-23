@@ -1,5 +1,7 @@
 package us.zacharymaddox.scorecard.core.web.api;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,11 @@ public class TransactionController {
 	
 	@Autowired
 	private TransactionService transactionService;
+	
+	@GetMapping(value="/list", produces="application/json")
+	public List<Transaction> getTransactions() {
+		return transactionService.getTransactions();
+	}
 	
 	@GetMapping(produces="application/json")
 	public Transaction getTransaction(@RequestParam(name="name", required=true) String name) {

@@ -1,14 +1,12 @@
 package us.zacharymaddox.scorecard.api.domain;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
-import us.zacharymaddox.scorecard.domain.ScoreCardStatus;
 
 public class ScoreCard implements Serializable {
 
@@ -20,12 +18,6 @@ public class ScoreCard implements Serializable {
 	private Long transactionId;
 	@JsonProperty("transaction_name")
 	private String transactionName;
-	@JsonProperty("start_timestamp")
-	private LocalDateTime startTimestamp;
-	@JsonProperty("end_timestamp")
-	private LocalDateTime endTimestamp;
-	@JsonProperty("score_card_status")
-	private ScoreCardStatus scoreCardStatus;
 	private List<Action> actions;
 	public String getType() {
 		return type;
@@ -44,24 +36,6 @@ public class ScoreCard implements Serializable {
 	}
 	public void setTransactionId(Long transactionId) {
 		this.transactionId = transactionId;
-	}
-	public LocalDateTime getStartTimestamp() {
-		return startTimestamp;
-	}
-	public void setStartTimestamp(LocalDateTime startTimestamp) {
-		this.startTimestamp = startTimestamp;
-	}
-	public LocalDateTime getEndTimestamp() {
-		return endTimestamp;
-	}
-	public void setEndTimestamp(LocalDateTime endTimestamp) {
-		this.endTimestamp = endTimestamp;
-	}
-	public ScoreCardStatus getScoreCardStatus() {
-		return scoreCardStatus;
-	}
-	public void setScoreCardStatus(ScoreCardStatus scoreCardStatus) {
-		this.scoreCardStatus = scoreCardStatus;
 	}
 	public List<Action> getActions() {
 		return actions;
