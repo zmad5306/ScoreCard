@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import us.zacharymaddox.scorecard.example.bank.repository.AccountRepository;
 import us.zacharymaddox.scorecard.example.bank.repository.BankTransactionRepository;
 
 @Service
+@Profile({"test-app"})
 public class AccountService {
 
 	@Autowired
@@ -29,16 +31,18 @@ public class AccountService {
 	}
 	
 	@Transactional
-	public void debitAccount(DebitRequest request, Account account) {
+	public Long debitAccount(DebitRequest request, Account account) {
 		BankTransaction bankTransaction = new BankTransaction();
 		bankTransaction.setAccount(account);
 		bankTransaction.setAmount(request.getAmount());
 		bankTransaction.setTimestamp(LocalDateTime.now());
 		bankTransaction.setTransactionType(TransactionType.DEBIT);
-		bankTransactionRepository.save(bankTransaction);
+		bankTransaction = bankTransactionRepository.save(bankTransaction);
 		
 		account.setBalance(account.getBalance().subtract(request.getAmount()));
 		accountRepository.save(account);
+		
+		return bankTransaction.getTransactionId();
 	}
 	
 	@Transactional

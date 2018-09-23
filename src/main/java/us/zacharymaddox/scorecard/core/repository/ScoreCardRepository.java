@@ -17,7 +17,7 @@ public interface ScoreCardRepository extends JpaRepository<ScoreCard, Long> {
 	
 	public List<ScoreCard> findByScoreCardStatusOrderByScoreCardIdDesc(ScoreCardStatus scoreCardStatus, Pageable pageable);
 	
-	@Query("select sc from ScoreCardAction sca join sca.scoreCard sc where sca.status = 'FAILED' and sc.transactionName = :transaction_name and sc.scoreCardStatus <> 'COMPLETED'")
+	@Query("select sc from ScoreCardAction sca join sca.scoreCard sc where sca.status = 'FAILED' and sc.transactionName = :transaction_name and sc.scoreCardStatus = 'COMPLETED'")
 	public List<ScoreCard> findByFaliedScoreCards(@Param("transaction_name") String transactionName, Pageable pageable);
 
 }

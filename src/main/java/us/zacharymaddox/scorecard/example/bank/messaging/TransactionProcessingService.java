@@ -33,6 +33,7 @@ public class TransactionProcessingService {
 	private AccountService accountService;
 	private Logger logger = LoggerFactory.getLogger(TransactionProcessingService.class);
 	private String errorKey = "error_code";
+	private String transactionIdKey = "transaction_id";
 	
 	private void nsf(String scoreCardHeader) {
 		Map<String, String> metadata = new HashMap<>();
@@ -47,8 +48,11 @@ public class TransactionProcessingService {
 	}
 	
 	private void performDebit(DebitRequest request, String scoreCardHeader, Account account) {
-		accountService.debitAccount(request, account);
-		scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.COMPLETED);
+		Long transactionId = accountService.debitAccount(request, account);
+		Map<String, String> metadata = new HashMap<>();
+		// set the transaction id in the metadata in case it needs reversed later
+		metadata.put(transactionIdKey, transactionId.toString());
+		scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.COMPLETED, metadata);
 	}
 	
 	@JmsListener(destination="account", selector="ACTION='debit'", containerFactory="myFactory")

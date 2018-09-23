@@ -27,7 +27,7 @@ public class ExampleController {
 	
 	private final String transactionName = "transaction1";
 	
-	@GetMapping
+	@GetMapping(produces="application/json")
 	public ScoreCardId startExampleFlow() throws RestClientException, URISyntaxException {
 		Transaction transaction = transactionApiService.getTransactionByName(transactionName);
         ScoreCardId id = scoreCardApiService.createScoreCard(transaction);

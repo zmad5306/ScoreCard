@@ -151,6 +151,17 @@ public class DataSetupService {
 		ta2.setTransaction(t1);
 		
 		ta2 = transactionActionRepository.save(ta2);
+		
+		Transaction t2 = new Transaction();
+		t2.setName("bank-credit");
+		
+		t2 = transactionRepository.save(t2);
+		
+		TransactionAction ta3 = new TransactionAction();
+		ta3.setAction(a2);
+		ta3.setTransaction(t2);
+		
+		ta3 = transactionActionRepository.save(ta3);
 	}
 
 }
