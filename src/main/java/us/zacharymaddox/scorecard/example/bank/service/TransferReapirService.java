@@ -54,7 +54,7 @@ public class TransferReapirService {
 	
 	private void reverseDebit(ScoreCard scoreCard, Action action) {
 		Transaction transaction = transactionApiService.getTransactionByName(creditTransactionName);
-		ScoreCardId id = scoreCardApiService.getScoreCardId(transaction);
+		ScoreCardId id = scoreCardApiService.createScoreCard(transaction);
 		logger.warn("reversing failed transaction with Score Card Id {}", id.getScoreCardId());
 		Action creditAction = transaction.getAction("credit");
 		Long transactionId = Long.valueOf(action.getMetadata().get(transactionIdKey));
