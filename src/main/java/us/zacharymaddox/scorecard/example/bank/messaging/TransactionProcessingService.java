@@ -1,7 +1,6 @@
 package us.zacharymaddox.scorecard.example.bank.messaging;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -11,18 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import us.zacharymaddox.scorecard.api.domain.Action;
-import us.zacharymaddox.scorecard.api.domain.ScoreCard;
-import us.zacharymaddox.scorecard.api.domain.ScoreCardHeader;
 import us.zacharymaddox.scorecard.api.domain.WaitException;
 import us.zacharymaddox.scorecard.api.service.ScoreCardApiService;
 import us.zacharymaddox.scorecard.domain.Authorization;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
-import us.zacharymaddox.scorecard.domain.ScoreCardStatus;
 import us.zacharymaddox.scorecard.example.bank.domain.Account;
 import us.zacharymaddox.scorecard.example.bank.domain.BankErrorCode;
 import us.zacharymaddox.scorecard.example.bank.domain.CreditRequest;
@@ -114,28 +108,4 @@ public class TransactionProcessingService {
 		
 	}
 	
-	private void cancelCredit(ScoreCard scoreCard, Action action) {
-		if (ScoreCardActionStatus.PENDING.equals(action.getStatus())) {
-			ScoreCardHeader scoreCardHeader = new ScoreCardHeader(scoreCard.getScoreCardId(), action.getActionId(), action.getPath());
-			scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.CANCELLED);	
-		}
-	}
-	
-	@Scheduled(fixedDelay=60000)
-	public void repairFailedTransfers() {
-		// only query score cards for the trans in question
-		List<ScoreCard> scoreCards = scoreCardApiService.getScoreCards(ScoreCardStatus.PROCESSING, 100, 0);
-		for (ScoreCard scoreCard : scoreCards) {
-			for (Action action : scoreCard.getActions()) {
-				if (ScoreCardActionStatus.FAILED.equals(action.getStatus()) && "debit".equals(action.getName())) {
-					// debit failed, mark credit action as cancelled
-					cancelCredit(scoreCard, scoreCard.getAction("credit"));
-				}
-				
-			}
-		}
-	}
-
-	
-
 }

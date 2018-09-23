@@ -37,6 +37,16 @@ public class ScoreCardController {
 		return scoreCardService.getScoreCards(scoreCardStatus, page, rows);
 	}
 	
+	@GetMapping(value="/failed", produces="application/json")
+	public List<ScoreCard> getFailedScoreCards(
+			@RequestParam(name="transaction_name", required=true) String transactionName,
+			@RequestParam(name="rows", required=false, defaultValue="100") Integer rows,
+			@RequestParam(name="page", required		=false, defaultValue="1") Integer page
+		) {
+		List<ScoreCard> cards = scoreCardService.getFailedScoreCards(transactionName, page, rows);
+		return cards;
+	}
+	
 	@GetMapping(value="/id", produces="application/json")
 	public ScoreCardId getScoreCardId() {
 		return scoreCardService.getNextScoreCardId();

@@ -122,6 +122,18 @@ public class ScoreCardApiService {
 		return response.getBody();
 	}
 	
+	public List<ScoreCard> getFailedScoreCards(String transactionName, Integer rows, Integer page) {
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<List<ScoreCard>> response = restTemplate.exchange(
+				baseUrl + "/scorecard/failed?transaction_name={transactionName}&rows={rows}&page={page}", 
+				HttpMethod.GET, 
+				null, //requestEntity
+				new ParameterizedTypeReference<List<ScoreCard>>() {},
+				transactionName, rows, page
+			);
+		return response.getBody();
+	}
+	
 	public ScoreCardId createScoreCard(Transaction transaction) {
 		ScoreCardId id = getScoreCardId();
 		return createScoreCard(id, transaction);

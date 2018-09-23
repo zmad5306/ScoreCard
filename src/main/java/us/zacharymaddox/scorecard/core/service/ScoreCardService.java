@@ -146,6 +146,12 @@ public class ScoreCardService {
 		return scoreCardRepository.findByScoreCardStatusOrderByScoreCardIdDesc(scoreCardStatus, pageable);
 	}
 	
+	@Transactional(readOnly=true)
+	public List<ScoreCard> getFailedScoreCards(String transactionName, Integer page, Integer rows) {
+		Pageable pageable = PageRequest.of(page, rows);
+		return scoreCardRepository.findByFaliedScoreCards(transactionName, pageable);
+	}
+	
 	@Transactional
 	public AuthorizationResult authorize(Long scoreCardId, Long actionId) {
 		Optional<ScoreCard> sc = scoreCardRepository.findById(scoreCardId);
