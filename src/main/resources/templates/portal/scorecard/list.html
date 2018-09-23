@@ -1,30 +1,91 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>List - Score Card</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>List - Score Card</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+	crossorigin="anonymous">
+<link href="/starter-template.css" rel="stylesheet">
 </head>
 <body>
-   <h1>Score Cards</h1>
-   <table>
-   		<thead>
-            <tr>
-                <th>Id</th>
-				<th>Transaction Id</th>
-                <th>Start Timestamp</th>
-                <th>End Timestamp</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-        	<tr th:each="scoreCard : ${scorecards}">
-        		<td th:text="${scoreCard.scoreCardId}"></td>
-        		<td th:text="${scoreCard.transactionId}"></td>
-        		<td th:text="${scoreCard.startTimestamp}"></td>
-        		<td th:text="${scoreCard.endTimestamp}"></td>
-        		<td th:text="${scoreCard.scoreCardStatus}"></td>
-        	</tr>
-        </tbody>
-   </table> 
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Score Card Portal</a>
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="#">Cards</a></li>
+					<li><a href="#about">Transactions</a></li>
+				</ul>
+			</div>
+			<!--/.nav-collapse -->
+		</div>
+	</nav>
+
+	<div class="container">
+
+		<div class="starter-template">
+			<div class="row">
+				<h1>Cards</h1>
+			</div>
+			<div class="row">
+				<ul class="nav nav-pills pull-right">
+					<li role="presentation"
+						th:classappend="${scoreCardStatus == T(us.zacharymaddox.scorecard.domain.ScoreCardStatus).COMPLETED} ? active"><a
+						href="?score_card_status=COMPLETED">COMPLETED</a></li>
+					<li role="presentation"
+						th:classappend="${scoreCardStatus == T(us.zacharymaddox.scorecard.domain.ScoreCardStatus).PROCESSING} ? active"><a
+						href="?score_card_status=PROCESSING">PROCESSING</a></li>
+					<li role="presentation"
+						th:classappend="${scoreCardStatus == T(us.zacharymaddox.scorecard.domain.ScoreCardStatus).UNKNOWN} ? active"><a
+						href="?score_card_status=UNKNOWN">UNKNOWN</a></li>
+				</ul>
+			</div>
+			<div class="row">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Transaction Id</th>
+							<th>Start Timestamp</th>
+							<th>End Timestamp</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="scoreCard : ${scorecards}">
+							<td th:text="${scoreCard.scoreCardId}"></td>
+							<td th:text="${scoreCard.transactionId}"></td>
+							<td th:text="${scoreCard.startTimestamp}"></td>
+							<td th:text="${scoreCard.endTimestamp}"></td>
+							<td th:text="${scoreCard.scoreCardStatus}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+	</div>
+	<!-- /.container -->
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+		integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+		crossorigin="anonymous"></script>
 </body>
 </html>

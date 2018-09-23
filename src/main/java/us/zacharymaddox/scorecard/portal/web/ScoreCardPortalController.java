@@ -25,6 +25,7 @@ public class ScoreCardPortalController {
 			Model model
 		) {
 		model.addAttribute("scorecards", scoreCardApiService.getScoreCards(scoreCardStatus, rows, page));
+		model.addAttribute("scoreCardStatus", scoreCardStatus);
 		return "portal/scorecard/list";
 	}
 
