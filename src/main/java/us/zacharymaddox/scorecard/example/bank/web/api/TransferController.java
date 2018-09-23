@@ -42,7 +42,7 @@ public class TransferController {
         Action debitAction = transaction.getAction("debit");
         Action creditAction = transaction.getAction("credit");
         
-        ScoreCardId id = scoreCardApiService.createScoreCard(transaction);
+        ScoreCardId id = scoreCardApiService.getScoreCardId(transaction);
         scoreCardApiService.wrapAndSend(id, transaction, debitAction, debitRequest);
         scoreCardApiService.wrapAndSend(id, transaction, creditAction, creditRequest);
 

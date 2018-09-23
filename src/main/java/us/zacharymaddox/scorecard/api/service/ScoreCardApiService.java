@@ -134,7 +134,7 @@ public class ScoreCardApiService {
 		return response.getBody();
 	}
 	
-	public ScoreCardId createScoreCard(Transaction transaction) {
+	public ScoreCardId getScoreCardId(Transaction transaction) {
 		ScoreCardId id = getScoreCardId();
 		return createScoreCard(id, transaction);
 	}

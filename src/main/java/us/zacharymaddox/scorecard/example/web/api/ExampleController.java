@@ -30,7 +30,7 @@ public class ExampleController {
 	@GetMapping(produces="application/json")
 	public ScoreCardId startExampleFlow() throws RestClientException, URISyntaxException {
 		Transaction transaction = transactionApiService.getTransactionByName(transactionName);
-        ScoreCardId id = scoreCardApiService.createScoreCard(transaction);
+        ScoreCardId id = scoreCardApiService.getScoreCardId(transaction);
         for (Action action : transaction.getActions()) {
         	String message = String.format("Hello world from %s, %s!", action.getService().getName(), action.getName());
         	scoreCardApiService.wrapAndSend(id, transaction, action, message);
