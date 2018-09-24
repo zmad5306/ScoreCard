@@ -238,12 +238,16 @@ public class ScoreCardService {
 		
 		ScoreCardAction sca = a.get();
 		
+		// TODO is this needed?
+		//calling from the outside world, action must be in processing status to complete
 		if (mustBeProcessing && ScoreCardActionStatus.COMPLETED.equals(status) && !ScoreCardActionStatus.PROCESSING.equals(sca.getStatus())) {
+			// TODO design says to update this to UNKNOWN state not blow up
 			throw new ScoreCardClientException(ScoreCardErrorCode.ILLEGAL_STATE_CHANGE_NOT_AUTHORIZED);
 		}
 		
 		List<ScoreCardActionStatus> valid = ScoreCardService.VALID_STATE_CHANGES.get(sca.getStatus());
 		if (!valid.contains(status)) {
+			// TODO design says to update this to UNKNOWN state not blow up
 			throw new ScoreCardClientException(ScoreCardErrorCode.ILLEGAL_STATE_CHANGE);
 		}
 		
@@ -259,6 +263,4 @@ public class ScoreCardService {
 		sca.setMetadata(request.getMetadata());
 	}
 
-	
-	
 }
