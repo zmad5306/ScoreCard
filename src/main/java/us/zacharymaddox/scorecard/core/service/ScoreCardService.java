@@ -155,9 +155,7 @@ public class ScoreCardService {
 	public AuthorizationResult authorize(Long scoreCardId, Long actionId) {
 		Optional<ScoreCard> sc = scoreCardRepository.findById(scoreCardId);
 		if (!sc.isPresent()) {
-			// TODO need to respond WAIT here if score card creation is async, might have to push this to the client 
-			// to retry... how can I know that its async if it hasn't been created yet...
-			throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_DNE);
+			return new AuthorizationResult(Authorization.WAIT);
 		}
 		
 		ScoreCard scoreCard = sc.get();
@@ -165,9 +163,7 @@ public class ScoreCardService {
 		Optional<ScoreCardAction> a = scoreCardActionRepository.findByScoreCardIdAndActionId(scoreCardId, actionId);
 		
 		if (!a.isPresent()) {
-			// TODO need to respond WAIT here if score card creation is async, might have to push this to the client 
-			// to retry... how can I know that its async if it hasn't been created yet...
-			throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_ACTION_DNE);
+			return new AuthorizationResult(Authorization.WAIT);
 		}
 		
 		ScoreCardAction sca = a.get();
