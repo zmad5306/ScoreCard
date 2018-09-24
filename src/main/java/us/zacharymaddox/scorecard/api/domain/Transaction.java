@@ -47,5 +47,8 @@ public class Transaction implements Serializable {
 		Optional<Action> action = actions.stream().filter(a -> id == a.getActionId()).findFirst();
 		return action.get();
 	}
+	public Integer getActionCount() {
+		return actions.size();
+	}
 	
 }

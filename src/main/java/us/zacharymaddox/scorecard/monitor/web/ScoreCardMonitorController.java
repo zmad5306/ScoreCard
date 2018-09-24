@@ -12,12 +12,13 @@ import us.zacharymaddox.scorecard.api.service.TransactionApiService;
 
 @Controller
 @RequestMapping("/monitor/scorecard")
-public class ScoreCardPortalController {
+public class ScoreCardMonitorController {
 	
 	@Autowired
 	private ScoreCardApiService scoreCardApiService;
 	
-	@Autowired TransactionApiService transactionApiService;
+	@Autowired
+	TransactionApiService transactionApiService;
 	
 	@GetMapping("/list")
 	public String list(

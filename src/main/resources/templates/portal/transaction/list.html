@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>List - Transactions - Score Card Portal</title>
+<!--/*/ <th:block th:include="portal/fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+	<!--/*/ <th:block th:include="portal/fragments/header :: header"></th:block> /*/-->
+	<div class="container">
+		<div class="starter-template">
+			<div class="row">
+				<h1>Transactions</h1>
+			</div>
+			<div class="row">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Transaction Id</th>
+							<th>Transaction Name</th>
+							<th>Action Count</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="transaction : ${transactions}">
+							<td th:text="${transaction.transactionId}"></td>
+							<td th:text="${transaction.name}"></td>
+							<td th:text="${transaction.actionCount}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
