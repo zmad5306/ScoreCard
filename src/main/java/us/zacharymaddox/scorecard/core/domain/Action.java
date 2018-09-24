@@ -2,7 +2,6 @@ package us.zacharymaddox.scorecard.core.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -12,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -19,7 +19,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-@Table(name="ACTION", schema="SCORE_CARD")
+@Table(name="ACTION", schema="SCORE_CARD",
+		uniqueConstraints=
+			@UniqueConstraint(columnNames= {"SERVICE_ID", "NAME"})
+	)
 public class Action extends DomainObject implements Serializable {
 
 	private static final long serialVersionUID = -3686654230565046107L;
@@ -28,7 +31,6 @@ public class Action extends DomainObject implements Serializable {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@JsonProperty("action_id")
 	private Long actionId;
-	@Column(unique=true)
 	private String name;
 	@ManyToOne
 	@JoinColumn(name="SERVICE_ID")
