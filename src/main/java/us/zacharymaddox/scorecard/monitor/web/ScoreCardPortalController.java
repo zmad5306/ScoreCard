@@ -1,4 +1,4 @@
-package us.zacharymaddox.scorecard.portal.web;
+package us.zacharymaddox.scorecard.monitor.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,7 +11,7 @@ import us.zacharymaddox.scorecard.api.service.ScoreCardApiService;
 import us.zacharymaddox.scorecard.api.service.TransactionApiService;
 
 @Controller
-@RequestMapping("/portal/scorecard")
+@RequestMapping("/monitor/scorecard")
 public class ScoreCardPortalController {
 	
 	@Autowired
@@ -36,7 +36,7 @@ public class ScoreCardPortalController {
 		
 		
 		model.addAttribute("transactions", transactionApiService.getTransactions());
-		return "portal/scorecard/list";
+		return "monitor/scorecard/list";
 	}
 
 }
