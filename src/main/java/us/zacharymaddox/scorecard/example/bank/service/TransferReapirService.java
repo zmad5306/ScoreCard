@@ -23,7 +23,7 @@ import us.zacharymaddox.scorecard.example.bank.domain.BankTransaction;
 import us.zacharymaddox.scorecard.example.bank.domain.CreditRequest;
 
 @Service
-@Profile({"test-app"})
+@Profile({"example"})
 public class TransferReapirService {
 	
 	@Autowired

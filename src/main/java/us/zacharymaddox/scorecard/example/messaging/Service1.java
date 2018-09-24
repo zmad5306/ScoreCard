@@ -18,7 +18,7 @@ import us.zacharymaddox.scorecard.domain.Authorization;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 
 @Component
-@Profile({"test-app"})
+@Profile({"example"})
 public class Service1 {
 	
 	@Autowired

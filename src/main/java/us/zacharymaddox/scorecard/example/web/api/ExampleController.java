@@ -17,7 +17,7 @@ import us.zacharymaddox.scorecard.domain.ScoreCardId;
 
 @RestController
 @RequestMapping("/app/example")
-@Profile({"test-app"})
+@Profile({"example"})
 public class ExampleController {
 	
 	@Autowired

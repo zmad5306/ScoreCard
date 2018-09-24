@@ -22,7 +22,7 @@ import us.zacharymaddox.scorecard.core.repository.TransactionRepository;
 import us.zacharymaddox.scorecard.domain.Transport;
 
 @Component
-@Profile({"test-app"})
+@Profile({"dev"})
 public class DataSetupService {
 	
 	@Autowired

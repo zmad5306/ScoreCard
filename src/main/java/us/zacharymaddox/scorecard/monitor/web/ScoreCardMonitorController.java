@@ -1,6 +1,7 @@
 package us.zacharymaddox.scorecard.monitor.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import us.zacharymaddox.scorecard.api.service.TransactionApiService;
 
 @Controller
 @RequestMapping("/monitor/scorecard")
+@Profile({"monitor"})
 public class ScoreCardMonitorController {
 	
 	@Autowired

@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.RequestEntity;
 //import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import us.zacharymaddox.scorecard.domain.ScoreCardId;
 import us.zacharymaddox.scorecard.domain.UpdateRequest;
 
 //@Service
+@Profile({"api"})
 public class ScoreCardApiServiceHttp extends AbstractScoreCardApiService implements ScoreCardApiService {
 
 	@Override

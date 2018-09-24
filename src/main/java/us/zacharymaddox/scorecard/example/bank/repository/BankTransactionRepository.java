@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import us.zacharymaddox.scorecard.example.bank.domain.BankTransaction;
 
-@Profile({"test-app"})
+@Profile({"example"})
 public interface BankTransactionRepository extends JpaRepository<BankTransaction, Long>{
 
 }

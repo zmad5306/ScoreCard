@@ -12,7 +12,7 @@ import us.zacharymaddox.scorecard.example.bank.domain.Account;
 import us.zacharymaddox.scorecard.example.bank.repository.AccountRepository;
 
 @Service
-@Profile({"test-app"})
+@Profile({"example"})
 public class BankDataSetupService {
 	
 	@Autowired

@@ -17,7 +17,7 @@ import us.zacharymaddox.scorecard.example.bank.repository.AccountRepository;
 import us.zacharymaddox.scorecard.example.bank.repository.BankTransactionRepository;
 
 @Service
-@Profile({"test-app"})
+@Profile({"example"})
 public class AccountService {
 
 	@Autowired

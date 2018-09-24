@@ -24,7 +24,7 @@ import us.zacharymaddox.scorecard.example.bank.domain.DebitRequest;
 import us.zacharymaddox.scorecard.example.bank.service.AccountService;
 
 @Component
-@Profile({"test-app"})
+@Profile({"example"})
 public class TransactionProcessingService {
 	
 	@Autowired

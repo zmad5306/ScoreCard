@@ -19,7 +19,7 @@ import us.zacharymaddox.scorecard.example.bank.domain.DebitRequest;
 
 @RestController
 @RequestMapping("/app/bank/transfer")
-@Profile({"test-app"})
+@Profile({"example"})
 public class TransferController {
 	
 	@Autowired
