@@ -1,6 +1,7 @@
 package us.zacharymaddox.scorecard.api.domain;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,9 +52,17 @@ public class ScoreCard implements Serializable {
 		Optional<Action> action = actions.stream().filter(a -> id == a.getActionId()).findFirst();
 		return action.get();
 	}
-	public boolean hadFailedActions() {
+	public boolean hasFailedActions() {
 		Long failedActionCount = actions.stream().filter(a -> ScoreCardActionStatus.FAILED.equals(a.getStatus())).count();
 		return failedActionCount > 0;
+	}
+	public boolean hasPendingActions() {
+		if (hasFailedActions()) {
+			return false;
+		} 
+		List<ScoreCardActionStatus> pendingStatus = Arrays.asList(new ScoreCardActionStatus[] {ScoreCardActionStatus.PENDING, ScoreCardActionStatus.PROCESSING});
+		Long pendingActionCount = actions.stream().filter(a -> pendingStatus.contains(a.getStatus())).count();
+		return pendingActionCount > 0;
 	}
 	public String getTransactionName() {
 		return transactionName;
