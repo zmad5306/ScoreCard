@@ -45,7 +45,5 @@ public class Service implements Serializable {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
-	
 
 }

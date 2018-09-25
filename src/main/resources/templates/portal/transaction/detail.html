@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Detail - Transactions - Score Card Portal</title>
+<title>Detail - Transaction - Score Card Portal</title>
 <!--/*/ <th:block th:include="portal/fragments/headerinc :: head"></th:block> /*/-->
 </head>
 <body>
@@ -38,7 +38,7 @@
 						<tr th:each="action : ${transaction.actions}">
 							<td th:text="${action.actionId}"></td>
 							<td th:text="${action.name}"></td>
-							<td th:text="${action.service.serviceId}"></td>
+							<td><a th:href="@{'/portal/service/' + ${action.service.serviceId}}" th:text="${action.service.serviceId}"></a></td>
 							<td th:text="${action.service.path}"></td>
 							<td th:text="${action.path}"></td>
 							<td th:text="${action.method}"></td>

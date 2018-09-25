@@ -7,7 +7,8 @@ public enum ScoreCardErrorCode {
 	SCORE_CARD_ACTION_DNE("SC-0003", "The requested Score Card Action does not exist.", 404),
 	SCORE_CARD_ACTION_DEPENDENCY_DNE("SC-0004", "The requested Score Card Action Dependency does not exist.", 404),
 	ILLEGAL_STATE_CHANGE_NOT_AUTHORIZED("SC-0005", "The requested Score Card Action update was denied, this action was not authorized.", 403),
-	ILLEGAL_STATE_CHANGE("SC-0006", "The requested Score Card Action update was not completed, invalid state change.", 400);
+	ILLEGAL_STATE_CHANGE("SC-0006", "The requested Score Card Action update was not completed, invalid state change.", 400), 
+	SERVICE_DNE("SC-0007", "The requested Service does not exist.", 404);
 	
 	private String errorCode;
 	private String message;

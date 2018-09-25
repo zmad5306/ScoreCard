@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>List - Services - Score Card Portal</title>
+<!--/*/ <th:block th:include="portal/fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+	<!--/*/ <th:block th:include="portal/fragments/header :: header"></th:block> /*/-->
+	<div class="container">
+		<div class="starter-template">
+			<div class="row">
+				<h1>Services</h1>
+			</div>
+			<div class="row">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Service Id</th>
+							<th>Service Name</th>
+							<th>Transport</th>
+							<th>Path</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="service : ${services}">
+							<td><a th:href="@{'/portal/service/' + ${service.serviceId}}" th:text="${service.serviceId}"></a></td>
+							<td th:text="${service.name}"></td>
+							<td th:text="${service.transport}"></td>
+							<td th:text="${service.path}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
