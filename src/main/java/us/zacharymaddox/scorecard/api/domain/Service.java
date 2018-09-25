@@ -1,6 +1,7 @@
 package us.zacharymaddox.scorecard.api.domain;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -15,6 +16,7 @@ public class Service implements Serializable {
 	private String name;
 	private Transport transport;
 	private String path;
+	private List<Action> actions;
 	public Long getServiceId() {
 		return serviceId;
 	}
@@ -44,6 +46,12 @@ public class Service implements Serializable {
 	}
 	public void setPath(String path) {
 		this.path = path;
+	}
+	public List<Action> getActions() {
+		return actions;
+	}
+	public void setActions(List<Action> actions) {
+		this.actions = actions;
 	}
 
 }

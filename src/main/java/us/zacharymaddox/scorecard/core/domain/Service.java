@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,8 +17,8 @@ import javax.persistence.Table;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import us.zacharymaddox.scorecard.domain.Transport;
 
@@ -36,8 +37,8 @@ public class Service extends DomainObject implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private Transport transport;
 	private String path;
-	@OneToMany(mappedBy="service")
-	@JsonIgnore
+	@OneToMany(mappedBy="service", fetch=FetchType.EAGER)
+	@JsonSerialize(using=ServiceActionListSerializer.class)
 	private List<Action> actions;
 	
 	public Service() {
