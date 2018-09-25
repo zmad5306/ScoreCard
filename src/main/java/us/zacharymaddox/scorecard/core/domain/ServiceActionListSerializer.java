@@ -30,7 +30,9 @@ public class ServiceActionListSerializer extends StdSerializer<List<Action>>{
 				gen.writeStartObject();
 				gen.writeNumberField("action_id", a.getActionId());
 				gen.writeStringField("name", a.getName());
-				gen.writeNumberField("service_id", a.getService().getServiceId());
+					gen.writeObjectFieldStart("service");
+						gen.writeNumberField("service_id", a.getService().getServiceId());
+					gen.writeEndObject();
 				gen.writeStringField("path", a.getPath());
 				gen.writeStringField("method", a.getMethod().name());
 				gen.writeEndObject();

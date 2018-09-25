@@ -36,7 +36,7 @@
 					</thead>
 					<tbody>
 						<tr th:each="action : ${transaction.actions}">
-							<td th:text="${action.actionId}"></td>
+							<td><a th:href="@{'/portal/action/' + ${action.actionId}}" th:text="${action.actionId}"></a></td>
 							<td th:text="${action.name}"></td>
 							<td><a th:href="@{'/portal/service/' + ${action.service.serviceId}}" th:text="${action.service.serviceId}"></a></td>
 							<td th:text="${action.service.path}"></td>
