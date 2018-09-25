@@ -32,7 +32,7 @@ public class TransactionApiService {
 	
 	public Transaction getTransaction(Long transactionId) {
 		RestTemplate restTemplate = new RestTemplate();
-		Transaction transaction = restTemplate.getForObject(baseUrl + "/transaction/{transaction_id}" + transactionId, Transaction.class, transactionId);
+		Transaction transaction = restTemplate.getForObject(baseUrl + "/transaction/{transaction_id}", Transaction.class, transactionId);
 		return transaction;
 	}
 	

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import us.zacharymaddox.scorecard.api.service.TransactionApiService;
@@ -21,6 +22,12 @@ public class TransactionPortalController {
 	public String list(Model model) {
 		model.addAttribute("transactions", transactionApiService.getTransactions());
 		return "portal/transaction/list";
+	}
+	
+	@GetMapping("/{transaction_id}")
+	public String details(@PathVariable("transaction_id") Long transactionId, Model model) {
+		model.addAttribute("transaction", transactionApiService.getTransaction(transactionId));
+		return "portal/transaction/detail";
 	}
 
 }
