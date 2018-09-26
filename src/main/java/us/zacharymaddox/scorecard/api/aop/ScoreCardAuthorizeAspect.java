@@ -20,12 +20,12 @@ import us.zacharymaddox.scorecard.domain.Authorization;
 
 @Aspect
 @Component
-public class ScoreCardEnabledAspect {
+public class ScoreCardAuthorizeAspect {
 	
 	@Autowired
 	private ScoreCardApiService scoreCardApiService;
 	
-	private Logger logger = LoggerFactory.getLogger(ScoreCardEnabledAspect.class);
+	private Logger logger = LoggerFactory.getLogger(ScoreCardAuthorizeAspect.class);
 	
 	private ScoreCardHeader getScoreCardHeader(Method method, Object[] args) {
 		Annotation[][] annotationMatrix = method.getParameterAnnotations();
@@ -43,14 +43,12 @@ public class ScoreCardEnabledAspect {
 		return null;
 	}
 	
-	@Around("@annotation(us.zacharymaddox.scorecard.api.annotation.ScoreCardEnabled)")
+	@Around("@annotation(us.zacharymaddox.scorecard.api.annotation.ScoreCardAuthorize)")
 	public Object enableScoreCard(ProceedingJoinPoint joinPoint) throws Throwable {
 		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 		Method method = signature.getMethod();
 		ScoreCardHeader scoreCardHeader = getScoreCardHeader(method, joinPoint.getArgs());
 		if (null != scoreCardHeader) {
-			System.out.println("scoreCardId: " + scoreCardHeader.getScoreCardId());
-			System.out.println("actionId: " + scoreCardHeader.getActionId());
 			Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
 			switch (auth) {
 				case PROCESS:

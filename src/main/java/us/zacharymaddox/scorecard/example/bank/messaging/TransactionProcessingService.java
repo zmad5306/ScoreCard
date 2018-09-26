@@ -13,7 +13,7 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import us.zacharymaddox.scorecard.api.annotation.ScoreCardEnabled;
+import us.zacharymaddox.scorecard.api.annotation.ScoreCardAuthorize;
 import us.zacharymaddox.scorecard.api.service.ScoreCardApiService;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 import us.zacharymaddox.scorecard.example.bank.domain.Account;
@@ -56,7 +56,7 @@ public class TransactionProcessingService {
 	
 	@JmsListener(destination="account", selector="ACTION='debit'", containerFactory="myFactory")
 	@Transactional
-	@ScoreCardEnabled
+	@ScoreCardAuthorize
 	public void debit(DebitRequest request, @Header("SCORE_CARD") String scoreCardHeader) {
 		logger.info("processing debit reqeust");
 		Optional<Account> a = accountService.getAccount(request.getAccountId());
@@ -79,7 +79,7 @@ public class TransactionProcessingService {
 
 	@JmsListener(destination="account", selector="ACTION='credit'", containerFactory="myFactory")
 	@Transactional
-	@ScoreCardEnabled
+	@ScoreCardAuthorize
 	public void credit(CreditRequest request, @Header("SCORE_CARD") String scoreCardHeader) {
 		logger.info("processing credit reqeust");
 		Optional<Account> a = accountService.getAccount(request.getAccountId());
