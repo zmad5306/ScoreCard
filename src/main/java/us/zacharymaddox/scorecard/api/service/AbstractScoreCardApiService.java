@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import us.zacharymaddox.scorecard.api.domain.ScoreCard;
 import us.zacharymaddox.scorecard.api.domain.ScoreCardHeader;
-import us.zacharymaddox.scorecard.api.domain.Transaction;
 import us.zacharymaddox.scorecard.domain.Authorization;
 import us.zacharymaddox.scorecard.domain.AuthorizationRequest;
 import us.zacharymaddox.scorecard.domain.AuthorizationResult;
