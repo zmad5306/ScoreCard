@@ -1,0 +1,262 @@
+diff --git a/src/main/java/us/zacharymaddox/scorecard/api/service/AbstractScoreCardApiService.java b/src/main/java/us/zacharymaddox/scorecard/api/service/AbstractScoreCardApiService.java
+index 6940627..abb9cbb 100644
+--- a/src/main/java/us/zacharymaddox/scorecard/api/service/AbstractScoreCardApiService.java
++++ b/src/main/java/us/zacharymaddox/scorecard/api/service/AbstractScoreCardApiService.java
+@@ -28,7 +28,7 @@ public abstract class AbstractScoreCardApiService implements ScoreCardApiService
+ 	@Value("${scorecard.api.baseurl}")
+ 	private String baseUrl;
+ 	
+-	protected ScoreCardHeader convertHeader(String value) {
++	public ScoreCardHeader convertHeader(String value) {
+ 		try {
+ 			return mapper.readValue(value, ScoreCardHeader.class);
+ 		} catch (IOException e) {
+@@ -38,9 +38,13 @@ public abstract class AbstractScoreCardApiService implements ScoreCardApiService
+ 	
+ 	public Authorization authorize(String scoreCardHeader) {
+ 		ScoreCardHeader sch = convertHeader(scoreCardHeader);
++		return authorize(sch);
++	}
++	
++	public Authorization authorize(ScoreCardHeader scoreCardHeader) {
+ 		AuthorizationRequest req = new AuthorizationRequest();
+-		req.setActionId(sch.getActionId());
+-		req.setScoreCardId(sch.getScoreCardId());
++		req.setActionId(scoreCardHeader.getActionId());
++		req.setScoreCardId(scoreCardHeader.getScoreCardId());
+ 		RestTemplate restTemplate = new RestTemplate();
+ 		ResponseEntity<AuthorizationResult> result = restTemplate.postForEntity(baseUrl + "/scorecard", req, AuthorizationResult.class);
+ 		AuthorizationResult aResult = result.getBody();
+diff --git a/src/main/java/us/zacharymaddox/scorecard/api/service/ScoreCardApiService.java b/src/main/java/us/zacharymaddox/scorecard/api/service/ScoreCardApiService.java
+index e8783cf..a7e0aa7 100644
+--- a/src/main/java/us/zacharymaddox/scorecard/api/service/ScoreCardApiService.java
++++ b/src/main/java/us/zacharymaddox/scorecard/api/service/ScoreCardApiService.java
+@@ -13,7 +13,9 @@ import us.zacharymaddox.scorecard.domain.ScoreCardId;
+ 
+ public interface ScoreCardApiService {
+ 	
++	public ScoreCardHeader convertHeader(String value);
+ 	public Authorization authorize(String scoreCardHeader);
++	public Authorization authorize(ScoreCardHeader scoreCardHeader);
+ 	public List<ScoreCard> getScoreCards(Integer rows, Integer page);
+ 	public List<ScoreCard> getScoreCards(String transactionName, Integer rows, Integer page);
+ 	public List<ScoreCard> getScoreCards(ScoreCardActionStatus status, String transactionName, Integer rows, Integer page);
+diff --git a/src/main/java/us/zacharymaddox/scorecard/example/bank/messaging/TransactionProcessingService.java b/src/main/java/us/zacharymaddox/scorecard/example/bank/messaging/TransactionProcessingService.java
+index a2ac4b0..b22b279 100644
+--- a/src/main/java/us/zacharymaddox/scorecard/example/bank/messaging/TransactionProcessingService.java
++++ b/src/main/java/us/zacharymaddox/scorecard/example/bank/messaging/TransactionProcessingService.java
+@@ -13,9 +13,9 @@ import org.springframework.messaging.handler.annotation.Header;
+ import org.springframework.stereotype.Component;
+ import org.springframework.transaction.annotation.Transactional;
+ 
+-import us.zacharymaddox.scorecard.api.domain.WaitException;
+-import us.zacharymaddox.scorecard.api.service.ScoreCardApiService;
+-import us.zacharymaddox.scorecard.domain.Authorization;
++import us.zacharymaddox.scorecard.api.domain.ScoreCardResult;
++import us.zacharymaddox.scorecard.api.metadata.SCH;
++import us.zacharymaddox.scorecard.api.metadata.ScoreCardEnabled;
+ import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
+ import us.zacharymaddox.scorecard.example.bank.domain.Account;
+ import us.zacharymaddox.scorecard.example.bank.domain.BankErrorCode;
+@@ -28,86 +28,50 @@ import us.zacharymaddox.scorecard.example.bank.service.AccountService;
+ public class TransactionProcessingService {
+ 	
+ 	@Autowired
+-	private ScoreCardApiService scoreCardApiService;
+-	@Autowired
+ 	private AccountService accountService;
+ 	private Logger logger = LoggerFactory.getLogger(TransactionProcessingService.class);
+ 	private String errorKey = "error_code";
+ 	private String transactionIdKey = "transaction_id";
+ 	
+-	private void nsf(String scoreCardHeader) {
+-		Map<String, String> metadata = new HashMap<>();
+-		metadata.put(errorKey, BankErrorCode.NSF.name());
+-		scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.FAILED, metadata);
+-	}
+-	
+-	private void accountDne(String scoreCardHeader) {
+-		Map<String, String> metadata = new HashMap<>();
+-		metadata.put(errorKey, BankErrorCode.ACCOUNT_DNE.name());
+-		scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.FAILED, metadata);
+-	}
+-	
+-	private void performDebit(DebitRequest request, String scoreCardHeader, Account account) {
+-		Long transactionId = accountService.debitAccount(request, account);
+-		Map<String, String> metadata = new HashMap<>();
+-		// set the transaction id in the metadata in case it needs reversed later
+-		metadata.put(transactionIdKey, transactionId.toString());
+-		scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.COMPLETED, metadata);
+-	}
+-	
+ 	@JmsListener(destination="account", selector="ACTION='debit'", containerFactory="myFactory")
+ 	@Transactional
+-	public void debit(DebitRequest request, @Header("SCORE_CARD") String scoreCardHeader) {
++	@ScoreCardEnabled
++	public ScoreCardResult debit(DebitRequest request, @SCH @Header("SCORE_CARD") String scoreCardHeader) {
+ 		logger.info("processing debit reqeust");
+-		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
+-		switch (auth) {
+-			case CANCEL:
+-				break;
+-			case PROCESS:
+-				Optional<Account> a = accountService.getAccount(request.getAccountId());
+-				if (a.isPresent()) {
+-					Account account = a.get();
+-					if (-1 == account.getBalance().compareTo(request.getAmount())) {
+-						nsf(scoreCardHeader);
+-					} else {
+-						performDebit(request, scoreCardHeader, account);
+-					}
+-				} else {
+-					accountDne(scoreCardHeader);					
+-				}
+-				break;
+-			case SKIP:
+-				break;
+-			case WAIT:
+-				throw new WaitException();
++		Optional<Account> a = accountService.getAccount(request.getAccountId());
++		if (a.isPresent()) {
++			Account account = a.get();
++			if (-1 == account.getBalance().compareTo(request.getAmount())) {
++				Map<String, String> metadata = new HashMap<>();
++				metadata.put(errorKey, BankErrorCode.NSF.name());
++				return new ScoreCardResult(ScoreCardActionStatus.FAILED, metadata);
++			} else {
++				Long transactionId = accountService.debitAccount(request, account);
++				Map<String, String> metadata = new HashMap<>();
++				// set the transaction id in the metadata in case it needs reversed later
++				metadata.put(transactionIdKey, transactionId.toString());
++				return new ScoreCardResult(ScoreCardActionStatus.COMPLETED, metadata);
++			}
++		} else {
++			Map<String, String> metadata = new HashMap<>();
++			metadata.put(errorKey, BankErrorCode.ACCOUNT_DNE.name());
++			return new ScoreCardResult(ScoreCardActionStatus.FAILED, metadata);					
+ 		}
+ 	}
+ 	
+-	private void performCredit(CreditRequest request, String scoreCardHeader, Account account) {
+-		accountService.creditAccount(request, account);
+-		scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.COMPLETED);
+-	}
+-
+ 	@JmsListener(destination="account", selector="ACTION='credit'", containerFactory="myFactory")
+ 	@Transactional
+-	public void credit(CreditRequest request, @Header("SCORE_CARD") String scoreCardHeader) {
++	@ScoreCardEnabled
++	public ScoreCardResult credit(CreditRequest request, @SCH @Header("SCORE_CARD") String scoreCardHeader) {
+ 		logger.info("processing credit reqeust");
+-		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
+-		switch (auth) {
+-			case CANCEL:
+-				break;
+-			case PROCESS:
+-				Optional<Account> a = accountService.getAccount(request.getAccountId());
+-				if (a.isPresent()) {
+-					performCredit(request, scoreCardHeader, a.get());					
+-				} else {
+-					accountDne(scoreCardHeader);
+-				}
+-				break;
+-			case SKIP:
+-				break;
+-			case WAIT:
+-				throw new WaitException();
++		Optional<Account> a = accountService.getAccount(request.getAccountId());
++		if (a.isPresent()) {
++			accountService.creditAccount(request, a.get());
++			return new ScoreCardResult(ScoreCardActionStatus.COMPLETED);					
++		} else {
++			Map<String, String> metadata = new HashMap<>();
++			metadata.put(errorKey, BankErrorCode.ACCOUNT_DNE.name());
++			return new ScoreCardResult(ScoreCardActionStatus.FAILED, metadata);
+ 		}
+ 		
+ 	}
+diff --git a/src/main/java/us/zacharymaddox/scorecard/example/messaging/Service1.java b/src/main/java/us/zacharymaddox/scorecard/example/messaging/Service1.java
+index 9b3b1b0..8981a92 100644
+--- a/src/main/java/us/zacharymaddox/scorecard/example/messaging/Service1.java
++++ b/src/main/java/us/zacharymaddox/scorecard/example/messaging/Service1.java
+@@ -5,66 +5,49 @@ import java.util.Map;
+ 
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+-import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.context.annotation.Profile;
+ import org.springframework.jms.annotation.JmsListener;
+ import org.springframework.messaging.handler.annotation.Header;
+ import org.springframework.stereotype.Component;
+ import org.springframework.transaction.annotation.Transactional;
+ 
+-import us.zacharymaddox.scorecard.api.domain.WaitException;
+-import us.zacharymaddox.scorecard.api.service.ScoreCardApiService;
+-import us.zacharymaddox.scorecard.domain.Authorization;
++import us.zacharymaddox.scorecard.api.domain.ScoreCardResult;
++import us.zacharymaddox.scorecard.api.metadata.SCH;
++import us.zacharymaddox.scorecard.api.metadata.ScoreCardEnabled;
+ import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
+ 
+ @Component
+ @Profile({"example"})
+ public class Service1 {
+ 	
+-	@Autowired
+-	private ScoreCardApiService scoreCardApiService;
+ 	private Logger logger = LoggerFactory.getLogger(Service1.class);
+ 	
+-	private void process(Authorization auth, String message, String scoreCardHeader, Map<String, String> metadata) {
+-		switch (auth) {
+-			case CANCEL:
+-				break;
+-			case PROCESS:
+-				System.out.println("We have a message: " + message);
+-				scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.COMPLETED, metadata);
+-				break;
+-			case SKIP:
+-				break;
+-			case WAIT:
+-				throw new WaitException();
+-		}		
+-	}
+-	
+ 	@JmsListener(destination="service1", selector="ACTION='action1'", containerFactory="myFactory")
+ 	@Transactional
+-	public void action1(String message, @Header("SCORE_CARD") String scoreCardHeader) {
++	@ScoreCardEnabled
++	public ScoreCardResult action1(String message, @SCH @Header("SCORE_CARD") String scoreCardHeader) {
+ 		logger.info("service1/action1 invoked");
+-		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
+ 		Map<String, String> metadata = new HashMap<>();
+ 		metadata.put("test", "data");
+-		process(auth, message, scoreCardHeader, metadata);
++		System.out.println("We have a message: " + message);
++		return new ScoreCardResult(ScoreCardActionStatus.COMPLETED, metadata);
+ 	}
+ 	
+ 	@JmsListener(destination="service1", selector="ACTION='action2'", containerFactory="myFactory")
+ 	@Transactional
+-	public void action2(String message, @Header("SCORE_CARD") String scoreCardHeader) {
++	@ScoreCardEnabled
++	public ScoreCardResult action2(String message, @SCH @Header("SCORE_CARD") String scoreCardHeader) {
+ 		logger.info("service1/action2 invoked");
+-		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
+-		process(auth, message, scoreCardHeader, null);
+-		
++		return new ScoreCardResult(ScoreCardActionStatus.COMPLETED);
+ 	}
+ 	
+ 	@JmsListener(destination="service1", selector="ACTION='action3'", containerFactory="myFactory")
+ 	@Transactional
+-	public void action3(String message, @Header("SCORE_CARD") String scoreCardHeader) {
++	@ScoreCardEnabled
++	public ScoreCardResult action3(String message, @SCH @Header("SCORE_CARD") String scoreCardHeader) {
+ 		logger.info("service1/action3 invoked");
+-		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
+-		process(auth, message, scoreCardHeader, null);
++		System.out.println("We have a message: " + message);
++		return new ScoreCardResult(ScoreCardActionStatus.COMPLETED);
+ 		
+ 	}
+ 
