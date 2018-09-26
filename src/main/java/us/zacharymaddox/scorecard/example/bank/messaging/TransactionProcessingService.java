@@ -13,8 +13,9 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import us.zacharymaddox.scorecard.api.annotation.ScoreCardAuthorize;
+import us.zacharymaddox.scorecard.api.domain.WaitException;
 import us.zacharymaddox.scorecard.api.service.ScoreCardApiService;
+import us.zacharymaddox.scorecard.domain.Authorization;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 import us.zacharymaddox.scorecard.example.bank.domain.Account;
 import us.zacharymaddox.scorecard.example.bank.domain.BankErrorCode;
@@ -56,19 +57,29 @@ public class TransactionProcessingService {
 	
 	@JmsListener(destination="account", selector="ACTION='debit'", containerFactory="myFactory")
 	@Transactional
-	@ScoreCardAuthorize
 	public void debit(DebitRequest request, @Header("SCORE_CARD") String scoreCardHeader) {
 		logger.info("processing debit reqeust");
-		Optional<Account> a = accountService.getAccount(request.getAccountId());
-		if (a.isPresent()) {
-			Account account = a.get();
-			if (-1 == account.getBalance().compareTo(request.getAmount())) {
-				nsf(scoreCardHeader);
-			} else {
-				performDebit(request, scoreCardHeader, account);
-			}
-		} else {
-			accountDne(scoreCardHeader);					
+		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
+		switch (auth) {
+			case CANCEL:
+				break;
+			case PROCESS:
+				Optional<Account> a = accountService.getAccount(request.getAccountId());
+				if (a.isPresent()) {
+					Account account = a.get();
+					if (-1 == account.getBalance().compareTo(request.getAmount())) {
+						nsf(scoreCardHeader);
+					} else {
+						performDebit(request, scoreCardHeader, account);
+					}
+				} else {
+					accountDne(scoreCardHeader);					
+				}
+				break;
+			case SKIP:
+				break;
+			case WAIT:
+				throw new WaitException();
 		}
 	}
 	
@@ -79,14 +90,24 @@ public class TransactionProcessingService {
 
 	@JmsListener(destination="account", selector="ACTION='credit'", containerFactory="myFactory")
 	@Transactional
-	@ScoreCardAuthorize
 	public void credit(CreditRequest request, @Header("SCORE_CARD") String scoreCardHeader) {
 		logger.info("processing credit reqeust");
-		Optional<Account> a = accountService.getAccount(request.getAccountId());
-		if (a.isPresent()) {
-			performCredit(request, scoreCardHeader, a.get());					
-		} else {
-			accountDne(scoreCardHeader);
+		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
+		switch (auth) {
+			case CANCEL:
+				break;
+			case PROCESS:
+				Optional<Account> a = accountService.getAccount(request.getAccountId());
+				if (a.isPresent()) {
+					performCredit(request, scoreCardHeader, a.get());					
+				} else {
+					accountDne(scoreCardHeader);
+				}
+				break;
+			case SKIP:
+				break;
+			case WAIT:
+				throw new WaitException();
 		}
 		
 	}
