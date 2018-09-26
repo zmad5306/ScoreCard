@@ -28,19 +28,22 @@ public abstract class AbstractScoreCardApiService implements ScoreCardApiService
 	@Value("${scorecard.api.baseurl}")
 	private String baseUrl;
 	
-	protected ScoreCardHeader convertHeader(String value) {
+	public ScoreCardHeader convertHeader(String value) {
 		try {
 			return mapper.readValue(value, ScoreCardHeader.class);
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Could not parse Score Card Header.");
 		}
 	}
-	
 	public Authorization authorize(String scoreCardHeader) {
 		ScoreCardHeader sch = convertHeader(scoreCardHeader);
+		return authorize(sch);
+	}
+	
+	public Authorization authorize(ScoreCardHeader scoreCardHeader) {
 		AuthorizationRequest req = new AuthorizationRequest();
-		req.setActionId(sch.getActionId());
-		req.setScoreCardId(sch.getScoreCardId());
+		req.setActionId(scoreCardHeader.getActionId());
+		req.setScoreCardId(scoreCardHeader.getScoreCardId());
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<AuthorizationResult> result = restTemplate.postForEntity(baseUrl + "/scorecard", req, AuthorizationResult.class);
 		AuthorizationResult aResult = result.getBody();
