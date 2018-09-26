@@ -15,6 +15,7 @@ public interface ScoreCardApiService {
 	
 	public ScoreCardHeader convertHeader(String value);
 	public Authorization authorize(String scoreCardHeader);
+	public Authorization authorize(ScoreCardHeader scoreCardHeader);
 	public List<ScoreCard> getScoreCards(Integer rows, Integer page);
 	public List<ScoreCard> getScoreCards(String transactionName, Integer rows, Integer page);
 	public List<ScoreCard> getScoreCards(ScoreCardActionStatus status, String transactionName, Integer rows, Integer page);
