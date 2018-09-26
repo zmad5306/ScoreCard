@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import us.zacharymaddox.scorecard.api.domain.ScoreCard;
 import us.zacharymaddox.scorecard.api.domain.ScoreCardHeader;
+import us.zacharymaddox.scorecard.api.domain.Transaction;
 import us.zacharymaddox.scorecard.domain.Authorization;
 import us.zacharymaddox.scorecard.domain.AuthorizationRequest;
 import us.zacharymaddox.scorecard.domain.AuthorizationResult;
@@ -66,6 +67,12 @@ public abstract class AbstractScoreCardApiService implements ScoreCardApiService
 				rows, page
 			);
 		return response.getBody();
+	}
+	
+	public ScoreCard getScoreCard(Long scoreCardId) {
+		RestTemplate restTemplate = new RestTemplate();
+		ScoreCard scoreCard = restTemplate.getForObject(baseUrl + "/scorecard/{score_card_id}", ScoreCard.class, scoreCardId);
+		return scoreCard;
 	}
 	
 	public List<ScoreCard> getScoreCards(String transactionName, Integer rows, Integer page) {

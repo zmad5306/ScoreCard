@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -40,6 +41,12 @@ public class ScoreCardMonitorController {
 		
 		model.addAttribute("transactions", transactionApiService.getTransactions());
 		return "monitor/scorecard/list";
+	}
+	
+	@GetMapping("/{score_card_id}")
+	public String details(@PathVariable("score_card_id") Long scoreCardId, Model model) {
+		model.addAttribute("scorecard", scoreCardApiService.getScoreCard(scoreCardId));
+		return "monitor/scorecard/detail";
 	}
 
 }

@@ -25,5 +25,6 @@ public interface ScoreCardApiService {
 	public void updateStatus(ScoreCardHeader scoreCardHeader, ScoreCardActionStatus status, Map<String, String> metadata);
 	public ScoreCardId createScoreCard(Transaction transaction);
 	public void wrapAndSend(ScoreCardId id, Transaction transaction, Action action, Object message);
+	public ScoreCard getScoreCard(Long scoreCardId);
 	
 }
