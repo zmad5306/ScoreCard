@@ -62,6 +62,7 @@ public class TransactionProcessingService {
 		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
 		switch (auth) {
 			case CANCEL:
+				scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.CANCELLED);
 				break;
 			case PROCESS:
 				Optional<Account> a = accountService.getAccount(request.getAccountId());
@@ -95,6 +96,7 @@ public class TransactionProcessingService {
 		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
 		switch (auth) {
 			case CANCEL:
+				scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.CANCELLED);
 				break;
 			case PROCESS:
 				Optional<Account> a = accountService.getAccount(request.getAccountId());

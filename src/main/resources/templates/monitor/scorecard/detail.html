@@ -12,6 +12,8 @@
 				<h1>Score Card</h1>
 			</div>
 			<div class="row">
+				<p class="alert alert-info" th:if="${scorecard.hasPendingActions()}">This Score Card has pending actions.</p>
+				<p class="alert alert-danger" th:if="${scorecard.hasFailedActions()}">This Score Card has failed actions.</p>
 				<div class="control-group">
 					<label class="control-label">Score Card Id:</label>
 					<span class="controls readonly" th:text="${scorecard.scoreCardId}"></span>
@@ -23,14 +25,6 @@
 				<div class="control-group">
 					<label class="control-label">Transaction Name:</label>
 					<span class="controls readonly" th:text="${scorecard.transactionName}"></span>
-				</div>
-				<div class="control-group">
-					<label class="control-label">Has Failed Actions:</label>
-					<span class="controls readonly" th:text="${scorecard.hasFailedActions()}"></span>
-				</div>
-				<div class="control-group">
-					<label class="control-label">Has Pending Actions:</label>
-					<span class="controls readonly" th:text="${scorecard.hasPendingActions()}"></span>
 				</div>
 			</div>
 			<div class="row">

@@ -168,13 +168,11 @@ public class ScoreCardService {
 		
 		switch (sca.getStatus()) {
 			case PROCESSING:
-				return new AuthorizationResult(Authorization.SKIP);
 			case COMPLETED:
-				return new AuthorizationResult(Authorization.SKIP);
 			case FAILED:
-				return new AuthorizationResult(Authorization.CANCEL);
 			case CANCELLED:
-				return new AuthorizationResult(Authorization.CANCEL);
+			case ROLLEDBACK:
+				return new AuthorizationResult(Authorization.SKIP);
 			case UNKNOWN:
 				return new AuthorizationResult(Authorization.WAIT);
 			case PENDING:

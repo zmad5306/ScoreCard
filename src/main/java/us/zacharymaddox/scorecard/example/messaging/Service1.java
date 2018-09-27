@@ -25,29 +25,27 @@ public class Service1 {
 	private ScoreCardApiService scoreCardApiService;
 	private Logger logger = LoggerFactory.getLogger(Service1.class);
 	
-	private void process(Authorization auth, String message, String scoreCardHeader, Map<String, String> metadata) {
+	@JmsListener(destination="service1", selector="ACTION='action1'", containerFactory="myFactory")
+	@Transactional
+	public void action1(String message, @Header("SCORE_CARD") String scoreCardHeader) {
+		logger.info("service1/action1 invoked");
+		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
+		
 		switch (auth) {
 			case CANCEL:
+				scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.CANCELLED);
 				break;
 			case PROCESS:
 				System.out.println("We have a message: " + message);
+				Map<String, String> metadata = new HashMap<>();
+				metadata.put("test", "data");
 				scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.COMPLETED, metadata);
 				break;
 			case SKIP:
 				break;
 			case WAIT:
 				throw new WaitException();
-		}		
-	}
-	
-	@JmsListener(destination="service1", selector="ACTION='action1'", containerFactory="myFactory")
-	@Transactional
-	public void action1(String message, @Header("SCORE_CARD") String scoreCardHeader) {
-		logger.info("service1/action1 invoked");
-		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
-		Map<String, String> metadata = new HashMap<>();
-		metadata.put("test", "data");
-		process(auth, message, scoreCardHeader, metadata);
+		}
 	}
 	
 	@JmsListener(destination="service1", selector="ACTION='action2'", containerFactory="myFactory")
@@ -55,7 +53,21 @@ public class Service1 {
 	public void action2(String message, @Header("SCORE_CARD") String scoreCardHeader) {
 		logger.info("service1/action2 invoked");
 		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
-		process(auth, message, scoreCardHeader, null);
+		switch (auth) {
+			case CANCEL:
+				scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.CANCELLED);
+				break;
+			case PROCESS:
+				System.out.println("We have a message: " + message);
+				Map<String, String> metadata = new HashMap<>();
+				metadata.put("test", "data");
+				scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.COMPLETED, metadata);
+				break;
+			case SKIP:
+				break;
+			case WAIT:
+				throw new WaitException();
+		}
 		
 	}
 	
@@ -64,8 +76,21 @@ public class Service1 {
 	public void action3(String message, @Header("SCORE_CARD") String scoreCardHeader) {
 		logger.info("service1/action3 invoked");
 		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
-		process(auth, message, scoreCardHeader, null);
-		
+		switch (auth) {
+			case CANCEL:
+				scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.CANCELLED);
+				break;
+			case PROCESS:
+				System.out.println("We have a message: " + message);
+				Map<String, String> metadata = new HashMap<>();
+				metadata.put("test", "data");
+				scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.COMPLETED, metadata);
+				break;
+			case SKIP:
+				break;
+			case WAIT:
+				throw new WaitException();
+		}
 	}
 
 }
