@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -15,7 +16,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-@Table(name="SCORE_CARD", schema="SCORE_CARD")
+@Table(name="SCORE_CARD", schema="SCORE_CARD", indexes= {
+		@Index(columnList="transactionName")
+})
 public class ScoreCard extends DomainObject implements Serializable {
 
 	private static final long serialVersionUID = 3392668963392107413L;

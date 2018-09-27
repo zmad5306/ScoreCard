@@ -8,6 +8,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -20,8 +21,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name="ACTION", schema="SCORE_CARD",
-		uniqueConstraints=
+		uniqueConstraints= {
 			@UniqueConstraint(columnNames= {"SERVICE_ID", "NAME"})
+		},
+		indexes = {
+			@Index(columnList="NAME"),
+			@Index(columnList="SERVICE_ID,NAME", unique=true)
+		}
 	)
 public class Action extends DomainObject implements Serializable {
 

@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -23,7 +24,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import us.zacharymaddox.scorecard.domain.Transport;
 
 @Entity
-@Table(name="SERVICE", schema="SCORE_CARD")
+@Table(name="SERVICE", schema="SCORE_CARD", indexes= {
+		@Index(columnList="NAME", unique=true)
+})
 public class Service extends DomainObject implements Serializable {
 	
 	private static final long serialVersionUID = 4081098177527594840L;

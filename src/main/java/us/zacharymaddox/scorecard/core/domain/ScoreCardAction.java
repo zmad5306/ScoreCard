@@ -16,6 +16,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -33,7 +34,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 
 @Entity
-@Table(name="SCORE_CARD_ACTION", schema="SCORE_CARD")
+@Table(name="SCORE_CARD_ACTION", schema="SCORE_CARD", indexes= {
+		@Index(columnList="STATUS")
+})
 public class ScoreCardAction extends DomainObject implements Serializable {
 
 	private static final long serialVersionUID = 7351293958881594081L;

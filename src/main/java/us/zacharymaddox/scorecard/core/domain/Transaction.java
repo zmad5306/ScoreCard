@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -18,7 +19,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
-@Table(name="TRANSACTION", schema="SCORE_CARD")
+@Table(name="TRANSACTION", schema="SCORE_CARD", indexes = {
+		@Index(columnList="NAME", unique=true)
+})
 public class Transaction extends DomainObject implements Serializable {
 
 	private static final long serialVersionUID = -7061621744060205125L;

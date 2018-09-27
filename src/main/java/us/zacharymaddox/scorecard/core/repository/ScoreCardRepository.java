@@ -21,6 +21,6 @@ public interface ScoreCardRepository extends JpaRepository<ScoreCard, Long> {
 	public List<ScoreCard> findAllOrderByScoreCardIdDesc(Pageable pageable);
 	
 	@Query("select sc from ScoreCardAction sca join sca.scoreCard sc where sca.status = :score_card_action_status and sc.transactionName = :transaction_name order by sc.scoreCardId desc")
-	public List<ScoreCard> findByActionStatusAndTransactionnameOrderByScoreCardIdDesc(@Param("score_card_action_status") ScoreCardActionStatus status, @Param("transaction_name")String transactionName, Pageable pageable);
+	public List<ScoreCard> findByActionStatusAndTransactionNameOrderByScoreCardIdDesc(@Param("score_card_action_status") ScoreCardActionStatus status, @Param("transaction_name")String transactionName, Pageable pageable);
 	
 }

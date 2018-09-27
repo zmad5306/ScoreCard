@@ -121,8 +121,6 @@ public class ScoreCardService {
 		return sc;
 	}
 	
-
-
 	@Transactional(readOnly=true)
 	public ScoreCard getScoreCard(Long scoreCardId) {
 		Optional<ScoreCard> sc = scoreCardRepository.findById(scoreCardId);
@@ -148,7 +146,7 @@ public class ScoreCardService {
 	@Transactional(readOnly=true)
 	public List<ScoreCard> getScoreCards(ScoreCardActionStatus status, String transactionName, Integer page, Integer rows) {
 		Pageable pageable = PageRequest.of(page, rows);
-		return scoreCardRepository.findByActionStatusAndTransactionnameOrderByScoreCardIdDesc(status, transactionName, pageable);
+		return scoreCardRepository.findByActionStatusAndTransactionNameOrderByScoreCardIdDesc(status, transactionName, pageable);
 	}
 	
 	@Transactional
