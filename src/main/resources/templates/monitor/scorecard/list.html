@@ -48,7 +48,8 @@
 					<div class="text-center">
 						<ul class="pagination">
 							<li th:if="${null == transactionName}" th:classappend="${scorecards.page > 0 ? '' : 'disabled'}">
-								<a th:text="Prev" th:href="@{'/monitor/scorecard/list?rows=' + ${scorecards.rows} + '&page=' + ${scorecards.page - 1}}"></a>
+								<a th:if="${scorecards.page > 0}" th:text="Prev" th:href="@{'/monitor/scorecard/list?rows=' + ${scorecards.rows} + '&page=' + ${scorecards.page - 1}}"></a>
+								<a th:if="${scorecards.page <= 0}" th:text="Prev"></a>
 							<li>
 							<li th:if="${null != transactionName}" th:classappend="${scorecards.page > 0 ? '' : 'disabled'}">
 								<a th:text="Prev" th:disabled="${scorecards.page == 0}" th:href="@{'/monitor/scorecard/list?rows=' + ${scorecards.rows} + '&page=' + ${scorecards.page - 1} + '&transaction_name=' + ${transactionName}}"></a>
@@ -58,7 +59,8 @@
 								<a th:if="${null != transactionName}" th:text="${i}" th:href="@{'/monitor/scorecard/list?rows=' + ${scorecards.rows} + '&page=' + ${i - 1} + '&transaction_name=' + ${transactionName}}"></a>
 							</li>
 							<li th:if="${null == transactionName}" th:classappend="${scorecards.page < scorecards.getPages() - 1 ? '' : 'disabled'}">
-								<a th:text="Next" th:href="@{'/monitor/scorecard/list?rows=' + ${scorecards.rows} + '&page=' + ${scorecards.page + 1}}"></a>
+								<a th:if="${scorecards.page < scorecards.getPages() - 1}" th:text="Next" th:href="@{'/monitor/scorecard/list?rows=' + ${scorecards.rows} + '&page=' + ${scorecards.page + 1}}"></a>
+								<a th:if="${scorecards.page >= scorecards.getPages() - 1}" th:text="Next"></a>
 							<li>
 							<li th:if="${null != transactionName}" th:classappend="${scorecards.page < scorecards.getPages() - 1 ? '' : 'disabled'}">
 								<a th:text="Next" th:disabled="${scorecards.page == scorecards.getPages() - 1}" th:href="@{'/monitor/scorecard/list?rows=' + ${scorecards.rows} + '&page=' + ${scorecards.page + 1} + '&transaction_name=' + ${transactionName}}"></a>
