@@ -47,20 +47,20 @@
 				<div class="row">
 					<div class="text-center">
 						<ul class="pagination">
-							<li th:if="${null == transactionName && scorecards.page > 0}">
+							<li th:if="${null == transactionName}" th:classappend="${scorecards.page > 0 ? '' : 'disabled'}">
 								<a th:text="Prev" th:href="@{'/monitor/scorecard/list?rows=' + ${scorecards.rows} + '&page=' + ${scorecards.page - 1}}"></a>
 							<li>
-							<li th:if="${null != transactionName && scorecards.page > 0}">
+							<li th:if="${null != transactionName}" th:classappend="${scorecards.page > 0 ? '' : 'disabled'}">
 								<a th:text="Prev" th:disabled="${scorecards.page == 0}" th:href="@{'/monitor/scorecard/list?rows=' + ${scorecards.rows} + '&page=' + ${scorecards.page - 1} + '&transaction_name=' + ${transactionName}}"></a>
 							<li>
 							<li th:each="i: ${#numbers.sequence(1, scorecards.getPages())}" th:classappend="${scorecards.page == i - 1} ? active : ''">
 								<a th:if="${null == transactionName}" th:text="${i}" th:href="@{'/monitor/scorecard/list?rows=' + ${scorecards.rows} + '&page=' + ${i - 1}}"></a>
 								<a th:if="${null != transactionName}" th:text="${i}" th:href="@{'/monitor/scorecard/list?rows=' + ${scorecards.rows} + '&page=' + ${i - 1} + '&transaction_name=' + ${transactionName}}"></a>
 							</li>
-							<li th:if="${null == transactionName && scorecards.page < scorecards.getPages() - 1}">
+							<li th:if="${null == transactionName}" th:classappend="${scorecards.page < scorecards.getPages() - 1 ? '' : 'disabled'}">
 								<a th:text="Next" th:href="@{'/monitor/scorecard/list?rows=' + ${scorecards.rows} + '&page=' + ${scorecards.page + 1}}"></a>
 							<li>
-							<li th:if="${null != transactionName && scorecards.page < scorecards.getPages() - 1}">
+							<li th:if="${null != transactionName}" th:classappend="${scorecards.page < scorecards.getPages() - 1 ? '' : 'disabled'}">
 								<a th:text="Next" th:disabled="${scorecards.page == scorecards.getPages() - 1}" th:href="@{'/monitor/scorecard/list?rows=' + ${scorecards.rows} + '&page=' + ${scorecards.page + 1} + '&transaction_name=' + ${transactionName}}"></a>
 							<li>
 						</ul>
