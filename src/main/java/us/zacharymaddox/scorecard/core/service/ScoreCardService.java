@@ -89,26 +89,28 @@ public class ScoreCardService {
 		
 		Transaction transaction = t.get();
 		
-		ScoreCard sc = new ScoreCard();
-		sc.setScoreCardId(scoreCardId);
-		sc.setTransactionId(transactionId);
-		sc.setTransactionName(transaction.getName());
+		ScoreCard scoreCard = new ScoreCard();
+		scoreCard.setScoreCardId(scoreCardId);
+		scoreCard.setTransactionId(transactionId);
+		scoreCard.setTransactionName(transaction.getName());
 		
-		sc = scoreCardRepository.save(sc);
+		scoreCard = scoreCardRepository.save(scoreCard);
 		
-		List<ScoreCardAction> actions = createScoreCardActions(t.get().getActions(), sc);
+		List<ScoreCardAction> actions = createScoreCardActions(t.get().getActions(), scoreCard);
 		
+		// save the score card actions, we need the ids set in order to build the dependencies
 		actions = scoreCardActionRepository.saveAll(actions);
 		
-		sc.setActions(actions);
+		scoreCard.setActions(actions);
 		
+		// build dependencies between score card actions
 		for (ScoreCardAction sca : actions) {
 			Set<ScoreCardAction> dependsOn = new HashSet<>(); 
 			List<TransactionAction> tas = transactionActionRepository.findByTransactionIdAndActionId(transaction.getTransactionId(), sca.getActionId());
 			for (TransactionAction ta : tas) {
 				for (TransactionAction dta : ta.getDependsOn()) {
 					Action action = dta.getAction();
-					Optional<ScoreCardAction> dependency = scoreCardActionRepository.findByScoreCardIdAndActionId(sc.getScoreCardId(), action.getActionId());
+					Optional<ScoreCardAction> dependency = scoreCardActionRepository.findByScoreCardIdAndActionId(scoreCard.getScoreCardId(), action.getActionId());
 					if (dependency.isPresent()) {
 						dependsOn.add(dependency.get());
 					}
@@ -118,7 +120,7 @@ public class ScoreCardService {
 			scoreCardActionRepository.save(sca);
 		}
 		
-		return sc;
+		return scoreCard;
 	}
 	
 	@Transactional(readOnly=true)
@@ -181,7 +183,6 @@ public class ScoreCardService {
 			case COMPLETED:
 			case FAILED:
 			case CANCELLED:
-			case ROLLEDBACK:
 				return new AuthorizationResult(Authorization.SKIP);
 			case UNKNOWN:
 				return new AuthorizationResult(Authorization.WAIT);
@@ -203,7 +204,7 @@ public class ScoreCardService {
 						
 						// check that all dependencies are finished before returning PROCESS
 						if (completedActions == dependencies.size()) {							
-							updateActionStatusInternal(new UpdateRequest(scoreCardId, sca.getActionId(), ScoreCardActionStatus.PROCESSING), false);
+							updateActionStatus(new UpdateRequest(scoreCardId, sca.getActionId(), ScoreCardActionStatus.PROCESSING), false);
 							return new AuthorizationResult(Authorization.PROCESS);
 						} 
 						// a dependency isn't finished, WAIT on it
@@ -213,7 +214,7 @@ public class ScoreCardService {
 					} 
 					// there aren't any dependencies so go ahead and process
 					else {
-						updateActionStatusInternal(new UpdateRequest(scoreCardId, sca.getActionId(), ScoreCardActionStatus.PROCESSING), false);
+						updateActionStatus(new UpdateRequest(scoreCardId, sca.getActionId(), ScoreCardActionStatus.PROCESSING), false);
 						return new AuthorizationResult(Authorization.PROCESS);
 					}
 				}
@@ -225,10 +226,11 @@ public class ScoreCardService {
 	
 	@Transactional
 	public void updateActionStatus(UpdateRequest request) {
-		updateActionStatusInternal(request, true);
+		updateActionStatus(request, true);
 	}
 	
-	private void updateActionStatusInternal(UpdateRequest request, Boolean mustBeProcessing) {
+	@Transactional
+	private void updateActionStatus(UpdateRequest request, Boolean mustBeProcessing) {
 		Long scoreCardId = request.getScoreCardId();
 		Long actionId = request.getActionId();
 		ScoreCardActionStatus status = request.getStatus();	
@@ -240,8 +242,8 @@ public class ScoreCardService {
 		
 		ScoreCardAction sca = a.get();
 		
-		// TODO is this needed?
-		//calling from the outside world, action must be in processing status to complete
+		//calling from the outside world (public overload), the action must be in processing status to complete
+		//internal updates are allowed w/o the score card being in processing status
 		if (mustBeProcessing && ScoreCardActionStatus.COMPLETED.equals(status) && !ScoreCardActionStatus.PROCESSING.equals(sca.getStatus())) {
 			// TODO design says to update this to UNKNOWN state not blow up
 			throw new ScoreCardClientException(ScoreCardErrorCode.ILLEGAL_STATE_CHANGE_NOT_AUTHORIZED);
