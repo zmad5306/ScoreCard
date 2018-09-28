@@ -18,7 +18,7 @@ public interface ScoreCardApiService {
 	public Authorization authorize(String scoreCardHeader);
 	public Authorization authorize(ScoreCardHeader scoreCardHeader);
 	public DataPage<ScoreCard> getScoreCards(Integer rows, Integer page);
-	public List<ScoreCard> getScoreCards(String transactionName, Integer rows, Integer page);
+	public DataPage<ScoreCard> getScoreCards(String transactionName, Integer rows, Integer page);
 	public List<ScoreCard> getScoreCards(ScoreCardActionStatus status, String transactionName, Integer rows, Integer page);
 	public void updateStatus(String scoreCardHeader, ScoreCardActionStatus status);
 	public void updateStatus(ScoreCardHeader scoreCardHeader, ScoreCardActionStatus status);

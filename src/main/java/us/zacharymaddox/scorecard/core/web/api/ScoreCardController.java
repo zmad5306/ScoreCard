@@ -43,12 +43,17 @@ public class ScoreCardController {
 	}
 	
 	@GetMapping(value="/filter", produces="application/json")
-	public List<ScoreCard> getScoreCardsFilterByTransactionName(
+	public DataPage<ScoreCard> getScoreCardsFilterByTransactionName(
 			@RequestParam(name="transaction_name", required=true) String transactionName,
 			@RequestParam(name="rows", required=false, defaultValue="100") Integer rows,
 			@RequestParam(name="page", required		=false, defaultValue="1") Integer page
 		) {
-		return scoreCardService.getScoreCards(transactionName, page, rows);
+		return new DataPage<ScoreCard>(
+				scoreCardService.getScoreCards(transactionName, page, rows), 
+				rows, 
+				page, 
+				scoreCardService.countByTransactionName(transactionName)
+			);
 	}
 	
 	@GetMapping(value="/status", produces="application/json")

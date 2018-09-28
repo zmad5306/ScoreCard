@@ -75,13 +75,13 @@ public abstract class AbstractScoreCardApiService implements ScoreCardApiService
 		return scoreCard;
 	}
 	
-	public List<ScoreCard> getScoreCards(String transactionName, Integer rows, Integer page) {
+	public DataPage<ScoreCard> getScoreCards(String transactionName, Integer rows, Integer page) {
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<List<ScoreCard>> response = restTemplate.exchange(
+		ResponseEntity<DataPage<ScoreCard>> response = restTemplate.exchange(
 				baseUrl + "/scorecard/filter?transaction_name={transactionName}&rows={rows}&page={page}", 
 				HttpMethod.GET, 
 				null, //requestEntity
-				new ParameterizedTypeReference<List<ScoreCard>>() {},
+				new ParameterizedTypeReference<DataPage<ScoreCard>>() {},
 				transactionName, rows, page
 			);
 		return response.getBody();

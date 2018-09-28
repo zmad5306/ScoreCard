@@ -143,6 +143,11 @@ public class ScoreCardService {
 	}
 	
 	@Transactional(readOnly=true)
+	public Long countByTransactionName(String transactionName) {
+		return scoreCardRepository.countByTransactionName(transactionName);
+	}
+
+	@Transactional(readOnly=true)
 	public List<ScoreCard> getScoreCards(Integer page, Integer rows) {
 		Pageable pageable = PageRequest.of(page, rows);
 		return scoreCardRepository.findAllOrderByScoreCardIdDesc(pageable);

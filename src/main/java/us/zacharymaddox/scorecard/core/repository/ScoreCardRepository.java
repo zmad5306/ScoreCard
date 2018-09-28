@@ -17,6 +17,8 @@ public interface ScoreCardRepository extends JpaRepository<ScoreCard, Long> {
 	
 	public List<ScoreCard> findByTransactionNameOrderByScoreCardIdDesc(String transactionName, Pageable pageable);
 	
+	public Long countByTransactionName(String transactionName);
+	
 	@Query("from ScoreCard order by scoreCardId desc")
 	public List<ScoreCard> findAllOrderByScoreCardIdDesc(Pageable pageable);
 	
