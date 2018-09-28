@@ -18,6 +18,7 @@ import us.zacharymaddox.scorecard.api.domain.ScoreCardHeader;
 import us.zacharymaddox.scorecard.domain.Authorization;
 import us.zacharymaddox.scorecard.domain.AuthorizationRequest;
 import us.zacharymaddox.scorecard.domain.AuthorizationResult;
+import us.zacharymaddox.scorecard.domain.DataPage;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 import us.zacharymaddox.scorecard.domain.ScoreCardId;
 
@@ -56,13 +57,13 @@ public abstract class AbstractScoreCardApiService implements ScoreCardApiService
         return id;
 	}
 	
-	public List<ScoreCard> getScoreCards(Integer rows, Integer page) {
+	public DataPage<ScoreCard> getScoreCards(Integer rows, Integer page) {
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<List<ScoreCard>> response = restTemplate.exchange(
+		ResponseEntity<DataPage<ScoreCard>> response = restTemplate.exchange(
 				baseUrl + "/scorecard?rows={rows}&page={page}", 
 				HttpMethod.GET, 
 				null, //requestEntity
-				new ParameterizedTypeReference<List<ScoreCard>>() {},
+				new ParameterizedTypeReference<DataPage<ScoreCard>>() {},
 				rows, page
 			);
 		return response.getBody();

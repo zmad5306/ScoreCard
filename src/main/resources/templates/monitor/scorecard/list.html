@@ -37,13 +37,21 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="scoreCard : ${scorecards}"
+						<tr th:each="scoreCard : ${scorecards.data}"
 							th:classappend="${(scoreCard.hasFailedActions() ? 'danger' : '') + (scoreCard.hasPendingActions() ? 'info' : '')}">
 							<td><a th:href="@{'/monitor/scorecard/' + ${scoreCard.scoreCardId}}" th:text="${scoreCard.scoreCardId}"></a></td>
 							<td th:text="${scoreCard.transactionName}"></td>
 						</tr>
 					</tbody>
 				</table>
+				<div class="row">
+					<ul class="pagination">
+						<li th:each="i: ${#numbers.sequence(1, scorecards.getPages())}" th:classappend="${scorecards.page == i - 1} ? active : ''">
+							<a th:if="${null == transactionName}" th:text="${i}" th:href="@{'/monitor/scorecard/list?rows=' + ${scorecards.rows} + '&page=' + ${i - 1}}"></a>
+							<a th:if="${null != transactionName}" th:text="${i}" th:href="@{'/monitor/scorecard/list?rows=' + ${scorecards.rows} + '&page=' + ${i - 1} + '&transaction_name=' + ${transactionName}"></a>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</div>

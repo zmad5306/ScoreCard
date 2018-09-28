@@ -17,6 +17,7 @@ import us.zacharymaddox.scorecard.core.service.ScoreCardService;
 import us.zacharymaddox.scorecard.domain.AuthorizationRequest;
 import us.zacharymaddox.scorecard.domain.AuthorizationResult;
 import us.zacharymaddox.scorecard.domain.CreateRequest;
+import us.zacharymaddox.scorecard.domain.DataPage;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 import us.zacharymaddox.scorecard.domain.ScoreCardId;
 import us.zacharymaddox.scorecard.domain.UpdateRequest;
@@ -29,11 +30,16 @@ public class ScoreCardController {
 	private ScoreCardService scoreCardService;
 	
 	@GetMapping(produces="application/json")
-	public List<ScoreCard> getScoreCards(
+	public DataPage<ScoreCard> getScoreCards(
 			@RequestParam(name="rows", required=false, defaultValue="100") Integer rows,
 			@RequestParam(name="page", required=false, defaultValue="1") Integer page 
 		) {
-		return scoreCardService.getScoreCards(page, rows);
+		return new DataPage<ScoreCard>(
+				scoreCardService.getScoreCards(page, rows), 
+				rows, 
+				page, 
+				scoreCardService.countAll()
+			);
 	}
 	
 	@GetMapping(value="/filter", produces="application/json")
@@ -60,14 +66,14 @@ public class ScoreCardController {
 		return scoreCardService.getNextScoreCardId();
 	}
 	
-	@PutMapping(consumes="application/json", produces="application/json")
-	public ScoreCard createScoreCard(@RequestBody CreateRequest request) {
-		return scoreCardService.createScoreCard(request.getScoreCardId(), request.getTransactionId());
-	}
-	
 	@GetMapping(value="/{score_card_id}", produces="application/json")
 	public ScoreCard getScoreCard(@PathVariable("score_card_id") Long scoreCardId) {
 		return scoreCardService.getScoreCard(scoreCardId);
+	}
+
+	@PutMapping(consumes="application/json", produces="application/json")
+	public ScoreCard createScoreCard(@RequestBody CreateRequest request) {
+		return scoreCardService.createScoreCard(request.getScoreCardId(), request.getTransactionId());
 	}
 	
 	@PostMapping(consumes="application/json", produces="application/json")

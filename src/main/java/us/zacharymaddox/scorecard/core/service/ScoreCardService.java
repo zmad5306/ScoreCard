@@ -138,6 +138,11 @@ public class ScoreCardService {
 	}
 	
 	@Transactional(readOnly=true)
+	public Long countAll() {
+		return scoreCardRepository.count();
+	}
+	
+	@Transactional(readOnly=true)
 	public List<ScoreCard> getScoreCards(Integer page, Integer rows) {
 		Pageable pageable = PageRequest.of(page, rows);
 		return scoreCardRepository.findAllOrderByScoreCardIdDesc(pageable);
