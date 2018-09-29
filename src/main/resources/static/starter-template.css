@@ -18,3 +18,8 @@ body {
 .comma-list li:last-child::after {
     content: "";
 }
+.table td.fit, 
+.table th.fit {
+    white-space: nowrap;
+    width: 1%;
+}
