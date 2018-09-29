@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -38,11 +39,13 @@ public class Service extends DomainObject implements Serializable {
 	private Long serviceId;
 	@Column(unique=true)
 	@NotNull
+	@NotEmpty
 	private String name;
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	private Transport transport;
 	@NotNull
+	@NotEmpty
 	private String path;
 	@OneToMany(mappedBy="service", fetch=FetchType.EAGER)
 	@JsonSerialize(using=ServiceActionListSerializer.class)

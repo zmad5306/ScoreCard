@@ -13,11 +13,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import us.zacharymaddox.scorecard.domain.Method;
 
 @Entity
 @Table(name="ACTION", schema="SCORE_CARD",
@@ -37,12 +41,18 @@ public class Action extends DomainObject implements Serializable {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@JsonProperty("action_id")
 	private Long actionId;
+	@NotNull
+	@NotEmpty
 	private String name;
 	@ManyToOne
 	@JoinColumn(name="SERVICE_ID")
+	@NotNull
 	private Service service;
+	@NotNull
+	@NotEmpty
 	private String path;
 	@Enumerated(EnumType.STRING)
+	@NotNull
 	private Method method;
 
 	public Action() {

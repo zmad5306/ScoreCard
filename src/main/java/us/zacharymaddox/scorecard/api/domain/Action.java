@@ -5,8 +5,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import us.zacharymaddox.scorecard.domain.Method;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 
 public class Action implements Serializable {
@@ -15,9 +19,14 @@ public class Action implements Serializable {
 	@JsonProperty("action_id")
 	private Long actionId;
 	private String type;
+	@NotNull
+	@NotEmpty
 	private String name;
+	@NotNull
+	@NotEmpty
 	private String path;
-	private String method;
+	@NotNull
+	private Method method;
 	private Service service;
 	private ScoreCardActionStatus status;
 	@JsonProperty("start_timestamp")
@@ -52,10 +61,10 @@ public class Action implements Serializable {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	public String getMethod() {
+	public Method getMethod() {
 		return method;
 	}
-	public void setMethod(String method) {
+	public void setMethod(Method method) {
 		this.method = method;
 	}
 	public Service getService() {

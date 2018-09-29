@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import us.zacharymaddox.scorecard.domain.Method;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 
 @Entity

@@ -3,6 +3,7 @@ package us.zacharymaddox.scorecard.api.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,6 +27,11 @@ public class ActionApiService {
 	public Action getActionByName(String name) {
 		Action action = restTemplate.getForObject(baseUrl + "/action/?name={name}", Action.class, name);
 		return action;
+	}
+
+	public Action saveAction(Action action) {
+		ResponseEntity<Action> svc = restTemplate.postForEntity(baseUrl + "/action", action, Action.class);
+		return svc.getBody();
 	}
 
 }

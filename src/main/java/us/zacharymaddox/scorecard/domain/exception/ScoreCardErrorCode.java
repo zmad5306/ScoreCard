@@ -11,7 +11,9 @@ public enum ScoreCardErrorCode {
 	SERVICE_DNE("The requested Service does not exist.", 404), 
 	ACTION_DNE("The requested Action does not exist.", 404), 
 	SERVICE_NAME_TAKEN("The requested Service name already exists, select a unique service name.", 400), 
-	SERVICE_INVALID("The requested Service passed was invalid.", 400);
+	SERVICE_INVALID("The requested Service passed was invalid.", 400), 
+	ACTION_NAME_TAKEN("The requested Action name alrady exists in this Service, select a unique action name.", 400),
+	ACTION_INVALID("The requested Action passed was invalid.", 400);
 	
 	private String message;
 	private Integer status;

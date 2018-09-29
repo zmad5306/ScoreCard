@@ -31,6 +31,11 @@
 			</div>
 			<div class="row">
 				<h3>Actions</h3>
+				<div class="btn-group pull-right">
+				    <a th:href="@{'/portal/action/' + ${service.serviceId} + '/add'}" class="btn btn-primary">
+				        <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> Add Action
+				    </a>
+				</div>
 				<table class="table table-hover">
 					<thead>
 						<tr>
