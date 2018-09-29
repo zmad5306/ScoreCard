@@ -16,12 +16,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	@ExceptionHandler({ScoreCardClientException.class})
 	protected ResponseEntity<Object> handleClientError(ScoreCardClientException e, WebRequest request) {
-		return handleExceptionInternal(e, new ApiError(e.getError().getStatus(), e.getError().getErrorCode(), e.getError().getMessage()), null, HttpStatus.valueOf(e.getError().getStatus()), request);
+		return handleExceptionInternal(e, new ApiError(e.getError().getStatus(), e.getError(), e.getError().getMessage()), null, HttpStatus.valueOf(e.getError().getStatus()), request);
 	}
 	
 	@ExceptionHandler({ScoreCardServerException.class})
 	protected ResponseEntity<Object> handleClientError(ScoreCardServerException e, WebRequest request) {
-		return handleExceptionInternal(e, new ApiError(e.getError().getStatus(), e.getError().getErrorCode(), e.getError().getMessage()), null, HttpStatus.valueOf(e.getError().getStatus()), request);
+		return handleExceptionInternal(e, new ApiError(e.getError().getStatus(), e.getError(), e.getError().getMessage()), null, HttpStatus.valueOf(e.getError().getStatus()), request);
 	}
 
 }

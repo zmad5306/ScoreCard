@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import us.zacharymaddox.scorecard.domain.ApiError;
 import us.zacharymaddox.scorecard.domain.exception.ScoreCardClientException;
-import us.zacharymaddox.scorecard.domain.exception.ScoreCardErrorCode;
 import us.zacharymaddox.scorecard.domain.exception.ScoreCardServerException;
 
 public class RestErrorHandler implements ResponseErrorHandler {
@@ -37,10 +36,10 @@ public class RestErrorHandler implements ResponseErrorHandler {
 	public void handleError(ClientHttpResponse httpResponse) throws IOException {
 		if (httpResponse.getStatusCode().series() == CLIENT_ERROR) {
 			ApiError apiError = mapper.readValue(httpResponse.getBody(), ApiError.class);
-			throw new ScoreCardClientException(ScoreCardErrorCode.fromErrorCode(apiError.getErrorCode()));
+			throw new ScoreCardClientException(apiError.getErrorCode());
 		} else if (httpResponse.getStatusCode().series() == SERVER_ERROR) {
 			ApiError apiError = mapper.readValue(httpResponse.getBody(), ApiError.class);
-			throw new ScoreCardServerException(ScoreCardErrorCode.fromErrorCode(apiError.getErrorCode()));
+			throw new ScoreCardServerException(apiError.getErrorCode());
 		} else {
 			throw new UnknownHttpStatusCodeException(
 					httpResponse.getRawStatusCode(), 

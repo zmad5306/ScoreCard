@@ -2,19 +2,21 @@ package us.zacharymaddox.scorecard.domain;
 
 import java.io.Serializable;
 
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardErrorCode;
+
 public class ApiError implements Serializable {
 
 	private static final long serialVersionUID = -6959597226612659891L;
 	
 	private Integer status;
-	private String errorCode;
+	private ScoreCardErrorCode errorCode;
 	private String message;
 	
 	public ApiError() {
 		super();
 	}
 
-	public ApiError(Integer status, String errorCode, String message) {
+	public ApiError(Integer status, ScoreCardErrorCode errorCode, String message) {
 		super();
 		this.status = status;
 		this.errorCode = errorCode;
@@ -25,7 +27,7 @@ public class ApiError implements Serializable {
 		return status;
 	}
 
-	public String getErrorCode() {
+	public ScoreCardErrorCode getErrorCode() {
 		return errorCode;
 	}
 
