@@ -10,39 +10,35 @@
 
 	<view-state id="createTransaction" view="portal/transaction/add">
 		<var name="transaction" class="us.zacharymaddox.scorecard.api.domain.Transaction" />
-		<transition on="saveTransaction" to="addAction" />
-		<transition on="cancel" to="cancel" />
-		<on-exit>
+		<transition on="saveTransaction" to="addAction">
 			<evaluate expression="transactionHandler.addTransaction(flowScope.transaction, transaction)" />
-		</on-exit>
+		</transition>
+		<transition on="cancel" to="cancel" />
 	</view-state>
 	
 	<view-state id="addAction" view="portal/transaction/add-action">
 		<var name="action" class="us.zacharymaddox.scorecard.api.domain.Action" />
-		<transition on="saveActionAndAddAnother" to="addAction"></transition>
-		<transition on="saveAction" to="review"></transition>
-		<transition on="cancel" to="cancel" />
-		<on-exit>
+		<transition on="saveActionAndAddAnother" to="addAction">
 			<evaluate expression="transactionHandler.addAction(flowScope.transaction, action)" />
-		</on-exit>
+		</transition>
+		<transition on="saveAction" to="review">
+			<evaluate expression="transactionHandler.addAction(flowScope.transaction, action)" />
+		</transition>
+		<transition on="cancel" to="cancel" />
 	</view-state>
 	
 	<view-state id="review" view="portal/transaction/add-review">
-		<transition on="submitToServer" to="transactionsRedirect" history="invalidate" />
+		<transition on="submitToServer" to="redirect" history="invalidate">
+			<evaluate expression="transactionHandler.save(flowScope.transaction)" />
+		</transition>
 		<transition on="cancel" to="cancel" />
 	</view-state>
 	
 	<view-state id="cancel" view="portal/transaction/add-cancel-confirm">
-		<transition on="confirm" to="cancelRedirect" history="invalidate" />
+		<transition on="confirm" to="redirect" history="invalidate" />
 		<transition on="deny" to="createTransaction" />
 	</view-state>
 	
-	<end-state id="transactionsRedirect" view="redirect:/portal/transaction/list">
-		<on-entry>
-			<evaluate expression="transactionHandler.save(flowScope.transaction)"></evaluate>
-		</on-entry>
-	</end-state>
-	
-	<end-state id="cancelRedirect" view="redirect:/portal/transaction/list" />
+	<end-state id="redirect" view="redirect:/portal/transaction/list" />
 	
 </flow>
