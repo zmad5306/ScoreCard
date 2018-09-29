@@ -35,6 +35,8 @@ dependencies {
 	compile group: 'commons-io', name: 'commons-io', version: '2.5'
 	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+	compile 'org.springframework.webflow:spring-webflow:2.5.1.RELEASE'
+	compile group: 'org.springframework.webflow', name: 'org.springframework.js', version: '2.0.5.RELEASE'
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	runtime('com.h2database:h2')
 	

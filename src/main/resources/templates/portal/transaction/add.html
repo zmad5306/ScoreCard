@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Add - Transaction - Score Card Portal</title>
+<!--/*/ <th:block th:include="portal/fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+	<!--/*/ <th:block th:include="portal/fragments/header :: header"></th:block> /*/-->
+	<div class="container">
+		<div class="starter-template">
+			<div class="row">
+				<h1>Add Transaction</h1>
+			</div>
+			<div class="row">
+				<form method="post" th:action="${flowExecutionUrl}">
+					<button type="submit" name="_eventId_saveTransaction" value="saveTransaction" class="btn btn-primary">Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
