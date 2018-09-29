@@ -25,6 +25,8 @@ import us.zacharymaddox.scorecard.domain.ScoreCardId;
 public abstract class AbstractScoreCardApiService implements ScoreCardApiService {
 	
 	@Autowired
+	private RestTemplate restTemplate;
+	@Autowired
 	private ObjectMapper mapper;
 	@Value("${scorecard.api.baseurl}")
 	private String baseUrl;
@@ -45,20 +47,17 @@ public abstract class AbstractScoreCardApiService implements ScoreCardApiService
 		AuthorizationRequest req = new AuthorizationRequest();
 		req.setActionId(scoreCardHeader.getActionId());
 		req.setScoreCardId(scoreCardHeader.getScoreCardId());
-		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<AuthorizationResult> result = restTemplate.postForEntity(baseUrl + "/scorecard", req, AuthorizationResult.class);
 		AuthorizationResult aResult = result.getBody();
 		return aResult.getAuthorization();
 	}
 	
 	protected ScoreCardId getScoreCardId() {
-		RestTemplate restTemplate = new RestTemplate();
         ScoreCardId id = restTemplate.getForObject(baseUrl + "/scorecard/id", ScoreCardId.class);
         return id;
 	}
 	
 	public DataPage<ScoreCard> getScoreCards(Integer rows, Integer page) {
-		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<DataPage<ScoreCard>> response = restTemplate.exchange(
 				baseUrl + "/scorecard?rows={rows}&page={page}", 
 				HttpMethod.GET, 
@@ -70,13 +69,11 @@ public abstract class AbstractScoreCardApiService implements ScoreCardApiService
 	}
 	
 	public ScoreCard getScoreCard(Long scoreCardId) {
-		RestTemplate restTemplate = new RestTemplate();
 		ScoreCard scoreCard = restTemplate.getForObject(baseUrl + "/scorecard/{score_card_id}", ScoreCard.class, scoreCardId);
 		return scoreCard;
 	}
 	
 	public DataPage<ScoreCard> getScoreCards(String transactionName, Integer rows, Integer page) {
-		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<DataPage<ScoreCard>> response = restTemplate.exchange(
 				baseUrl + "/scorecard/filter?transaction_name={transactionName}&rows={rows}&page={page}", 
 				HttpMethod.GET, 
@@ -88,7 +85,6 @@ public abstract class AbstractScoreCardApiService implements ScoreCardApiService
 	}
 	
 	public List<ScoreCard> getScoreCards(ScoreCardActionStatus status, String transactionName, Integer rows, Integer page) {
-		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<List<ScoreCard>> response = restTemplate.exchange(
 				baseUrl + "/scorecard/status?score_card_action_status={status}&transaction_name={transactionName}&rows={rows}&page={page}", 
 				HttpMethod.GET, 

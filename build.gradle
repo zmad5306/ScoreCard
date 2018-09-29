@@ -32,6 +32,7 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-devtools")
 	compile('org.apache.commons:commons-lang3:3.8')
 	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+	compile group: 'commons-io', name: 'commons-io', version: '2.5'
 	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 	testCompile('org.springframework.boot:spring-boot-starter-test')

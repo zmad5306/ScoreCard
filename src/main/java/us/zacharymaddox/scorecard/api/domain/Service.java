@@ -3,6 +3,9 @@ package us.zacharymaddox.scorecard.api.domain;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import us.zacharymaddox.scorecard.domain.Transport;
@@ -13,8 +16,13 @@ public class Service implements Serializable {
 	@JsonProperty("service_id")
 	private Long serviceId;
 	private String type;
+	@NotNull
+	@NotEmpty
 	private String name;
+	@NotNull
 	private Transport transport;
+	@NotNull
+	@NotEmpty
 	private String path;
 	private List<Action> actions;
 	public Long getServiceId() {

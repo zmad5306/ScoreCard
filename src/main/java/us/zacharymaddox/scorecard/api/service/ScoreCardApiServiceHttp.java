@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.RequestEntity;
@@ -21,11 +22,13 @@ import us.zacharymaddox.scorecard.domain.UpdateRequest;
 //@Service
 @Profile({"api"})
 public class ScoreCardApiServiceHttp extends AbstractScoreCardApiService implements ScoreCardApiService {
+	
+	@Autowired
+	private RestTemplate restTemplate;
 
 	@Override
 	public void updateStatus(ScoreCardHeader scoreCardHeader, ScoreCardActionStatus status, Map<String, String> metadata) {
 		UpdateRequest request = new UpdateRequest(scoreCardHeader.getScoreCardId(), scoreCardHeader.getActionId(), status, metadata);
-		RestTemplate restTemplate = new RestTemplate();
 		URI uri;
 		
 		try {
@@ -41,7 +44,6 @@ public class ScoreCardApiServiceHttp extends AbstractScoreCardApiService impleme
 	@Override
 	public ScoreCardId createScoreCard(Transaction transaction) {
 		ScoreCardId scoreCardId = getScoreCardId();
-		RestTemplate restTemplate = new RestTemplate();
 		CreateRequest request = new CreateRequest(scoreCardId.getScoreCardId(), transaction.getTransactionId());
 		
 		restTemplate.put(getBaseUrl() + "/scorecard", request);

@@ -39,5 +39,14 @@ public class ServiceService {
 		}
 		return s.get();
 	}
+	
+	@Transactional
+	public Service saveService(Service service) {
+		Optional<Service> svc = serviceRepository.findByName(service.getName());
+		if (svc.isPresent()) {
+			throw new ScoreCardClientException(ScoreCardErrorCode.SERVICE_NAME_TAKEN);
+		}
+		return serviceRepository.save(service);
+	}
 
 }

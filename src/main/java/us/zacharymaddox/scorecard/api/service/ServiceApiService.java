@@ -2,6 +2,7 @@ package us.zacharymaddox.scorecard.api.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
@@ -18,8 +19,10 @@ public class ServiceApiService {
 	@Value("${scorecard.api.baseurl}")
 	private String baseUrl;
 	
+	@Autowired
+	private RestTemplate restTemplate;
+	
 	public List<Service> getServices() {
-		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<List<Service>> response = restTemplate.exchange(
 				baseUrl + "/service/list", 
 				HttpMethod.GET, 
@@ -30,15 +33,18 @@ public class ServiceApiService {
 	}
 
 	public Service getService(Long serviceId) {
-		RestTemplate restTemplate = new RestTemplate();
 		Service service = restTemplate.getForObject(baseUrl + "/service/{service_id}", Service.class, serviceId);
 		return service;
 	}
 	
 	public Service getServicenByName(String name) {
-		RestTemplate restTemplate = new RestTemplate();
 		Service service = restTemplate.getForObject(baseUrl + "/service/?name={name}", Service.class, name);
 		return service;
+	}
+	
+	public Service saveService(Service service) {
+		ResponseEntity<Service> svc = restTemplate.postForEntity(baseUrl + "/service", service, Service.class);
+		return svc.getBody();
 	}
 
 }
