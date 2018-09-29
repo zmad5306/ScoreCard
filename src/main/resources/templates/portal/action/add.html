@@ -51,7 +51,7 @@
 						<span th:each="err : ${#fields.errors('method')}" th:text="${err}" class="help-block"></span>
 					</div>
 					<a th:href="@{'/portal/service/' + ${action.service.serviceId}}" class="btn btn-link">Cancel</a>
-					<button type="submit" class="btn btn-primary pull-right btn-lg">Submit</button>
+					<button type="submit" class="btn btn-primary pull-right">Submit</button>
 				</form>
 			</div>
 		</div>
