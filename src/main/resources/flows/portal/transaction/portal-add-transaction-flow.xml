@@ -3,16 +3,46 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow
                           http://www.springframework.org/schema/webflow/spring-webflow.xsd">
+                          
+	<on-start>
+		<evaluate expression="transactionHandler.init()" result="flowScope.transaction" />
+	</on-start>
 
 	<view-state id="createTransaction" view="portal/transaction/add">
+		<var name="transaction" class="us.zacharymaddox.scorecard.api.domain.Transaction" />
 		<transition on="saveTransaction" to="addAction" />
+		<transition on="cancel" to="cancel" />
+		<on-exit>
+			<evaluate expression="transactionHandler.addTransaction(flowScope.transaction, transaction)" />
+		</on-exit>
 	</view-state>
 	
 	<view-state id="addAction" view="portal/transaction/add-action">
+		<var name="action" class="us.zacharymaddox.scorecard.api.domain.Action" />
 		<transition on="saveActionAndAddAnother" to="addAction"></transition>
-		<transition on="saveAction" to="transactionsRedirect"></transition>
+		<transition on="saveAction" to="review"></transition>
+		<transition on="cancel" to="cancel" />
+		<on-exit>
+			<evaluate expression="transactionHandler.addAction(flowScope.transaction, action)" />
+		</on-exit>
 	</view-state>
 	
-	<end-state id="transactionsRedirect" view="redirect:/portal/transaction/list" />
+	<view-state id="review" view="portal/transaction/add-review">
+		<transition on="submitToServer" to="transactionsRedirect" history="invalidate" />
+		<transition on="cancel" to="cancel" />
+	</view-state>
+	
+	<view-state id="cancel" view="portal/transaction/add-cancel-confirm">
+		<transition on="confirm" to="cancelRedirect" history="invalidate" />
+		<transition on="deny" to="createTransaction" />
+	</view-state>
+	
+	<end-state id="transactionsRedirect" view="redirect:/portal/transaction/list">
+		<on-entry>
+			<evaluate expression="transactionHandler.save(flowScope.transaction)"></evaluate>
+		</on-entry>
+	</end-state>
+	
+	<end-state id="cancelRedirect" view="redirect:/portal/transaction/list" />
 	
 </flow>

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Add - Transaction - Score Card Portal</title>
+<title>Confirm Cancel - Transaction - Score Card Portal</title>
 <!--/*/ <th:block th:include="portal/fragments/headerinc :: head"></th:block> /*/-->
 </head>
 <body>
@@ -9,12 +9,12 @@
 	<div class="container">
 		<div class="starter-template">
 			<div class="row">
-				<h1>Add Transaction</h1>
+				<h1>Confirm Cancel</h1>
 			</div>
 			<div class="row">
 				<form method="post" th:action="${flowExecutionUrl}">
-					<button type="submit" name="_eventId_cancel" value="cancel" class="btn btn-link">Cancel</button>
-					<button type="submit" name="_eventId_saveTransaction" value="saveTransaction" class="btn btn-primary pull-right">Submit</button>
+					<button type="submit" name="_eventId_deny" value="deny" class="btn btn-primary">No</button>
+					<button type="submit" name="_eventId_confirm" value="confirm" class="btn btn-primary pull-right">Yes</button>
 				</form>
 			</div>
 		</div>

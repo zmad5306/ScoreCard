@@ -13,8 +13,11 @@
 			</div>
 			<div class="row">
 				<form method="post" th:action="${flowExecutionUrl}">
-					<button type="submit" name="_eventId_saveAction" value="saveAction" class="btn btn-primary">Submit</button>
-					<button type="submit" name="_eventId_saveActionAndAddAnother" value="saveActionAndAddAnother" class="btn btn-primary">Submit and Add Another</button>
+					<button type="submit" name="_eventId_cancel" value="cancel" class="btn btn-link">Cancel</button>
+					<div class="btn-group  pull-right" role="group">
+						<button type="submit" name="_eventId_saveAction" value="saveAction" class="btn btn-default">Submit</button>
+						<button type="submit" name="_eventId_saveActionAndAddAnother" value="saveActionAndAddAnother" class="btn btn-primary">Add Another</button>
+					</div>
 				</form>
 			</div>
 		</div>
