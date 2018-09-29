@@ -62,7 +62,7 @@
 						<li th:if="${null != transactionName}" th:classappend="${scorecards.page > 0 ? '' : 'disabled'}">
 							<a th:text="Prev" th:disabled="${scorecards.page == 0}" th:href="@{'/monitor/scorecard/list?rows=' + ${scorecards.rows} + '&page=' + ${scorecards.page - 1} + '&transaction_name=' + ${transactionName}}"></a>
 						<li>
-						<li th:each="i: ${#numbers.sequence(1, scorecards.getPages())}" th:classappend="${scorecards.page == i - 1} ? active : ''">
+						<li th:each="i: ${#numbers.sequence(scorecards.page - 5 < 0 ? 1 : scorecards.page - 4, scorecards.page + 5 >= scorecards.getPages() ? scorecards.getPages() : scorecards.page + 6)}" th:classappend="${scorecards.page == i - 1} ? active : ''">
 							<a th:if="${null == transactionName}" th:text="${i}" th:href="@{'/monitor/scorecard/list?rows=' + ${scorecards.rows} + '&page=' + ${i - 1}}"></a>
 							<a th:if="${null != transactionName}" th:text="${i}" th:href="@{'/monitor/scorecard/list?rows=' + ${scorecards.rows} + '&page=' + ${i - 1} + '&transaction_name=' + ${transactionName}}"></a>
 						</li>
