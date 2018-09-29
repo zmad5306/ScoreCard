@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import us.zacharymaddox.scorecard.core.domain.Service;
-import us.zacharymaddox.scorecard.core.domain.exception.ScoreCardClientException;
-import us.zacharymaddox.scorecard.core.domain.exception.ScoreCardErrorCode;
 import us.zacharymaddox.scorecard.core.service.ServiceService;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardClientException;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardErrorCode;
 
 @RestController
 @RequestMapping("/api/v1/service")

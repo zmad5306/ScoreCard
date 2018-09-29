@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import us.zacharymaddox.scorecard.core.domain.exception.ScoreCardClientException;
-import us.zacharymaddox.scorecard.core.domain.exception.ScoreCardServerException;
 import us.zacharymaddox.scorecard.domain.ApiError;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardClientException;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardServerException;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {

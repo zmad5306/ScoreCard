@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import us.zacharymaddox.scorecard.core.domain.Service;
-import us.zacharymaddox.scorecard.core.domain.exception.ScoreCardClientException;
-import us.zacharymaddox.scorecard.core.domain.exception.ScoreCardErrorCode;
 import us.zacharymaddox.scorecard.core.repository.ServiceRepository;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardClientException;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardErrorCode;
 
 @org.springframework.stereotype.Service
 public class ServiceService {

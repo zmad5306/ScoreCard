@@ -1,4 +1,4 @@
-package us.zacharymaddox.scorecard.core.domain.exception;
+package us.zacharymaddox.scorecard.domain.exception;
 
 public class ScoreCardException extends RuntimeException {
 

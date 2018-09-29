@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import us.zacharymaddox.scorecard.api.domain.Service;
 import us.zacharymaddox.scorecard.api.service.ServiceApiService;
-import us.zacharymaddox.scorecard.core.domain.exception.ScoreCardClientException;
-import us.zacharymaddox.scorecard.core.domain.exception.ScoreCardErrorCode;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardClientException;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardErrorCode;
 
 @Controller
 @RequestMapping("/portal/service")

@@ -13,10 +13,10 @@ import org.springframework.web.client.UnknownHttpStatusCodeException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import us.zacharymaddox.scorecard.core.domain.exception.ScoreCardClientException;
-import us.zacharymaddox.scorecard.core.domain.exception.ScoreCardErrorCode;
-import us.zacharymaddox.scorecard.core.domain.exception.ScoreCardServerException;
 import us.zacharymaddox.scorecard.domain.ApiError;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardClientException;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardErrorCode;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardServerException;
 
 public class RestErrorHandler implements ResponseErrorHandler {
 	

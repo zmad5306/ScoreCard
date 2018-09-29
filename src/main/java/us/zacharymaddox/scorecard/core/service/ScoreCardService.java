@@ -21,8 +21,6 @@ import us.zacharymaddox.scorecard.core.domain.ScoreCard;
 import us.zacharymaddox.scorecard.core.domain.ScoreCardAction;
 import us.zacharymaddox.scorecard.core.domain.Transaction;
 import us.zacharymaddox.scorecard.core.domain.TransactionAction;
-import us.zacharymaddox.scorecard.core.domain.exception.ScoreCardClientException;
-import us.zacharymaddox.scorecard.core.domain.exception.ScoreCardErrorCode;
 import us.zacharymaddox.scorecard.core.repository.ScoreCardActionRepository;
 import us.zacharymaddox.scorecard.core.repository.ScoreCardRepository;
 import us.zacharymaddox.scorecard.core.repository.TransactionActionRepository;
@@ -32,6 +30,8 @@ import us.zacharymaddox.scorecard.domain.AuthorizationResult;
 import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 import us.zacharymaddox.scorecard.domain.ScoreCardId;
 import us.zacharymaddox.scorecard.domain.UpdateRequest;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardClientException;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardErrorCode;
 	
 @Service
 public class ScoreCardService {
