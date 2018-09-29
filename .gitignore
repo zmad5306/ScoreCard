@@ -25,3 +25,5 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+
+hs_err_*.log

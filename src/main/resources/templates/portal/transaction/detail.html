@@ -29,9 +29,9 @@
 							<th>Action Id</th>
 							<th>Action Name</th>
 							<th>Service Id</th>
-							<th>Service Path</th>
 							<th>Action Path</th>
 							<th>Method</th>
+							<th>Depends On</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -39,9 +39,13 @@
 							<td><a th:href="@{'/portal/action/' + ${action.actionId}}" th:text="${action.actionId}"></a></td>
 							<td th:text="${action.name}"></td>
 							<td><a th:href="@{'/portal/service/' + ${action.service.serviceId}}" th:text="${action.service.serviceId}"></a></td>
-							<td th:text="${action.service.path}"></td>
 							<td th:text="${action.path}"></td>
 							<td th:text="${action.method}"></td>
+							<td>
+								<ul class="comma-list">
+									<li th:each="dep : ${action.dependsOn}"><a th:href="@{'/portal/action/' + ${dep}}" th:text="${dep}"></a></li>
+								</ul>
+							</td>
 						</tr>
 					</tbody>
 				</table>

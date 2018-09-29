@@ -27,10 +27,23 @@ public class TransactionActionListSerializer extends StdSerializer<List<Transact
 		} else {
 			gen.writeStartArray();
 			for (TransactionAction a : value) {
-				gen.writeObject(a.getAction());
-				// TODO write out depends on
-//				gen.writeArrayFieldStart("depends_on");
-//				gen.writeEndArray();
+				gen.writeStartObject();
+				gen.writeStringField("type", a.getType());
+				gen.writeStringField("name", a.getAction().getName());
+				gen.writeObjectFieldStart("service");
+				gen.writeNumberField("service_id", a.getAction().getService().getServiceId());
+				gen.writeStringField("path", a.getAction().getService().getPath());
+				gen.writeStringField("transport", a.getAction().getService().getTransport().name());
+				gen.writeEndObject();
+				gen.writeStringField("path", a.getAction().getPath());
+				gen.writeStringField("method", a.getAction().getMethod().name());
+				gen.writeNumberField("action_id", a.getAction().getActionId());
+				gen.writeArrayFieldStart("depends_on");
+				for (TransactionAction dep : a.getDependsOn()) {
+					gen.writeNumber(dep.getAction().getActionId());
+				}
+				gen.writeEndArray();
+				gen.writeEndObject();
 			}
 			gen.writeEndArray();
 		}

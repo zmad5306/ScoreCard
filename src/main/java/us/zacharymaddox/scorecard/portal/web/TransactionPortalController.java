@@ -16,7 +16,7 @@ import us.zacharymaddox.scorecard.api.service.TransactionApiService;
 public class TransactionPortalController {
 	
 	@Autowired
-	TransactionApiService transactionApiService;
+	private TransactionApiService transactionApiService;
 	
 	@GetMapping("/list")
 	public String list(Model model) {

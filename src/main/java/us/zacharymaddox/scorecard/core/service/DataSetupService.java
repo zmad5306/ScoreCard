@@ -88,19 +88,23 @@ public class DataSetupService {
 		
 		ta1 = transactionActionRepository.save(ta1);
 		
-		Set<TransactionAction> dependsOn = new HashSet<>();
-		dependsOn.add(ta1);
+		Set<TransactionAction> dependsOn2 = new HashSet<>();
+		dependsOn2.add(ta1);
 		
 		TransactionAction ta2 = new TransactionAction();
 		ta2.setAction(a2);
-		ta2.setDependsOn(dependsOn);
+		ta2.setDependsOn(dependsOn2);
 		ta2.setTransaction(t1);
 		
 		ta2 = transactionActionRepository.save(ta2);
 		
+		Set<TransactionAction> dependsOn3 = new HashSet<>();
+		dependsOn3.add(ta1);
+		dependsOn3.add(ta2);
+		
 		TransactionAction ta3 = new TransactionAction();
 		ta3.setAction(a3);
-		ta3.setDependsOn(dependsOn);
+		ta3.setDependsOn(dependsOn3);
 		ta3.setTransaction(t1);
 		
 		ta3 = transactionActionRepository.save(ta3);
