@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flow xmlns="http://www.springframework.org/schema/webflow"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
                           http://www.springframework.org/schema/webflow/spring-webflow.xsd">
                           
 	<on-start>
@@ -28,6 +28,7 @@
 			<evaluate expression="transactionHandler.loadServices()" result="flowScope.services" />
 		</on-entry>
 		<transition on="selectedService" to="selectAction" validate="true" validation-hints="'step1'" />
+		<transition on="goBack" to="review" validate="false"/>
 		<transition on="cancel" to="cancel" validate="false" />
 	</view-state>
 	
@@ -38,6 +39,7 @@
 		<transition on="selectedAction" to="review" validate="true" validation-hints="'step1,step2'">
 			<evaluate expression="transactionHandler.addActionToTransaction(transaction, action)" />
 		</transition>
+		<transition on="goBack" to="selectService" validate="false" />
 		<transition on="cancel" to="cancel" validate="false" />
 	</view-state>
 	
