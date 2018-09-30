@@ -13,7 +13,7 @@
 		<transition on="cancel" to="cancel" validate="false" />
 	</view-state>
 	
-	<view-state id="review" view="portal/transaction/add-review">
+	<view-state id="review" view="portal/transaction/review">
 		<transition on="addNewAction" to="selectService">
 			<evaluate expression="transactionHandler.startAddAction()" result="flowScope.action" />
 		</transition>
