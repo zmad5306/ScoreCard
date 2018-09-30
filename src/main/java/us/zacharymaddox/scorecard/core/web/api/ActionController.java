@@ -36,6 +36,11 @@ public class ActionController {
 		return actionService.getAllActions();
 	}
 	
+	@GetMapping(value="/list/{service_id}", produces="application/json")
+	public List<Action> getActions(@PathVariable("service_id") Long serviceId) {
+		return actionService.getActions(serviceId);
+	}
+	
 	@GetMapping(value="/{action_id}", produces="application/json")
 	public Action getAction(@PathVariable("action_id") Long actionId) {
 		return actionService.getAction(actionId);

@@ -48,4 +48,15 @@ public class ActionApiService {
 		return svc.getBody();
 	}
 
+	public List<Action> getActionByServiceId(Long serviceId) {
+		ResponseEntity<List<Action>> response = restTemplate.exchange(
+				baseUrl + "/action/list/{service_id}", 
+				HttpMethod.GET, 
+				null, //requestEntity
+				new ParameterizedTypeReference<List<Action>>() {},
+				serviceId
+			);
+		return response.getBody();
+	}
+
 }

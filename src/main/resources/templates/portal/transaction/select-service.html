@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Add Transaction - Action - Select Service - Score Card Portal</title>
+<!--/*/ <th:block th:include="portal/fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+	<!--/*/ <th:block th:include="portal/fragments/header :: header"></th:block> /*/-->
+	<div class="container">
+		<div class="starter-template">
+			<div class="row">
+				<h1>Select Service</h1>
+			</div>
+			<div class="row">
+				<form method="post" th:action="${flowExecutionUrl}" th:object="${action}">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th></th>
+								<th>Service Id</th>
+								<th>Service Name</th>
+								<th>Transport</th>
+								<th>Path</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="service : ${services}">
+								<td><input type="radio" th:field="*{serviceId}" th:value="${service.serviceId}" /></td>
+								<td th:text="${service.serviceId}" />
+								<td th:text="${service.name}" />
+								<td th:text="${service.transport}" />
+								<td th:text="${service.path}" />
+							</tr>
+						</tbody>
+					</table>
+					<button type="submit" name="_eventId_cancel" value="cancel" class="btn btn-link">Cancel</button>
+					<button type="submit" name="_eventId_selectedService" value="selectedService" class="btn btn-primary pull-right">Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

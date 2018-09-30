@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import us.zacharymaddox.scorecard.api.domain.Action;
+import us.zacharymaddox.scorecard.api.domain.Service;
 import us.zacharymaddox.scorecard.api.domain.Transaction;
 import us.zacharymaddox.scorecard.api.service.ActionApiService;
+import us.zacharymaddox.scorecard.api.service.ServiceApiService;
 import us.zacharymaddox.scorecard.api.service.TransactionApiService;
+import us.zacharymaddox.scorecard.portal.domain.NewAction;
 
 // https://github.com/vakho10/Java-Spring-Boot-with-Web-Flow-and-Thymeleaf/blob/master/src/main/java/com/example/demo/handlers/RegisterHandler.java
 
@@ -20,29 +23,31 @@ public class TransactionHandler {
 	private TransactionApiService transactionApiService;
 	@Autowired
 	private ActionApiService actionApiService;
+	@Autowired
+	private ServiceApiService serviceApiService;
 
 	public Transaction init() {
-		System.out.println("called init...");
-		
 		Transaction transaction = new Transaction();
 		transaction.setActions(new ArrayList<>());
 		
 		return transaction;
 	}
 	
-	public Action createAction() {
-		System.out.println("called createAction...");
-		return new Action();
+	public NewAction startAddAction() {
+		return new NewAction();
 	}
 	
-	public List<Action> loadActions() {
-		return actionApiService.getAllActions();
+	public List<Service> loadServices() {
+		return serviceApiService.getServices();
 	}
 	
-	public void addAction(Transaction transaction, Action action) {
-		System.out.println("called addAction...");
-		Action actn = actionApiService.getAction(action.getActionId());
-		transaction.getActions().add(actn);
+	public List<Action> loadActions(NewAction action) {
+		return actionApiService.getActionByServiceId(action.getServiceId());
+	}
+	
+	public void addActionToTransaction(Transaction transaction, NewAction action) {
+		Action a = actionApiService.getAction(action.getActionId());
+		transaction.getActions().add(a);
 	}
 	
 	public void save(Transaction transaction) {

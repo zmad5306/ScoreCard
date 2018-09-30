@@ -4,19 +4,22 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import us.zacharymaddox.scorecard.core.domain.Action;
+import us.zacharymaddox.scorecard.core.domain.Service;
 import us.zacharymaddox.scorecard.core.repository.ActionRepository;
+import us.zacharymaddox.scorecard.core.repository.ServiceRepository;
 import us.zacharymaddox.scorecard.domain.exception.ScoreCardClientException;
 import us.zacharymaddox.scorecard.domain.exception.ScoreCardErrorCode;
 
-@Service
+@org.springframework.stereotype.Service
 public class ActionService {
 
 	@Autowired
 	private ActionRepository actionRepository;
+	@Autowired
+	private ServiceRepository serviceRepository;
 	
 	@Transactional(readOnly=true)
 	public Action getAction(Long actionId) {
@@ -50,6 +53,15 @@ public class ActionService {
 	@Transactional(readOnly=true)
 	public List<Action> getAllActions() {
 		return actionRepository.findAll();
+	}
+
+	@Transactional(readOnly=true)
+	public List<Action> getActions(Long serviceId) {
+		Optional<Service> service = serviceRepository.findById(serviceId);
+		if (!service.isPresent()) {
+			throw new ScoreCardClientException(ScoreCardErrorCode.SERVICE_DNE);
+		}
+		return actionRepository.findByService(service.get());
 	}
 	
 }

@@ -9,31 +9,36 @@
 	</on-start>
 
 	<view-state id="createTransaction" view="portal/transaction/add" model="transaction">
-		<transition on="saveTransaction" to="addAction" validate="true">
-			<evaluate expression="transactionHandler.createAction()" result="flowScope.action" />
-		</transition>
-		<transition on="cancel" to="cancel" validate="false" />
-	</view-state>
-	
-	<view-state id="addAction" view="portal/transaction/add-action" model="action">
-		<on-entry>
-			<evaluate expression="transactionHandler.loadActions()" result="flowScope.actions" />
-		</on-entry>
-		<transition on="saveActionAndAddAnother" to="addAction" validate="true" validation-hints="'selectAction'">
-			<evaluate expression="transactionHandler.addAction(transaction, action)" />
-			<evaluate expression="transactionHandler.createAction()" result="flowScope.action" />
-		</transition>
-		<transition on="saveAction" to="review" validate="true" validation-hints="'selectAction'">
-			<evaluate expression="transactionHandler.addAction(transaction, action)" />
-		</transition>
+		<transition on="saveTransaction" to="review" validate="true" />
 		<transition on="cancel" to="cancel" validate="false" />
 	</view-state>
 	
 	<view-state id="review" view="portal/transaction/add-review">
+		<transition on="addNewAction" to="selectService">
+			<evaluate expression="transactionHandler.startAddAction()" result="flowScope.action" />
+		</transition>
 		<transition on="submitToServer" to="redirect" history="invalidate">
 			<evaluate expression="transactionHandler.save(flowScope.transaction)" />
 		</transition>
-		<transition on="cancel" to="cancel" />
+		<transition on="cancel" to="cancel" validate="false" />
+	</view-state>
+	
+	<view-state id="selectService" view="portal/transaction/select-service" model="action">
+		<on-entry>
+			<evaluate expression="transactionHandler.loadServices()" result="flowScope.services" />
+		</on-entry>
+		<transition on="selectedService" to="selectAction" validate="true" validation-hints="'step1'" />
+		<transition on="cancel" to="cancel" validate="false" />
+	</view-state>
+	
+	<view-state id="selectAction" view="portal/transaction/select-action" model="action">
+		<on-entry>
+			<evaluate expression="transactionHandler.loadActions(action)" result="flowScope.actions" />
+		</on-entry>
+		<transition on="selectedAction" to="review" validate="true" validation-hints="'step1,step2'">
+			<evaluate expression="transactionHandler.addActionToTransaction(transaction, action)" />
+		</transition>
+		<transition on="cancel" to="cancel" validate="false" />
 	</view-state>
 	
 	<view-state id="cancel" view="portal/transaction/add-cancel-confirm">
