@@ -41,7 +41,7 @@
 		<transition on="cancel" to="cancel" validate="false" />
 	</view-state>
 	
-	<view-state id="cancel" view="portal/transaction/add-cancel-confirm">
+	<view-state id="cancel" view="portal/transaction/cancel-confirm">
 		<transition on="confirm" to="redirect" history="invalidate" />
 		<transition on="deny" to="createTransaction" />
 	</view-state>
