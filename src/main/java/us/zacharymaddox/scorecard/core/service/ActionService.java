@@ -1,5 +1,6 @@
 package us.zacharymaddox.scorecard.core.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,11 @@ public class ActionService {
 		} else {
 			return actionRepository.save(action);
 		}
+	}
+
+	@Transactional(readOnly=true)
+	public List<Action> getAllActions() {
+		return actionRepository.findAll();
 	}
 	
 }

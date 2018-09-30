@@ -43,7 +43,7 @@
 					</div>
 					<div class="form-group" th:classappend="${#fields.hasErrors('method') ? 'has-error' : ''}">
 						<label for="method">Method</label>
-						<select class="form-control" th:field="*{method}">
+						<select id="method" class="form-control" th:field="*{method}">
 							<option th:each="method : ${T(us.zacharymaddox.scorecard.domain.Method).values()}"
 								th:value="${method}"
 								th:text="${method}"></option>

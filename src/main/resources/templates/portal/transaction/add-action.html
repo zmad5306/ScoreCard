@@ -12,7 +12,16 @@
 				<h1>Add Action</h1>
 			</div>
 			<div class="row">
-				<form method="post" th:action="${flowExecutionUrl}">
+				<form method="post" th:action="${flowExecutionUrl}" th:object="${action}">
+					<div class="form-group" th:classappend="${#fields.hasErrors('actionId') ? 'has-error' : ''}">
+						<label for="action">Action</label>
+						<select class="form-control" id="action" th:field="*{actionId}">
+							<option th:each="act : ${actions}"
+								th:value="${act.actionId}"
+								th:text="${act.name}"></option>
+						</select>
+						<span th:each="err : ${#fields.errors('actionId')}" th:text="${err}" class="help-block"></span>
+					</div>
 					<button type="submit" name="_eventId_cancel" value="cancel" class="btn btn-link">Cancel</button>
 					<div class="btn-group  pull-right" role="group">
 						<button type="submit" name="_eventId_saveAction" value="saveAction" class="btn btn-default">Submit</button>

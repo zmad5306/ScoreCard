@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -31,6 +33,8 @@ public class Transaction extends DomainObject implements Serializable {
 	@JsonProperty("transaction_id")
 	private Long transactionId;
 	@Column(unique=true)
+	@NotEmpty
+	@NotNull
 	private String name;
 	@OneToMany(mappedBy="transaction")
 	@JsonSerialize(using=TransactionActionListSerializer.class)

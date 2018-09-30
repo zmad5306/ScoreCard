@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Transaction implements Serializable {
@@ -12,6 +15,8 @@ public class Transaction implements Serializable {
 	@JsonProperty("transaction_id")
 	private Long transactionId;
 	private String type;
+	@NotEmpty
+	@NotNull
 	private String name;
 	private List<Action> actions;
 	public Long getTransactionId() {
@@ -42,7 +47,6 @@ public class Transaction implements Serializable {
 		Optional<Action> action = actions.stream().filter(a -> name.equalsIgnoreCase(a.getName())).findFirst();
 		return action.get();
 	}
-	
 	public Action getAction(Long id) {
 		Optional<Action> action = actions.stream().filter(a -> id == a.getActionId()).findFirst();
 		return action.get();

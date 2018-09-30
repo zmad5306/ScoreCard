@@ -1,8 +1,12 @@
 package us.zacharymaddox.scorecard.api.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -22,6 +26,16 @@ public class ActionApiService {
 	public Action getAction(Long actionId) {
 		Action action = restTemplate.getForObject(baseUrl + "/action/{action_id}", Action.class, actionId);
 		return action;
+	}
+	
+	public List<Action> getAllActions() {
+		ResponseEntity<List<Action>> response = restTemplate.exchange(
+				baseUrl + "/action/list", 
+				HttpMethod.GET, 
+				null, //requestEntity
+				new ParameterizedTypeReference<List<Action>>() {}
+			);
+		return response.getBody();
 	}
 	
 	public Action getActionByName(String name) {

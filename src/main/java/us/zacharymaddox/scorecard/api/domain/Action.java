@@ -15,8 +15,11 @@ import us.zacharymaddox.scorecard.domain.ScoreCardActionStatus;
 
 public class Action implements Serializable {
 	
+	public interface SelectAction {}
+	
 	private static final long serialVersionUID = -5834592838132576186L;
 	@JsonProperty("action_id")
+	@NotNull(groups=SelectAction.class)
 	private Long actionId;
 	private String type;
 	@NotNull

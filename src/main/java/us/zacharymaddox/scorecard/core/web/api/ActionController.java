@@ -1,5 +1,7 @@
 package us.zacharymaddox.scorecard.core.web.api;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,11 @@ public class ActionController {
 	@GetMapping(produces="application/json")
 	public Action getAction(@RequestParam(name="name", required=true) String name) {
 		return actionService.getActionByName(name);
+	}
+	
+	@GetMapping(value="/list", produces="application/json")
+	public List<Action> getActions() {
+		return actionService.getAllActions();
 	}
 	
 	@GetMapping(value="/{action_id}", produces="application/json")
