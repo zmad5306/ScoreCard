@@ -13,6 +13,9 @@
 			</div>
 			<form method="post" th:action="${flowExecutionUrl}">
 				<div class="row">
+					<p class="alert alert-warning"><span class="glyphicon glyphicon-warning-sign"></span> This transaction has not been saved. Once all actions are configured click Submit below.</p>
+				</div>
+				<div class="row">
 					<div class="control-group">
 						<label class="control-label">Transaction Name:</label> <span
 							class="controls readonly" th:text="${transaction.name}"></span>
