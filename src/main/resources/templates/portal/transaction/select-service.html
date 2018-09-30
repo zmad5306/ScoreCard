@@ -12,7 +12,8 @@
 				<h1>Select Service</h1>
 			</div>
 			<div class="row">
-				<form method="post" th:action="${flowExecutionUrl}" th:object="${action}">
+				<form method="post" th:action="${flowExecutionUrl}" th:object="${action}">			
+					<p class="alert alert-danger" th:each="err : ${#fields.errors('serviceId')}" th:text="${err}"></p>
 					<table class="table table-hover">
 						<thead>
 							<tr>

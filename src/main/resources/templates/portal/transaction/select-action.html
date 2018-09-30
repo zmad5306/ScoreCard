@@ -13,6 +13,7 @@
 			</div>
 			<div class="row">
 				<form method="post" th:action="${flowExecutionUrl}" th:object="${action}">
+					<p class="alert alert-danger" th:each="err : ${#fields.errors('actionId')}" th:text="${err}"></p>
 					<table class="table table-hover">
 						<thead>
 							<tr>
