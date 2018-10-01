@@ -9,9 +9,17 @@
 	</on-start>
 
 	<view-state id="createTransaction" view="portal/transaction/add" model="transaction">
-		<transition on="saveTransaction" to="review" validate="true" />
+		<transition on="saveTransaction" to="addOrReview" validate="true" />
 		<transition on="cancel" to="cancel" validate="false" />
 	</view-state>
+	
+	<action-state id="addOrReview">
+		<evaluate expression="transaction.getActions().size() > 0" />
+		<transition on="yes" to="review" />
+		<transition on="no" to="selectService">
+			<evaluate expression="transactionHandler.startAddAction()" result="flowScope.action" />
+		</transition>
+	</action-state>
 	
 	<view-state id="review" view="portal/transaction/review">
 		<transition on="addNewAction" to="selectService">
@@ -23,6 +31,7 @@
 		<transition on-exception="us.zacharymaddox.scorecard.api.domain.exception.TransactionNameNotUniqueException" to="createTransaction">
 			<set name="flashScope.duplicateTransaction" value="true" />
 		</transition>
+		<transition on="editName" to="createTransaction" />
 		<transition on="cancel" to="cancel" validate="false" />
 	</view-state>
 	
@@ -41,6 +50,10 @@
 		</on-entry>
 		<transition on="selectedAction" to="review" validate="true" validation-hints="'step1,step2'">
 			<evaluate expression="transactionHandler.addActionToTransaction(transaction, action)" />
+		</transition>
+		<transition on="selectedActionAndAddAnother" to="selectService" validate="true" validation-hints="'step1,step2'">
+			<evaluate expression="transactionHandler.addActionToTransaction(transaction, action)" />
+			<evaluate expression="transactionHandler.startAddAction()" result="flowScope.action" />
 		</transition>
 		<transition on="goBack" to="selectService" validate="false" />
 		<transition on="cancel" to="cancel" validate="false" />
