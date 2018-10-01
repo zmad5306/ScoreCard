@@ -39,7 +39,7 @@
 		<transition on="cancel" to="cancel" validate="false" />
 	</view-state>
 	
-	<view-state id="selectDependencies" view="portal/transaction/select-dependencies">
+	<view-state id="selectDependencies" view="portal/transaction/select-dependencies" model="action">
 		<on-entry>
 			<set name="viewScope.selectedActionIndex" value="flashScope.selectedActionIndex" />
 		</on-entry>

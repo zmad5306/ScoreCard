@@ -50,7 +50,17 @@ public class TransactionHandler {
 	
 	public void addActionToTransaction(Transaction transaction, NewAction action) {
 		Action a = actionApiService.getAction(action.getActionId());
+		a.setDependsOn(new ArrayList<>());
 		transaction.getActions().add(a);
+	}
+	
+	public Action selectAction(Transaction transaction, Integer selectedActionIndex) {
+		return transaction.getActions().get(selectedActionIndex);
+	}
+	
+	public Transaction addDependencies(Transaction transaction, Action action, Integer selectedActionIndex) {
+		transaction.getActions().get(selectedActionIndex).setDependsOn(action.getDependsOn());
+		return transaction;
 	}
 	
 	public Long save(Transaction transaction) {
@@ -65,15 +75,6 @@ public class TransactionHandler {
 			}
 		}
 		return t.getTransactionId();
-	}
-	
-	public Action selectAction(Transaction transaction, Integer selectedActionIndex) {
-		return transaction.getActions().get(selectedActionIndex);
-	}
-	
-	public Transaction addDependencies(Transaction transaction, Action action, Integer selectedActionIndex) {
-		transaction.getActions().get(selectedActionIndex).setDependsOn(action.getDependsOn());
-		return transaction;
 	}
 	
 }
