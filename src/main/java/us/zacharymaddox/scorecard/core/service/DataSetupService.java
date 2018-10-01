@@ -1,6 +1,8 @@
 package us.zacharymaddox.scorecard.core.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -16,7 +18,6 @@ import us.zacharymaddox.scorecard.core.domain.Transaction;
 import us.zacharymaddox.scorecard.core.domain.TransactionAction;
 import us.zacharymaddox.scorecard.core.repository.ActionRepository;
 import us.zacharymaddox.scorecard.core.repository.ServiceRepository;
-import us.zacharymaddox.scorecard.core.repository.TransactionActionRepository;
 import us.zacharymaddox.scorecard.core.repository.TransactionRepository;
 import us.zacharymaddox.scorecard.domain.Method;
 import us.zacharymaddox.scorecard.domain.Transport;
@@ -33,9 +34,6 @@ public class DataSetupService {
 	
 	@Autowired
 	private TransactionRepository transactionRepository;
-	
-	@Autowired
-	private TransactionActionRepository transactionActionRepository;
 	
 	@PostConstruct
 	@Transactional
@@ -79,14 +77,10 @@ public class DataSetupService {
 		Transaction t1 = new Transaction();
 		t1.setName("transaction1");
 		
-		t1 = transactionRepository.save(t1);
-		
 		TransactionAction ta1 = new TransactionAction();
 		ta1.setAction(a1);
 		ta1.setDependsOn(null);
 		ta1.setTransaction(t1);
-		
-		ta1 = transactionActionRepository.save(ta1);
 		
 		Set<TransactionAction> dependsOn2 = new HashSet<>();
 		dependsOn2.add(ta1);
@@ -95,8 +89,6 @@ public class DataSetupService {
 		ta2.setAction(a2);
 		ta2.setDependsOn(dependsOn2);
 		ta2.setTransaction(t1);
-		
-		ta2 = transactionActionRepository.save(ta2);
 		
 		Set<TransactionAction> dependsOn3 = new HashSet<>();
 		dependsOn3.add(ta1);
@@ -107,12 +99,18 @@ public class DataSetupService {
 		ta3.setDependsOn(dependsOn3);
 		ta3.setTransaction(t1);
 		
-		ta3 = transactionActionRepository.save(ta3);
+		List<TransactionAction> actions = new ArrayList<>();
+		actions.add(ta1);
+		actions.add(ta2);
+		actions.add(ta3);
+		
+		t1.setActions(actions);
+		t1 = transactionRepository.save(t1);
 	}
 	
 	private void bankTransfer() {
 		Service s1 = new Service();
-		s1.setName("account-service");
+		s1.setName("account-service");	
 		s1.setPath("account");
 		s1.setTransport(Transport.QUEUE);
 		
@@ -137,14 +135,10 @@ public class DataSetupService {
 		Transaction t1 = new Transaction();
 		t1.setName("bank-transfer");
 		
-		t1 = transactionRepository.save(t1);
-		
 		TransactionAction ta1 = new TransactionAction();
 		ta1.setAction(a1);
 		ta1.setDependsOn(null);
 		ta1.setTransaction(t1);
-		
-		ta1 = transactionActionRepository.save(ta1);
 		
 		Set<TransactionAction> dependsOn = new HashSet<>();
 		dependsOn.add(ta1);
@@ -153,8 +147,6 @@ public class DataSetupService {
 		ta2.setAction(a2);
 		ta2.setDependsOn(dependsOn);
 		ta2.setTransaction(t1);
-		
-		ta2 = transactionActionRepository.save(ta2);
 		
 		Transaction t2 = new Transaction();
 		t2.setName("bank-credit");
@@ -165,7 +157,13 @@ public class DataSetupService {
 		ta3.setAction(a2);
 		ta3.setTransaction(t2);
 		
-		ta3 = transactionActionRepository.save(ta3);
+		List<TransactionAction> actions = new ArrayList<>();
+		actions.add(ta1);
+		actions.add(ta2);
+		actions.add(ta3);
+		
+		t1.setActions(actions);
+		t1 = transactionRepository.save(t1);
 	}
 
 }

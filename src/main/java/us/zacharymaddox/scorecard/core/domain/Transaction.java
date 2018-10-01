@@ -3,6 +3,7 @@ package us.zacharymaddox.scorecard.core.domain;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,6 +19,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
@@ -36,8 +38,9 @@ public class Transaction extends DomainObject implements Serializable {
 	@NotEmpty
 	@NotNull
 	private String name;
-	@OneToMany(mappedBy="transaction")
+	@OneToMany(mappedBy="transaction", cascade=CascadeType.ALL)
 	@JsonSerialize(using=TransactionActionListSerializer.class)
+	@JsonDeserialize(using=TransactionActionListDeserializer.class)
 	private List<TransactionAction> actions;
 	
 	public Transaction() {

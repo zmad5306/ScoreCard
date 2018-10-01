@@ -50,8 +50,8 @@ public class TransactionHandler {
 		transaction.getActions().add(a);
 	}
 	
-	public void save(Transaction transaction) {
-		System.out.println("called save...");
+	public Long save(Transaction transaction) {
+		return transactionApiService.save(transaction).getTransactionId();
 	}
 	
 }

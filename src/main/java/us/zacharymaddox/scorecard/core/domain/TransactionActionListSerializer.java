@@ -39,8 +39,10 @@ public class TransactionActionListSerializer extends StdSerializer<List<Transact
 				gen.writeStringField("method", a.getAction().getMethod().name());
 				gen.writeNumberField("action_id", a.getAction().getActionId());
 				gen.writeArrayFieldStart("depends_on");
-				for (TransactionAction dep : a.getDependsOn()) {
-					gen.writeNumber(dep.getAction().getActionId());
+				if (null != a.getDependsOn()) {
+					for (TransactionAction dep : a.getDependsOn()) {
+						gen.writeNumber(dep.getAction().getActionId());
+					}
 				}
 				gen.writeEndArray();
 				gen.writeEndObject();

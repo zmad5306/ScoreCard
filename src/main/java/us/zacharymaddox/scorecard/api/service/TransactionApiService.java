@@ -41,5 +41,9 @@ public class TransactionApiService {
 		Transaction transaction = restTemplate.getForObject(baseUrl + "/transaction/?name={name}", Transaction.class, name);
 		return transaction;
 	}
+	
+	public Transaction save(Transaction transaction) {
+		return restTemplate.postForObject(baseUrl + "/transaction", transaction, Transaction.class);
+	}
 
 }

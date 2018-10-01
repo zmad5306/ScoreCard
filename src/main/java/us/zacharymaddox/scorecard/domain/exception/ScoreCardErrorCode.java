@@ -13,7 +13,8 @@ public enum ScoreCardErrorCode {
 	SERVICE_NAME_TAKEN("The requested Service name already exists, select a unique service name.", 400), 
 	SERVICE_INVALID("The requested Service passed was invalid.", 400), 
 	ACTION_NAME_TAKEN("The requested Action name alrady exists in this Service, select a unique action name.", 400),
-	ACTION_INVALID("The requested Action passed was invalid.", 400);
+	ACTION_INVALID("The requested Action passed was invalid.", 400), 
+	TRANSACTION_SAVE_FAILED_BAD_ACTION("Action reqeusted not found.", 404);
 	
 	private String message;
 	private Integer status;

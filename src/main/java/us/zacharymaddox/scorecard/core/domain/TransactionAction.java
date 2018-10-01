@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -34,8 +36,9 @@ public class TransactionAction extends DomainObject implements Serializable {
 	private Transaction transaction;
 	@ManyToOne
 	@JoinColumn(name="ACTION_ID")
+	@NotNull
 	private Action action;
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinTable(name="TRANSACTION_ACTION_DEPENDENCY",
 		schema="SCORE_CARD",
 		joinColumns={@JoinColumn(name="TRANSACTION_ACTION_ID")},

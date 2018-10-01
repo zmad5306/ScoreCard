@@ -18,7 +18,7 @@
 			<evaluate expression="transactionHandler.startAddAction()" result="flowScope.action" />
 		</transition>
 		<transition on="submitToServer" to="redirect" history="invalidate">
-			<evaluate expression="transactionHandler.save(flowScope.transaction)" />
+			<evaluate expression="transactionHandler.save(flowScope.transaction)" result="flowScope.transactionId" />
 		</transition>
 		<transition on="cancel" to="cancel" validate="false" />
 	</view-state>
@@ -48,6 +48,6 @@
 		<transition on="deny" to="createTransaction" />
 	</view-state>
 	
-	<end-state id="redirect" view="redirect:/portal/transaction/list" />
+	<end-state id="redirect" view="redirect:/portal/transaction/{transactionId}" />
 	
 </flow>
