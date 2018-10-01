@@ -71,4 +71,9 @@ public class TransactionHandler {
 		return transaction.getActions().get(selectedActionIndex);
 	}
 	
+	public Transaction addDependencies(Transaction transaction, Action action, Integer selectedActionIndex) {
+		transaction.getActions().get(selectedActionIndex).setDependsOn(action.getDependsOn());
+		return transaction;
+	}
+	
 }
