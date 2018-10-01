@@ -13,10 +13,11 @@
 			</div>
 			<div class="row">
 				<form method="post" th:action="${flowExecutionUrl}" th:object="${transaction}">
-					<div class="form-group" th:classappend="${#fields.hasErrors('name') ? 'has-error' : ''}">
+					<div class="form-group" th:classappend="${#fields.hasErrors('name') || (null != duplicateTransaction && duplicateTransaction) ? 'has-error' : ''}">
 						<label for="transaction_name">Name</label>
 						<input type="text" class="form-control" id="transaction_name" placeholder="Transaction name" th:field="*{name}">
 						<span th:each="err : ${#fields.errors('name')}" th:text="${err}" class="help-block"></span>
+						<span th:if="${duplicateTransaction}" class="help-block">name in use</span>
 					</div>
 					<button type="submit" name="_eventId_cancel" value="cancel" class="btn btn-link">Cancel</button>
 					<button type="submit" name="_eventId_saveTransaction" value="saveTransaction" class="btn btn-primary pull-right">Submit</button>

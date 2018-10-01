@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import us.zacharymaddox.scorecard.api.service.TransactionApiService;
 
@@ -25,8 +26,13 @@ public class TransactionPortalController {
 	}
 	
 	@GetMapping("/{transaction_id}")
-	public String details(@PathVariable("transaction_id") Long transactionId, Model model) {
+	public String details(
+			@RequestParam(value="successful_add", required=false, defaultValue="false") Boolean successfulAdd, 
+			@PathVariable("transaction_id") Long transactionId, 
+			Model model
+		) {
 		model.addAttribute("transaction", transactionApiService.getTransaction(transactionId));
+		model.addAttribute("successfulAdd", successfulAdd);
 		return "portal/transaction/detail";
 	}
 

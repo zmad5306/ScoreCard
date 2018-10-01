@@ -9,9 +9,12 @@ import org.springframework.stereotype.Component;
 import us.zacharymaddox.scorecard.api.domain.Action;
 import us.zacharymaddox.scorecard.api.domain.Service;
 import us.zacharymaddox.scorecard.api.domain.Transaction;
+import us.zacharymaddox.scorecard.api.domain.exception.TransactionNameNotUniqueException;
 import us.zacharymaddox.scorecard.api.service.ActionApiService;
 import us.zacharymaddox.scorecard.api.service.ServiceApiService;
 import us.zacharymaddox.scorecard.api.service.TransactionApiService;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardClientException;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardErrorCode;
 import us.zacharymaddox.scorecard.portal.domain.NewAction;
 
 // https://github.com/vakho10/Java-Spring-Boot-with-Web-Flow-and-Thymeleaf/blob/master/src/main/java/com/example/demo/handlers/RegisterHandler.java
@@ -51,7 +54,17 @@ public class TransactionHandler {
 	}
 	
 	public Long save(Transaction transaction) {
-		return transactionApiService.save(transaction).getTransactionId();
+		Transaction t = null;
+		try {
+			t = transactionApiService.save(transaction);
+		} catch (ScoreCardClientException e) {
+			if (ScoreCardErrorCode.TRANSACTION_NAME_TAKEN.equals(e.getError())) {
+				throw new TransactionNameNotUniqueException();
+			} else {
+				throw e;
+			}
+		}
+		return t.getTransactionId();
 	}
 	
 }

@@ -51,6 +51,10 @@ public class TransactionService {
 
 	@Transactional
 	public Transaction save(Transaction transaction) {
+		Optional<Transaction> existing = transactionRepository.findByName(transaction.getName());
+		if (existing.isPresent()) {
+			throw new ScoreCardClientException(ScoreCardErrorCode.TRANSACTION_NAME_TAKEN);
+		}
 		for (TransactionAction a : transaction.getActions()) {
 			Optional<Action> action = actionRepository.findById(a.getAction().getActionId());
 			if (!action.isPresent()) {

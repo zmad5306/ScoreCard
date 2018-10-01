@@ -20,6 +20,9 @@
 		<transition on="submitToServer" to="redirect" history="invalidate">
 			<evaluate expression="transactionHandler.save(flowScope.transaction)" result="flowScope.transactionId" />
 		</transition>
+		<transition on-exception="us.zacharymaddox.scorecard.api.domain.exception.TransactionNameNotUniqueException" to="createTransaction">
+			<set name="flashScope.duplicateTransaction" value="true" />
+		</transition>
 		<transition on="cancel" to="cancel" validate="false" />
 	</view-state>
 	
@@ -44,10 +47,12 @@
 	</view-state>
 	
 	<view-state id="cancel" view="portal/transaction/cancel-confirm">
-		<transition on="confirm" to="redirect" history="invalidate" />
+		<transition on="confirm" to="cancelRedirect" history="invalidate" />
 		<transition on="deny" to="createTransaction" />
 	</view-state>
 	
-	<end-state id="redirect" view="redirect:/portal/transaction/{transactionId}" />
+	<end-state id="redirect" view="redirect:/portal/transaction/{transactionId}?successful_add=true" />
+	
+	<end-state id="cancelRedirect" view="redirect:/portal/transaction/list" />
 	
 </flow>
