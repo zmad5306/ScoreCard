@@ -13,7 +13,8 @@
 			</div>
 			<form method="post" th:action="${flowExecutionUrl}">
 				<div class="row">
-					<p class="alert alert-warning"><span class="glyphicon glyphicon-warning-sign"></span> This transaction has not been saved. Once all actions are configured click Submit below.</p>
+					<p th:if="${transaction.actions.size() > 0}" class="alert alert-warning"><span class="glyphicon glyphicon-warning-sign"></span> This transaction has not been saved. Once all actions are configured click Submit below.</p>
+					<p th:if="${transaction.actions.size() < 1}" class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> This transaction cannot been saved, it does not contain any actions. Add actions below.</p>
 				</div>
 				<div class="row">
 					<div class="control-group">
@@ -64,7 +65,7 @@
 				<button type="submit" name="_eventId_cancel" value="cancel"
 					class="btn btn-link">Cancel</button>
 				<button type="submit" name="_eventId_submitToServer"
-					value="submitToServer" class="btn btn-primary pull-right">Submit</button>
+					value="submitToServer" class="btn btn-primary pull-right" th:disabled="${transaction.actions.size() < 1}">Submit</button>
 			</form>
 		</div>
 	</div>
