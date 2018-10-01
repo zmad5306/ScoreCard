@@ -8,6 +8,9 @@ import java.util.Map;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import us.zacharymaddox.scorecard.domain.Method;
@@ -103,6 +106,27 @@ public class Action implements Serializable {
 	}
 	public void setMetadata(Map<String, String> metadata) {
 		this.metadata = metadata;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof Action) {
+			Action other = (Action) obj;
+			return new EqualsBuilder().append(actionId, other.getActionId()).build();
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		if (null == actionId) {
+			return super.hashCode();
+		} else {
+			return new HashCodeBuilder().append(actionId).toHashCode();
+		}
 	}
 	
 }

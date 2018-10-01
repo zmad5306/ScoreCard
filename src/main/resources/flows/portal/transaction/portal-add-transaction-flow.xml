@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/webflow
                           http://www.springframework.org/schema/webflow/spring-webflow.xsd">
-                          
+   
 	<on-start>
 		<evaluate expression="transactionHandler.init()" result="flowScope.transaction" />
 	</on-start>
@@ -32,7 +32,14 @@
 			<set name="flashScope.duplicateTransaction" value="true" />
 		</transition>
 		<transition on="editName" to="createTransaction" />
+		<transition on="addDependencies" to="selectDependencies">
+			<evaluate expression="transactionHandler.selectAction(transaction, requestParameters.selected_action_index)" result="flowScope.action" />
+			<set name="flashScope.selectedActionIndex" value="requestParameters.selected_action_index" />
+		</transition>
 		<transition on="cancel" to="cancel" validate="false" />
+	</view-state>
+	
+	<view-state id="selectDependencies" view="portal/transaction/select-dependencies">
 	</view-state>
 	
 	<view-state id="selectService" view="portal/transaction/select-service" model="action">

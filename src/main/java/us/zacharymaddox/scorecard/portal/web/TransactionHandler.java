@@ -67,4 +67,8 @@ public class TransactionHandler {
 		return t.getTransactionId();
 	}
 	
+	public Action selectAction(Transaction transaction, Integer selectedActionIndex) {
+		return transaction.getActions().get(selectedActionIndex);
+	}
+	
 }

@@ -43,7 +43,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="action : ${transaction.actions}">
+							<tr th:each="action,iter : ${transaction.actions}">
 								<td th:text="${action.actionId}" />
 								<td th:text="${action.name}" />
 								<td th:text="${action.path}" />
@@ -56,7 +56,7 @@
 									<ul class="comma-list">
 										<li th:each="dep : ${action.dependsOn}" th:text="${dep}"></li>
 									</ul>
-									<button type="submit" class="btn btn-sm"><i class="glyphicon glyphicon-plus" aria-hidden="true"></i>Add</button>
+									<button type="submit" class="btn btn-sm" name="_eventId_addDependencies" value="addDependencies" th:onclick="'setActionIndex(\'' + ${iter.index} + '\');'"><i class="glyphicon glyphicon-plus" aria-hidden="true"></i></button>
 								</td>
 							</tr>
 						</tbody>
@@ -67,8 +67,15 @@
 					class="btn btn-link">Cancel</button>
 				<button type="submit" name="_eventId_submitToServer"
 					value="submitToServer" class="btn btn-primary pull-right" th:disabled="${transaction.actions.size() < 1}">Submit</button>
+				<input type="hidden" name="selected_action_index" id="selected_action_index" />
 			</form>
 		</div>
 	</div>
+	<script type="text/javascript">
+		function setActionIndex(actionIndex) {
+			console.log(actionIndex);
+			$('#selected_action_index').val(actionIndex);
+		}
+	</script>
 </body>
 </html>
