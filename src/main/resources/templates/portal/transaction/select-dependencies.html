@@ -50,7 +50,10 @@
 						</thead>
 						<tbody>
 							<tr th:each="actn,iter : ${transaction.actions}" th:if="${iter.index != T(Integer).parseInt(selectedActionIndex)}">
-								<td><input type="checkbox" th:field="*{dependsOn}" th:value="${actn.actionId}" />
+								<td>
+									<input type="checkbox" th:field="*{dependsOn}" th:value="${actn.actionId}" th:if="${actn.dependsOn != null && actn.dependsOn.contains(action.actionId)}" disabled data-toggle="tooltip" data-placement="right" title="Adding this action would result in a circular dependency." />
+									<input type="checkbox" th:field="*{dependsOn}" th:value="${actn.actionId}" th:if="${actn.dependsOn == null || !actn.dependsOn.contains(action.actionId)}" />
+								</td>
 								<td th:text="${actn.actionId}" />
 								<td th:text="${actn.name}" />
 								<td th:text="${actn.path}" />
