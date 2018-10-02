@@ -67,4 +67,9 @@ public class TransactionService {
 		return transactionRepository.save(transaction);
 	}
 	
+	@Transactional
+	public void delete(Long transactionId) {
+		transactionRepository.deleteById(transactionId);
+	}
+	
 }

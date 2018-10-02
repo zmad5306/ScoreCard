@@ -45,5 +45,9 @@ public class TransactionApiService {
 	public Transaction save(Transaction transaction) {
 		return restTemplate.postForObject(baseUrl + "/transaction", transaction, Transaction.class);
 	}
+	
+	public void delete(Long transactionId) {
+		this.restTemplate.delete(baseUrl + "/transaction/{transaction_id}", transactionId);
+	}
 
 }

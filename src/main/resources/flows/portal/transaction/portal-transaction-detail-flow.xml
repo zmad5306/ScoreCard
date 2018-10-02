@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow.xsd">
+                          
+	<input name="transaction_id" required="true" type="java.lang.Long" />
+   
+	<on-start>
+		<evaluate expression="transactionHandler.lookup(transaction_id)" result="flowScope.transaction" />
+	</on-start>
+	
+	<view-state id="detail" view="portal/transaction/detail" model="transaction">
+		<transition on="deleteTransaction" to="confirmDelete" />
+	</view-state>
+
+	<view-state id="confirmDelete" view="portal/transaction/confirm-delete" model="transaction">
+		<transition on="confirm" to="redirect" history="invalidate">
+			<evaluate expression="transactionHandler.delete(transaction_id)" />
+		</transition>
+		<transition on="deny" to="detail" />
+	</view-state>
+	
+	<end-state id="redirect" view="redirect:/portal/transaction/list" />
+	
+</flow>

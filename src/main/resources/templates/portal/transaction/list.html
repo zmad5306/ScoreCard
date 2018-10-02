@@ -29,7 +29,7 @@
 					</thead>
 					<tbody>
 						<tr th:each="transaction : ${transactions}">
-							<td><a th:href="@{'/portal/transaction/' + ${transaction.transactionId}}" th:text="${transaction.transactionId}"></a></td>
+							<td><a th:href="@{'/portal/transaction/detail?transaction_id=' + ${transaction.transactionId}}" th:text="${transaction.transactionId}"></a></td>
 							<td th:text="${transaction.name}"></td>
 							<td th:text="${transaction.actionCount}"></td>
 						</tr>

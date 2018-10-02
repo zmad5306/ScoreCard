@@ -82,7 +82,7 @@
 		<transition on="deny" to="createTransaction" />
 	</view-state>
 	
-	<end-state id="redirect" view="redirect:/portal/transaction/{transactionId}?successful_add=true" />
+	<end-state id="redirect" view="redirect:/portal/transaction/detail?transaction_id={transactionId}&amp;successful_add=true" />
 	
 	<end-state id="cancelRedirect" view="redirect:/portal/transaction/list" />
 	

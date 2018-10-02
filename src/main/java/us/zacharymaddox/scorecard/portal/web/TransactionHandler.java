@@ -36,6 +36,10 @@ public class TransactionHandler {
 		return transaction;
 	}
 	
+	public Transaction lookup(Long transactionId) {
+		return transactionApiService.getTransaction(transactionId);
+	}
+	
 	public NewAction startAddAction() {
 		return new NewAction();
 	}
@@ -78,6 +82,10 @@ public class TransactionHandler {
 			}
 		}
 		return t.getTransactionId();
+	}
+	
+	public void delete(Long transactionId) {
+		transactionApiService.delete(transactionId);
 	}
 	
 }
