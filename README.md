@@ -6,7 +6,7 @@ Simple HTTP and JMS implemenation of the Score Card pattern. This project is mad
 
 URL: `http://localhost:8080`
 
-This is the Core Score Card application. This application tracks Services, Actions and Transactions. Individual executions are tracked as Sore Cards. The Core module exposes several web APIs these are described at http://localhost:8080/swagger-ui.html.
+This is the Core Score Card application. This application tracks Services, Actions and Transactions. Individual executions are tracked as Sore Cards. The Core module exposes several web APIs these are described at `http://localhost:8080/swagger-ui.html`.
 
 ## API
 
