@@ -11,7 +11,7 @@
 			<div class="row">
 				<h1>Add Transaction Review</h1>
 			</div>
-			<form method="post" th:action="${flowExecutionUrl}">
+			<form method="post">
 				<div class="row">
 					<p th:if="${transaction.actions.size() > 0}" class="alert alert-warning"><span class="glyphicon glyphicon-warning-sign"></span> This transaction has not been saved. Once all actions are configured click Submit below.</p>
 					<p th:if="${transaction.actions.size() < 1}" class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> This transaction cannot been saved, it does not contain any actions. Add actions below.</p>
@@ -26,7 +26,7 @@
 				<div class="row">
 					<h3>Actions</h3>
 					<div class="btn-group pull-right">
-						<button type="submit" class="btn btn-primary" name="_eventId_addNewAction" value="addNewAction"><i class="glyphicon glyphicon-plus" aria-hidden="true"></i> Add Action</button>
+						<button type="submit" class="btn btn-primary" name="_eventId_addNewAction" value="addNewAction"><i class="glyphicon glyphicon-plus" aria-hidden="true" th:formaction="${flowExecutionUrl}"></i> Add Action</button>
 					</div>
 					<table class="table table-hover">
 						<thead>
@@ -57,30 +57,20 @@
 									<ul class="comma-list">
 										<li th:each="dep : ${action.dependsOn}" th:text="${dep}"></li>
 									</ul>
-									<button th:if="${action.dependsOn == null || action.dependsOn.size() < 1}" type="submit" class="btn btn-sm" name="_eventId_addDependencies" value="addDependencies" th:onclick="'setActionIndex(\'' + ${iter.index} + '\');'"><i class="glyphicon glyphicon-plus" aria-hidden="true"></i></button>
-									<button th:if="${action.dependsOn != null && action.dependsOn.size() > 0}" type="submit" class="btn btn-sm" name="_eventId_addDependencies" value="addDependencies" th:onclick="'setActionIndex(\'' + ${iter.index} + '\');'"><i class="glyphicon glyphicon-pencil" aria-hidden="true"></i></button>
+									<button th:if="${action.dependsOn == null || action.dependsOn.size() < 1}" type="submit" class="btn btn-sm" name="_eventId_addDependencies" value="addDependencies" th:formaction="${flowExecutionUrl + '&selected_action_index=' + iter.index}"><i class="glyphicon glyphicon-plus" aria-hidden="true"></i></button>
+									<button th:if="${action.dependsOn != null && action.dependsOn.size() > 0}" type="submit" class="btn btn-sm" name="_eventId_addDependencies" value="addDependencies" th:formaction="${flowExecutionUrl + '&selected_action_index=' + iter.index}"><i class="glyphicon glyphicon-pencil" aria-hidden="true"></i></button>
 								</td>
 								<td>
-									<button type="submit" class="btn btn-sm" name="_eventId_removeAction" value="removeAction" th:onclick="'setActionIndex(\'' + ${iter.index} + '\');'"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></button> 
+									<button type="submit" class="btn btn-sm" name="_eventId_removeAction" value="removeAction" th:formaction="${flowExecutionUrl + '&selected_action_index=' + iter.index}"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></button> 
 								</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
-
-				<button type="submit" name="_eventId_cancel" value="cancel"
-					class="btn btn-link">Cancel</button>
-				<button type="submit" name="_eventId_submitToServer"
-					value="submitToServer" class="btn btn-primary pull-right" th:disabled="${transaction.actions.size() < 1}">Submit</button>
-				<input type="hidden" name="selected_action_index" id="selected_action_index" />
+				<button type="submit" name="_eventId_cancel" value="cancel" class="btn btn-link" th:formaction="${flowExecutionUrl}">Cancel</button>
+				<button type="submit" name="_eventId_submitToServer" value="submitToServer" class="btn btn-primary pull-right" th:disabled="${transaction.actions.size() < 1}" th:formaction="${flowExecutionUrl}">Submit</button>
 			</form>
 		</div>
 	</div>
-	<script type="text/javascript">
-		function setActionIndex(actionIndex) {
-			console.log(actionIndex);
-			$('#selected_action_index').val(actionIndex);
-		}
-	</script>
 </body>
 </html>
