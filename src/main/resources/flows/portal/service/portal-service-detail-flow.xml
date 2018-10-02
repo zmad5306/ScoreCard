@@ -25,7 +25,7 @@
 		<transition on="deny" to="detail" />
 	</view-state>
 	
-	<subflow-state id="addActionSub" subflow="portal/action/add">
+	<subflow-state id="addActionSub" subflow="portal/service/action/add">
 		<input name="service_id" />
 		<transition on="backToDetails" to="detail">
 			<evaluate expression="serviceHandler.lookup(service_id)" result="flowScope.service" />

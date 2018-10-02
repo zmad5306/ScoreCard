@@ -10,7 +10,7 @@
 		<evaluate expression="actionHandler.newAction(service_id)" result="flowScope.action" />
 	</on-start>
 	
-	<view-state id="addAction" view="portal/action/add" model="action">
+	<view-state id="addAction" view="portal/service/action/add" model="action">
 		<transition on="save" to="backToDetails">
 			<evaluate expression="actionHandler.save(action)" />
 		</transition>

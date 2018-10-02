@@ -62,7 +62,7 @@
 							</thead>
 							<tbody>
 								<tr th:each="action : ${service.actions}">
-									<td><a th:href="@{'/portal/action/detail?action_id=' + ${action.actionId}}" th:text="${action.actionId}"></a></td>
+									<td><a th:href="@{'/portal/service/action/detail?action_id=' + ${action.actionId}}" th:text="${action.actionId}"></a></td>
 									<td th:text="${action.name}"></td>
 									<td th:text="${action.path}"></td>
 									<td th:text="${action.method}"></td>

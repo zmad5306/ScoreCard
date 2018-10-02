@@ -52,7 +52,7 @@
 							</thead>
 							<tbody>
 								<tr th:each="action : ${transaction.actions}">
-									<td><a th:href="@{'/portal/action/detail?action_id=' + ${action.actionId}}"
+									<td><a th:href="@{'/portal/service/action/detail?action_id=' + ${action.actionId}}"
 										th:text="${action.actionId}"></a></td>
 									<td th:text="${action.name}"></td>
 									<td><a
@@ -63,7 +63,7 @@
 									<td>
 										<ul class="comma-list">
 											<li th:each="dep : ${action.dependsOn}"><a
-												th:href="@{'/portal/action/detail?action_id=' + ${dep}}" th:text="${dep}"></a></li>
+												th:href="@{'/portal/service/action/detail?action_id=' + ${dep}}" th:text="${dep}"></a></li>
 										</ul>
 									</td>
 								</tr>
