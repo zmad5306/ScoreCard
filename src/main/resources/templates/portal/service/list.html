@@ -8,40 +8,42 @@
 	<!--/*/ <th:block th:include="portal/fragments/header :: header"></th:block> /*/-->
 	<div class="container">
 		<div class="starter-template">
-			<div class="row">
-				<div class="col-md-9">
-					<h1>Services</h1>
-				</div>
-				<div class="col-md-3 pull-right">
-					<div class="btn-group">
-					    <a href="/portal/service/add" class="btn btn-primary">
-					        <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> Add Service
-					    </a>
+			<form method="post">
+				<div class="row">
+					<div class="col-md-9">
+						<h1>Services</h1>
+					</div>
+					<div class="col-md-3 pull-right">
+						<div class="btn-group">
+						    <button type="submit" class="btn btn-primary" name="_eventId_addService" value="addService" th:formaction="${flowExecutionUrl}">
+						        <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> Add Service
+						    </button>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th>Service Id</th>
-								<th>Service Name</th>
-								<th>Transport</th>
-								<th>Path</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="service : ${services}">
-								<td><a th:href="@{'/portal/service/detail?service_id=' + ${service.serviceId}}" th:text="${service.serviceId}"></a></td>
-								<td th:text="${service.name}"></td>
-								<td th:text="${service.transport}"></td>
-								<td th:text="${service.path}"></td>
-							</tr>
-						</tbody>
-					</table>
+				<div class="row">
+					<div class="col-md-12">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th>Service Id</th>
+									<th>Service Name</th>
+									<th>Transport</th>
+									<th>Path</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="service : ${services}">
+									<td><button type="submit" class="btn btn-link" name="_eventId_selectService" value="addselectService" th:formaction="${flowExecutionUrl + '&service_id=' + service.serviceId}" th:text="${service.serviceId}"></button></td>
+									<td th:text="${service.name}"></td>
+									<td th:text="${service.transport}"></td>
+									<td th:text="${service.path}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
-			</div>
+			</form>
 		</div>
 	</div>
 </body>

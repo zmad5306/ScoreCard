@@ -15,6 +15,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
+					<p class="alert alert-danger" th:if="${actionNameTaken}">Action name already taken. Please try a different name.</p>
 					<div class="control-group">
 						<label class="control-label">Service Id:</label>
 						<span class="controls readonly" th:text="${action.service.serviceId}"></span>
@@ -35,7 +36,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<form action="#" th:action="@{/portal/action/} + ${action.service.serviceId}" th:object="${action}" method="post">
+					<form method="post" th:action="${flowExecutionUrl}" th:object="${action}">
 						<div class="form-group" th:classappend="${#fields.hasErrors('name') ? 'has-error' : ''}">
 							<label for="service_name">Name</label>
 							<input type="text" class="form-control" id="service_name" placeholder="Action name" th:field="*{name}">
@@ -55,8 +56,8 @@
 							</select>
 							<span th:each="err : ${#fields.errors('method')}" th:text="${err}" class="help-block"></span>
 						</div>
-						<a th:href="@{'/portal/service/detail?service_id=' + ${action.service.serviceId}}" class="btn btn-link">Cancel</a>
-						<button type="submit" class="btn btn-primary pull-right">Submit</button>
+						<button type="submit" class="btn btn-link" name="_eventId_cancel" value="cancel">Cancel</button>
+						<button type="submit" class="btn btn-primary pull-right" name="_eventId_save" value="save">Submit</button>
 					</form>
 				</div>
 			</div>

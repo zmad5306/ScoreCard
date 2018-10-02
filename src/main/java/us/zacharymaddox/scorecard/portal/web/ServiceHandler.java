@@ -11,7 +11,7 @@ public class ServiceHandler {
 	
 	@Autowired
 	private ServiceApiService serviceApiService;
-
+	
 	public Service lookup(Long serviceId) {
 		return serviceApiService.getService(serviceId);
 	}

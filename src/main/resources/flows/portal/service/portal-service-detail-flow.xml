@@ -12,10 +12,11 @@
 	
 	<view-state id="detail" view="portal/service/detail" model="service">
 		<transition on="deleteService" to="confirmDelete" />
+		<transition on="addAction" to="addActionSub" />
 	</view-state>
 
 	<view-state id="confirmDelete" view="portal/service/confirm-delete" model="service">
-		<transition on="confirm" to="redirect" history="invalidate">
+		<transition on="confirm" to="backToList">
 			<evaluate expression="serviceHandler.delete(service_id)" />
 		</transition>
 		<transition on-exception="us.zacharymaddox.scorecard.api.domain.exception.ActionInUseException" to="detail">
@@ -24,6 +25,13 @@
 		<transition on="deny" to="detail" />
 	</view-state>
 	
-	<end-state id="redirect" view="redirect:/portal/service/list" />
+	<subflow-state id="addActionSub" subflow="portal/action/add">
+		<input name="service_id" />
+		<transition on="backToDetails" to="detail">
+			<evaluate expression="serviceHandler.lookup(service_id)" result="flowScope.service" />
+		</transition>
+	</subflow-state>
+	
+	<end-state id="backToList" />
 	
 </flow>
