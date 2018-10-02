@@ -62,6 +62,9 @@ public class TransactionHandler {
 		transaction.getActions().get(selectedActionIndex).setDependsOn(action.getDependsOn());
 		return transaction;
 	}
+	public void removeAction(Transaction transaction, Integer selectedActionIndex) {
+		transaction.getActions().remove(selectedActionIndex.intValue());
+	}
 	
 	public Long save(Transaction transaction) {
 		Transaction t = null;

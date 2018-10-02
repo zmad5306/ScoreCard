@@ -18,6 +18,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	private Logger logger = LoggerFactory.getLogger(RestExceptionHandler.class);
 	
+	// TODO handle generic exception... 
+	
 	@ExceptionHandler({ScoreCardClientException.class})
 	protected ResponseEntity<Object> handleClientError(ScoreCardClientException e, WebRequest request) {
 		logger.error("Handling client error: ", e);

@@ -36,6 +36,9 @@
 			<evaluate expression="transactionHandler.selectAction(transaction, requestParameters.selected_action_index)" result="flowScope.action" />
 			<set name="flashScope.selectedActionIndex" value="requestParameters.selected_action_index" />
 		</transition>
+		<transition on="removeAction" to="review">
+			<evaluate expression="transactionHandler.removeAction(transaction, requestParameters.selected_action_index)"></evaluate>
+		</transition>
 		<transition on="cancel" to="cancel" validate="false" />
 	</view-state>
 	

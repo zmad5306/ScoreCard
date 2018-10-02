@@ -20,7 +20,6 @@ public class Action implements Serializable {
 	
 	private static final long serialVersionUID = -5834592838132576186L;
 	@JsonProperty("action_id")
-	@NotNull
 	private Long actionId;
 	private String type;
 	@NotNull
