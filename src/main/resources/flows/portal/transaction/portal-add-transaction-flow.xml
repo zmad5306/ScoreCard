@@ -27,6 +27,7 @@
 		</transition>
 		<transition on="submitToServer" to="backToDetail" history="invalidate">
 			<evaluate expression="transactionHandler.save(transaction)" result="flashScope.transaction_id" />
+			<set name="flashScope.successfulAdd" value="true" />
 		</transition>
 		<transition on-exception="us.zacharymaddox.scorecard.api.domain.exception.TransactionNameNotUniqueException" to="createTransaction">
 			<set name="flashScope.duplicateTransaction" value="true" />

@@ -46,8 +46,7 @@ public class ServiceApiService {
 	}
 	
 	public Service saveService(Service service) {
-		ResponseEntity<Service> svc = restTemplate.postForEntity(baseUrl + "/service", service, Service.class);
-		return svc.getBody();
+		return restTemplate.postForObject(baseUrl + "/service", service, Service.class);
 	}
 	
 	public void delete(Long serviceId) {

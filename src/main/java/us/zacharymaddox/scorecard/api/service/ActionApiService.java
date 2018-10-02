@@ -47,8 +47,7 @@ public class ActionApiService {
 	}
 
 	public Action saveAction(Action action) {
-		ResponseEntity<Action> svc = restTemplate.postForEntity(baseUrl + "/action", action, Action.class);
-		return svc.getBody();
+		return restTemplate.postForObject(baseUrl + "/action", action, Action.class);
 	}
 
 	public List<Action> getActionByServiceId(Long serviceId) {

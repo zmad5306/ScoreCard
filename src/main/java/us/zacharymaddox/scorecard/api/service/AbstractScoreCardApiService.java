@@ -47,9 +47,8 @@ public abstract class AbstractScoreCardApiService implements ScoreCardApiService
 		AuthorizationRequest req = new AuthorizationRequest();
 		req.setActionId(scoreCardHeader.getActionId());
 		req.setScoreCardId(scoreCardHeader.getScoreCardId());
-		ResponseEntity<AuthorizationResult> result = restTemplate.postForEntity(baseUrl + "/scorecard", req, AuthorizationResult.class);
-		AuthorizationResult aResult = result.getBody();
-		return aResult.getAuthorization();
+		AuthorizationResult authorization = restTemplate.postForObject(baseUrl + "/scorecard", req, AuthorizationResult.class);
+		return authorization.getAuthorization();
 	}
 	
 	protected ScoreCardId getScoreCardId() {
