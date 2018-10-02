@@ -10,7 +10,7 @@ public class PortalController {
 	
 	@GetMapping
 	public String redirect() {
-		return "redirect:/portal/service/list";
+		return "redirect:/portal/transaction/list";
 	}
 
 }

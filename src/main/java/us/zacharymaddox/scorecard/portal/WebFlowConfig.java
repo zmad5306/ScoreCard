@@ -35,6 +35,7 @@ public class WebFlowConfig extends AbstractFlowConfiguration {
 //				.addFlowLocationPattern("/**/*-flow.xml")
 				.addFlowLocation("classpath:flows/portal/transaction/portal-add-transaction-flow.xml", "portal/transaction/add")
 				.addFlowLocation("classpath:flows/portal/transaction/portal-transaction-detail-flow.xml", "portal/transaction/detail")
+				.addFlowLocation("classpath:flows/portal/transaction/portal-transaction-list-flow.xml", "portal/transaction/list")
 				.addFlowLocation("classpath:flows/portal/service/action/portal-action-detail-flow.xml", "portal/service/action/detail")
 				.addFlowLocation("classpath:flows/portal/service/action/portal-action-add-flow.xml", "portal/service/action/add")
 				.addFlowLocation("classpath:flows/portal/service/portal-service-detail-flow.xml", "portal/service/detail")

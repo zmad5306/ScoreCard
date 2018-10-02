@@ -8,14 +8,14 @@
 	<!--/*/ <th:block th:include="portal/fragments/header :: header"></th:block> /*/-->
 	<div class="container">
 		<div class="starter-template">
-			<form method="post" th:action="${flowExecutionUrl}" th:object="${service}">
+			<form method="post" th:object="${service}">
 				<div class="row">
 					<div class="col-md-9">
 						<h1>Service</h1>
 					</div>
 					<div class="col-md-3 pull-right">
 						<div class="btn-group">
-							<button type="submit" class="btn btn-primary" name="_eventId_deleteService" value="deleteService">
+							<button type="submit" class="btn btn-primary" name="_eventId_deleteService" value="deleteService" 	>
 								<i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
 								Delete Service
 							</button>
@@ -47,7 +47,7 @@
 					<div class="col-md-12">
 						<h3>Actions</h3>
 						<div class="btn-group pull-right">
-							<button type="submit" class="btn btn-primary" name="_eventId_addAction" value="addAction">
+							<button type="submit" class="btn btn-primary" name="_eventId_addAction" value="addAction" th:formaction="${flowExecutionUrl}">
 								<i class="glyphicon glyphicon-plus" aria-hidden="true"></i> Add Action
 							</button>
 						</div>
@@ -62,7 +62,9 @@
 							</thead>
 							<tbody>
 								<tr th:each="action : ${service.actions}">
-									<td><a th:href="@{'/portal/service/action/detail?action_id=' + ${action.actionId}}" th:text="${action.actionId}"></a></td>
+									<td>
+										<button type="submit" class="btn btn-link" name="_eventId_actionDetails" value="actionDetails" th:text="${action.actionId}" th:formaction="${flowExecutionUrl + '&amp;action_id=' + action.actionId}" ></button>
+									</td>
 									<td th:text="${action.name}"></td>
 									<td th:text="${action.path}"></td>
 									<td th:text="${action.method}"></td>

@@ -25,8 +25,8 @@
 		<transition on="addNewAction" to="selectService">
 			<evaluate expression="transactionHandler.startAddAction()" result="flowScope.action" />
 		</transition>
-		<transition on="submitToServer" to="redirect" history="invalidate">
-			<evaluate expression="transactionHandler.save(transaction)" result="flowScope.transactionId" />
+		<transition on="submitToServer" to="backToDetail" history="invalidate">
+			<evaluate expression="transactionHandler.save(transaction)" result="flashScope.transaction_id" />
 		</transition>
 		<transition on-exception="us.zacharymaddox.scorecard.api.domain.exception.TransactionNameNotUniqueException" to="createTransaction">
 			<set name="flashScope.duplicateTransaction" value="true" />
@@ -78,12 +78,14 @@
 	</view-state>
 	
 	<view-state id="cancel" view="portal/transaction/cancel-confirm">
-		<transition on="confirm" to="cancelRedirect" history="invalidate" />
+		<transition on="confirm" to="backToList" history="invalidate" />
 		<transition on="deny" to="createTransaction" />
 	</view-state>
 	
-	<end-state id="redirect" view="redirect:/portal/transaction/detail?transaction_id={transactionId}&amp;successful_add=true" />
+	<end-state id="backToDetail">
+		<output name="transaction_id" />
+	</end-state>
 	
-	<end-state id="cancelRedirect" view="redirect:/portal/transaction/list" />
+	<end-state id="backToList" />
 	
 </flow>

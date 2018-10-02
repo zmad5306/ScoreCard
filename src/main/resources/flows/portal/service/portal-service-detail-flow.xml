@@ -13,6 +13,9 @@
 	<view-state id="detail" view="portal/service/detail" model="service">
 		<transition on="deleteService" to="confirmDelete" />
 		<transition on="addAction" to="addActionSub" />
+		<transition on="actionDetails" to="actionDetailsSub">
+			<set name="flashScope.action_id" value="requestParameters.action_id" />
+		</transition>
 	</view-state>
 
 	<view-state id="confirmDelete" view="portal/service/confirm-delete" model="service">
@@ -28,6 +31,13 @@
 	<subflow-state id="addActionSub" subflow="portal/service/action/add">
 		<input name="service_id" />
 		<transition on="backToDetails" to="detail">
+			<evaluate expression="serviceHandler.lookup(service_id)" result="flowScope.service" />
+		</transition>
+	</subflow-state>
+	
+	<subflow-state id="actionDetailsSub" subflow="portal/service/action/detail">
+		<input name="action_id"/>
+		<transition on="back" to="detail">
 			<evaluate expression="serviceHandler.lookup(service_id)" result="flowScope.service" />
 		</transition>
 	</subflow-state>

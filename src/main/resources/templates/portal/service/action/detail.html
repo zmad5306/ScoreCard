@@ -32,9 +32,11 @@
 							</div>
 							<div class="control-group">
 								<label class="control-label">Service Id:</label>
-								<span class="controls readonly">
-									<a th:href="@{'/portal/service/detail?service_id=' + ${action.service.serviceId}}" th:text="${action.service.serviceId}"></a>
-								</span>
+								<span class="controls readonly" th:text="${action.service.serviceId}"></span>
+							</div>
+							<div class="control-group">
+								<label class="control-label">Service Name:</label>
+								<span class="controls readonly" th:text="${action.service.name}"></span>
 							</div>
 							<div class="control-group">
 								<label class="control-label">Name:</label>

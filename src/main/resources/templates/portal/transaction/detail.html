@@ -8,14 +8,14 @@
 	<!--/*/ <th:block th:include="portal/fragments/header :: header"></th:block> /*/-->
 	<div class="container">
 		<div class="starter-template">
-			<form method="post" th:action="${flowExecutionUrl}" th:object="${transaction}">
+			<form method="post" th:object="${transaction}">
 				<div class="row">
 					<div class="col-md-9">
 						<h1>Transaction</h1>
 					</div>
 					<div class="col-md-3 pull-right">
 						<div class="btn-group">
-							<button type="submit" class="btn btn-primary" name="_eventId_deleteTransaction" value="deleteTransaction">
+							<button type="submit" class="btn btn-primary" name="_eventId_deleteTransaction" value="deleteTransaction" th:formaction="${flowExecutionUrl}"> 
 								<i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
 								Delete Transaction
 							</button>
@@ -52,18 +52,20 @@
 							</thead>
 							<tbody>
 								<tr th:each="action : ${transaction.actions}">
-									<td><a th:href="@{'/portal/service/action/detail?action_id=' + ${action.actionId}}"
-										th:text="${action.actionId}"></a></td>
+									<td>
+										<button type="submit" class="btn btn-link" th:formaction="${flowExecutionUrl + '&amp;action_id=' + action.actionId}" name="_eventId_actionDetails" value="actionDetails" th:text="${action.actionId}"></button>
+									</td>
 									<td th:text="${action.name}"></td>
-									<td><a
-										th:href="@{'/portal/service/detail?service_id=' + ${action.service.serviceId}}"
-										th:text="${action.service.serviceId}"></a></td>
+									<td>
+										<button type="submit" class="btn btn-link" th:formaction="${flowExecutionUrl + '&amp;service_id=' + action.service.serviceId}" name="_eventId_serviceDetails" value="serviceDetails" th:text="${action.service.serviceId}"></button>
+									</td>
 									<td th:text="${action.path}"></td>
 									<td th:text="${action.method}"></td>
 									<td>
 										<ul class="comma-list">
-											<li th:each="dep : ${action.dependsOn}"><a
-												th:href="@{'/portal/service/action/detail?action_id=' + ${dep}}" th:text="${dep}"></a></li>
+											<li th:each="dep : ${action.dependsOn}">
+												<button type="submit" class="btn btn-link" th:formaction="${flowExecutionUrl + '&amp;action_id=' + dep}" name="_eventId_actionDetails" value="actionDetails" th:text="${dep}"></button>
+											</li>
 										</ul>
 									</td>
 								</tr>

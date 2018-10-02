@@ -12,15 +12,37 @@
 	
 	<view-state id="detail" view="portal/transaction/detail" model="transaction">
 		<transition on="deleteTransaction" to="confirmDelete" />
+		<transition on="actionDetails" to="actionDetailsSub">
+			<set name="flashScope.action_id" value="requestParameters.action_id" />
+		</transition>
+		<transition on="serviceDetails" to="serviceDetailSub">
+			<set name="flashScope.service_id" value="requestParameters.service_id" />
+		</transition>
 	</view-state>
 
 	<view-state id="confirmDelete" view="portal/transaction/confirm-delete" model="transaction">
-		<transition on="confirm" to="redirect" history="invalidate">
+		<transition on="confirm" to="backToList">
 			<evaluate expression="transactionHandler.delete(transaction_id)" />
 		</transition>
 		<transition on="deny" to="detail" />
 	</view-state>
 	
-	<end-state id="redirect" view="redirect:/portal/transaction/list" />
+	<subflow-state id="actionDetailsSub" subflow="portal/service/action/detail">
+		<input name="action_id"/>
+		<transition on="back" to="detail">
+			<!-- this transition should not be possible, back in only invoked when the action is deleted, an 
+				 action that belongs to a transaction cannot be deleted -->
+			<evaluate expression="transactionHandler.lookup(transaction_id)" result="flowScope.transaction" />
+		</transition>
+	</subflow-state>
+	
+	<subflow-state id="serviceDetailSub" subflow="portal/service/detail">
+		<input name="service_id" />
+		<transition on="backToList" to="detail">
+			<evaluate expression="transactionHandler.lookup(transaction_id)" result="flowScope.transaction" />
+		</transition>
+	</subflow-state>
+	
+	<end-state id="backToList" />
 	
 </flow>
