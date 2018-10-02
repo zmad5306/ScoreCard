@@ -30,12 +30,6 @@ public class ActionPortalController {
 	@Autowired
 	private ActionApiService actionApiService;
 	
-	@GetMapping("/{action_id}")
-	public String details(@PathVariable("action_id") Long actionId, Model model) {
-		model.addAttribute("action", actionApiService.getAction(actionId));
-		return "portal/action/detail";
-	}
-	
 	@GetMapping("/{service_id}/add")
 	public String add(@PathVariable("service_id") Long serviceId, Model model) {
 		Action action = new Action();
@@ -62,7 +56,7 @@ public class ActionPortalController {
 					throw e;
 				}
 			}
-			return "redirect:/portal/service/" + serviceId;
+			return "redirect:/portal/service/detail?service_id=" + serviceId;
 		}
 	}
 

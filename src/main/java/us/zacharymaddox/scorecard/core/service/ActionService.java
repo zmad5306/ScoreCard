@@ -8,8 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import us.zacharymaddox.scorecard.core.domain.Action;
 import us.zacharymaddox.scorecard.core.domain.Service;
+import us.zacharymaddox.scorecard.core.domain.TransactionAction;
 import us.zacharymaddox.scorecard.core.repository.ActionRepository;
 import us.zacharymaddox.scorecard.core.repository.ServiceRepository;
+import us.zacharymaddox.scorecard.core.repository.TransactionActionRepository;
 import us.zacharymaddox.scorecard.domain.exception.ScoreCardClientException;
 import us.zacharymaddox.scorecard.domain.exception.ScoreCardErrorCode;
 
@@ -20,6 +22,8 @@ public class ActionService {
 	private ActionRepository actionRepository;
 	@Autowired
 	private ServiceRepository serviceRepository;
+	@Autowired
+	private TransactionActionRepository transactionActionRepository;
 	
 	@Transactional(readOnly=true)
 	public Action getAction(Long actionId) {
@@ -62,6 +66,15 @@ public class ActionService {
 			throw new ScoreCardClientException(ScoreCardErrorCode.SERVICE_DNE);
 		}
 		return actionRepository.findByService(service.get());
+	}
+	
+	@Transactional
+	public void delete(Long actionId) {
+		List<TransactionAction> tas = transactionActionRepository.findByActionId(actionId);
+		if(tas.size() > 0) {
+			throw new ScoreCardClientException(ScoreCardErrorCode.CANNOT_DELETE_ACTION_IN_USE);
+		}
+		actionRepository.deleteById(actionId);
 	}
 	
 }

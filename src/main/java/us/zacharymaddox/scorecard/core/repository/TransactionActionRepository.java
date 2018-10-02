@@ -12,5 +12,8 @@ public interface TransactionActionRepository extends JpaRepository<TransactionAc
 	
 	@Query("from TransactionAction where transaction.transactionId = :transaction_id and action.actionId = :action_id")
 	public List<TransactionAction> findByTransactionIdAndActionId(@Param("transaction_id") Long transactionId, @Param("action_id") Long actionId);
+	
+	@Query("from TransactionAction where action.actionId = :action_id")
+	public List<TransactionAction> findByActionId(@Param("action_id") Long actionId);
 
 }

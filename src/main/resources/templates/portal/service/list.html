@@ -30,7 +30,7 @@
 					</thead>
 					<tbody>
 						<tr th:each="service : ${services}">
-							<td><a th:href="@{'/portal/service/' + ${service.serviceId}}" th:text="${service.serviceId}"></a></td>
+							<td><a th:href="@{'/portal/service/detail?service_id=' + ${service.serviceId}}" th:text="${service.serviceId}"></a></td>
 							<td th:text="${service.name}"></td>
 							<td th:text="${service.transport}"></td>
 							<td th:text="${service.path}"></td>

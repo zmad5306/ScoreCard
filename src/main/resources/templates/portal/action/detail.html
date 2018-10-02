@@ -11,30 +11,41 @@
 			<div class="row">
 				<h1>Action</h1>
 			</div>
-			<div class="row">
-				<div class="control-group">
-					<label class="control-label">Id:</label>
-					<span class="controls readonly" th:text="${action.actionId}"></span>
+			<form method="post" th:action="${flowExecutionUrl}" th:object="${action}">
+				<div class="row">
+					<div class="btn-group pull-right">
+						<button type="submit" class="btn btn-primary" name="_eventId_deleteAction" value="deleteAction">
+							<i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+							Delete Action
+						</button>
+					</div>
 				</div>
-				<div class="control-group">
-					<label class="control-label">Service Id:</label>
-					<span class="controls readonly">
-						<a th:href="@{'/portal/service/' + ${action.service.serviceId}}" th:text="${action.service.serviceId}"></a>
-					</span>
+				<div class="row">
+					<p class="alert alert-danger" th:if="${actionInUse}">Action could not be deleted. It is currently in use by a transaction.</p>
+					<div class="control-group">
+						<label class="control-label">Id:</label>
+						<span class="controls readonly" th:text="${action.actionId}"></span>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Service Id:</label>
+						<span class="controls readonly">
+							<a th:href="@{'/portal/service/' + ${action.service.serviceId}}" th:text="${action.service.serviceId}"></a>
+						</span>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Name:</label>
+						<span class="controls readonly" th:text="${action.name}"></span>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Path:</label>
+						<span class="controls readonly" th:text="${action.path}"></span>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Method:</label>
+						<span class="controls readonly" th:text="${action.method}"></span>
+					</div>
 				</div>
-				<div class="control-group">
-					<label class="control-label">Name:</label>
-					<span class="controls readonly" th:text="${action.name}"></span>
-				</div>
-				<div class="control-group">
-					<label class="control-label">Path:</label>
-					<span class="controls readonly" th:text="${action.path}"></span>
-				</div>
-				<div class="control-group">
-					<label class="control-label">Method:</label>
-					<span class="controls readonly" th:text="${action.method}"></span>
-				</div>
-			</div>
+			</form>
 		</div>
 	</div>
 </body>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow.xsd">
+                          
+	<input name="action_id" required="true" type="java.lang.Long" />
+	<input name="service_id" required="true" type="java.lang.Long" />
+   
+	<on-start>
+		<evaluate expression="actionHandler.lookup(action_id)" result="flowScope.action" />
+	</on-start>
+	
+	<view-state id="detail" view="portal/action/detail" model="action">
+		<transition on="deleteAction" to="confirmDelete" />
+	</view-state>
+
+	<view-state id="confirmDelete" view="portal/action/confirm-delete" model="action">
+		<transition on="confirm" to="redirect" history="invalidate">
+			<evaluate expression="actionHandler.delete(action_id)" />
+		</transition>
+		<transition on-exception="us.zacharymaddox.scorecard.api.domain.exception.ActionInUseException" to="detail">
+			<set name="flashScope.actionInUse" value="true" />
+		</transition>
+		<transition on="deny" to="detail" />
+	</view-state>
+	
+	<end-state id="redirect" view="redirect:/portal/service/detail?service_id={service_id}" />
+	
+</flow>

@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import us.zacharymaddox.scorecard.api.domain.Service;
+import us.zacharymaddox.scorecard.api.domain.exception.ActionInUseException;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardClientException;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardErrorCode;
 
 @org.springframework.stereotype.Service
 @Profile({"api"})
@@ -45,6 +48,19 @@ public class ServiceApiService {
 	public Service saveService(Service service) {
 		ResponseEntity<Service> svc = restTemplate.postForEntity(baseUrl + "/service", service, Service.class);
 		return svc.getBody();
+	}
+	
+	public void delete(Long serviceId) {
+		try {
+			this.restTemplate.delete(baseUrl + "/service/{service_id}", serviceId);
+		} catch (ScoreCardClientException e) {
+			if (ScoreCardErrorCode.CANNOT_DELETE_SERVICE_ACTION_IN_USE.equals(e.getError())) {
+				throw new ActionInUseException(e.getError());
+			} else {
+				throw e;
+			}
+		}
+		
 	}
 
 }

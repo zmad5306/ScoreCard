@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import us.zacharymaddox.scorecard.api.domain.Action;
+import us.zacharymaddox.scorecard.api.domain.exception.ActionInUseException;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardClientException;
+import us.zacharymaddox.scorecard.domain.exception.ScoreCardErrorCode;
 
 @Service
 @Profile({"api"})
@@ -57,6 +60,18 @@ public class ActionApiService {
 				serviceId
 			);
 		return response.getBody();
+	}
+	
+	public void delete(Long actionId) {
+		try {
+			this.restTemplate.delete(baseUrl + "/action/{action_id}", actionId);
+		} catch (ScoreCardClientException e) {
+			if (ScoreCardErrorCode.CANNOT_DELETE_ACTION_IN_USE.equals(e.getError())) {
+				throw new ActionInUseException(e.getError());
+			} else {
+				throw e;
+			}
+		}
 	}
 
 }

@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Confirm Delete - Service - Score Card Portal</title>
+<!--/*/ <th:block th:include="portal/fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+	<!--/*/ <th:block th:include="portal/fragments/header :: header"></th:block> /*/-->
+	<div class="container">
+		<div class="starter-template">
+			<div class="row">
+				<div class="col-md-3"></div>
+				<div class="col-md-6 text-center">
+					<form method="post" th:action="${flowExecutionUrl}">
+						<h3>Are you sure you want to delete the <span th:text="${service.name}"></span> service?</h3>
+						<button type="submit" name="_eventId_deny" value="deny" class="btn btn-primary pull-left">No</button>
+						<button type="submit" name="_eventId_confirm" value="confirm" class="btn btn-primary pull-right">Yes</button>
+					</form>
+				</div>
+				<div class="col-md-3"></div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

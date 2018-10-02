@@ -15,7 +15,9 @@ public enum ScoreCardErrorCode {
 	ACTION_NAME_TAKEN("The requested Action name alrady exists in this Service, select a unique action name.", 400),
 	ACTION_INVALID("The requested Action passed was invalid.", 400), 
 	TRANSACTION_SAVE_FAILED_BAD_ACTION("Action reqeusted not found.", 404), 
-	TRANSACTION_NAME_TAKEN("The requested Transaction name alrady exists, select a unique transaction name.", 400);
+	TRANSACTION_NAME_TAKEN("The requested Transaction name alrady exists, select a unique transaction name.", 400), 
+	CANNOT_DELETE_SERVICE_ACTION_IN_USE("This service cannot be deleted, it has actions that are currently used by transactions.", 400), 
+	CANNOT_DELETE_ACTION_IN_USE("This action cannot be deleted, its is currently used by transactions.", 400);
 	
 	private String message;
 	private Integer status;

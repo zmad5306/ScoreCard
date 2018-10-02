@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -30,12 +29,6 @@ public class ServicePortalController {
 	public String list(Model model) {
 		model.addAttribute("services", serviceApiService.getServices());
 		return "portal/service/list";
-	}
-	
-	@GetMapping("/{service_id}")
-	public String details(@PathVariable("service_id") Long serviceId, Model model) {
-		model.addAttribute("service", serviceApiService.getService(serviceId));
-		return "portal/service/detail";
 	}
 	
 	@GetMapping("/add")
@@ -61,7 +54,7 @@ public class ServicePortalController {
 					throw e;
 				}
 			}
-			return "redirect:/portal/service/" + savedServcie.getServiceId();
+			return "redirect:/portal/service/detail?service_id=" + savedServcie.getServiceId();
 		}
 	}
 
