@@ -5,7 +5,6 @@
                           http://www.springframework.org/schema/webflow/spring-webflow.xsd">
                           
 	<input name="action_id" required="true" type="java.lang.Long" />
-	<input name="service_id" required="true" type="java.lang.Long" />
    
 	<on-start>
 		<evaluate expression="actionHandler.lookup(action_id)" result="flowScope.action" />
@@ -17,7 +16,7 @@
 
 	<view-state id="confirmDelete" view="portal/action/confirm-delete" model="action">
 		<transition on="confirm" to="redirect" history="invalidate">
-			<evaluate expression="actionHandler.delete(action_id)" />
+			<evaluate expression="actionHandler.delete(action_id)" result="flowScope.serviceId"/>
 		</transition>
 		<transition on-exception="us.zacharymaddox.scorecard.api.domain.exception.ActionInUseException" to="detail">
 			<set name="flashScope.actionInUse" value="true" />
@@ -25,6 +24,6 @@
 		<transition on="deny" to="detail" />
 	</view-state>
 	
-	<end-state id="redirect" view="redirect:/portal/service/detail?service_id={service_id}" />
+	<end-state id="redirect" view="redirect:/portal/service/detail?service_id={serviceId}" />
 	
 </flow>

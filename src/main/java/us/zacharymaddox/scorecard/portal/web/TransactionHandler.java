@@ -67,7 +67,13 @@ public class TransactionHandler {
 		return transaction;
 	}
 	public void removeAction(Transaction transaction, Integer selectedActionIndex) {
-		transaction.getActions().remove(selectedActionIndex.intValue());
+		Action removedAction = transaction.getActions().remove(selectedActionIndex.intValue());
+		for (Action action : transaction.getActions()) {
+			if (null != action.getDependsOn() && action.getDependsOn().contains(removedAction.getActionId())) {
+				int inx = action.getDependsOn().indexOf(removedAction.getActionId());
+				action.getDependsOn().remove(inx);
+			}
+		}
 	}
 	
 	public Long save(Transaction transaction) {

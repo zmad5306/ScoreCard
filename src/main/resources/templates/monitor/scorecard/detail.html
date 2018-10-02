@@ -9,60 +9,70 @@
 	<div class="container">
 		<div class="starter-template">
 			<div class="row">
-				<h1>Score Card</h1>
-			</div>
-			<div class="row">
-				<p class="alert alert-info" th:if="${scorecard.hasPendingActions()}">This Score Card has pending actions.</p>
-				<p class="alert alert-danger" th:if="${scorecard.hasFailedActions()}">This Score Card has failed actions.</p>
-				<div class="control-group">
-					<label class="control-label">Score Card Id:</label>
-					<span class="controls readonly" th:text="${scorecard.scoreCardId}"></span>
-				</div>
-				<div class="control-group">
-					<label class="control-label">Transaction Id:</label>
-					<span class="controls readonly" th:text="${scorecard.transactionId}"></span>
-				</div>
-				<div class="control-group">
-					<label class="control-label">Transaction Name:</label>
-					<span class="controls readonly" th:text="${scorecard.transactionName}"></span>
+				<div class="col-md-12">
+					<h1>Score Card</h1>
 				</div>
 			</div>
 			<div class="row">
-				<h3>Actions</h3>
-				<table class="table table-hover">
-					<thead>
-						<tr>
-							<th class="fit"></th>
-							<th>Action Id</th>
-							<th>Action Name</th>
-							<th>Action Path</th>
-							<th>Method</th>
-							<th>Status</th>
-							<th>Start Timestamp</th>
-							<th>End Timestamp</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="action : ${scorecard.actions}">
-							<td th:if="${T(us.zacharymaddox.scorecard.domain.ScoreCardActionStatus).FAILED == action.status}" class="fit danger">
-								<span class="glyphicon glyphicon-remove"></span>
-							</td>
-							<td th:if="${T(us.zacharymaddox.scorecard.domain.ScoreCardActionStatus).PENDING == action.status || T(us.zacharymaddox.scorecard.domain.ScoreCardActionStatus).PROCESSING == action.status}" class="fit info">
-								<span class="glyphicon glyphicon-refresh"></span>
-							</td>
-							<td th:if="${!(T(us.zacharymaddox.scorecard.domain.ScoreCardActionStatus).FAILED == action.status) && !(T(us.zacharymaddox.scorecard.domain.ScoreCardActionStatus).PENDING == action.status || T(us.zacharymaddox.scorecard.domain.ScoreCardActionStatus).PROCESSING == action.status)}" class="fit success">
-								<span class="glyphicon glyphicon-ok"></span>
-							</td>
-							<td th:text="${action.actionId}"></td>
-							<td th:text="${action.name}"></td>
-							<td th:text="${action.path}"></td>
-							<td th:text="${action.method}"></td>
-							<td th:text="${action.status}"></td>
-							<td th:text="${action.startTimestamp}"></td>
-							<td th:text="${action.endTimestamp}"></td>
-						</tr>
-					</tbody>
-				</table>
+				<div class="col-md-12">
+					<p class="alert alert-info" th:if="${scorecard.hasPendingActions()}">This Score Card has pending actions.</p>
+					<p class="alert alert-danger" th:if="${scorecard.hasFailedActions()}">This Score Card has failed actions.</p>
+					<div class="control-group">
+						<label class="control-label">Score Card Id:</label>
+						<span class="controls readonly" th:text="${scorecard.scoreCardId}"></span>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Transaction Id:</label>
+						<span class="controls readonly" th:text="${scorecard.transactionId}"></span>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Transaction Name:</label>
+						<span class="controls readonly" th:text="${scorecard.transactionName}"></span>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<h3>Actions</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th class="fit"></th>
+								<th>Action Id</th>
+								<th>Action Name</th>
+								<th>Action Path</th>
+								<th>Method</th>
+								<th>Status</th>
+								<th>Start Timestamp</th>
+								<th>End Timestamp</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="action : ${scorecard.actions}">
+								<td th:if="${T(us.zacharymaddox.scorecard.domain.ScoreCardActionStatus).FAILED == action.status}" class="fit danger">
+									<span class="glyphicon glyphicon-remove"></span>
+								</td>
+								<td th:if="${T(us.zacharymaddox.scorecard.domain.ScoreCardActionStatus).PENDING == action.status || T(us.zacharymaddox.scorecard.domain.ScoreCardActionStatus).PROCESSING == action.status}" class="fit info">
+									<span class="glyphicon glyphicon-refresh"></span>
+								</td>
+								<td th:if="${!(T(us.zacharymaddox.scorecard.domain.ScoreCardActionStatus).FAILED == action.status) && !(T(us.zacharymaddox.scorecard.domain.ScoreCardActionStatus).PENDING == action.status || T(us.zacharymaddox.scorecard.domain.ScoreCardActionStatus).PROCESSING == action.status)}" class="fit success">
+									<span class="glyphicon glyphicon-ok"></span>
+								</td>
+								<td th:text="${action.actionId}"></td>
+								<td th:text="${action.name}"></td>
+								<td th:text="${action.path}"></td>
+								<td th:text="${action.method}"></td>
+								<td th:text="${action.status}"></td>
+								<td th:text="${action.startTimestamp}"></td>
+								<td th:text="${action.endTimestamp}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>

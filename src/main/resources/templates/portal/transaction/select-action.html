@@ -9,42 +9,46 @@
 	<div class="container">
 		<div class="starter-template">
 			<div class="row">
-				<h1>Select Action</h1>
+				<div class="col-md-12">
+					<h1>Select Action</h1>
+				</div>
 			</div>
 			<div class="row">
-				<form method="post" th:action="${flowExecutionUrl}" th:object="${action}">
-					<p class="alert alert-danger" th:each="err : ${#fields.errors('actionId')}" th:text="${err}"></p>
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th></th>
-								<th>Action Id</th>
-								<th>Action Name</th>
-								<th>Path</th>
-								<th>Method</th>
-								<th>Service Id</th>
-								<th>Service Name</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="action : ${actions}">
-								<td><input type="radio" th:field="*{actionId}" th:value="${action.actionId}" /></td>
-								<td th:text="${action.actionId}" />
-								<td th:text="${action.name}" />
-								<td th:text="${action.path}" />
-								<td th:text="${action.method}" />
-								<td th:text="${action.service.serviceId}" />
-								<td th:text="${action.service.name}" />
-							</tr>
-						</tbody>
-					</table>
-					<button type="submit" name="_eventId_cancel" value="cancel" class="btn btn-link">Cancel</button>
-					<div class="btn-group pull-right" role="group">
-						<button type="submit" name="_eventId_goBack" value="goBack" class="btn">Back</button>
-						<button type="submit" name="_eventId_selectedActionAndAddAnother" value="selectedActionAndAddAnother" class="btn btn-default">Submit & Add More</button>
-						<button type="submit" name="_eventId_selectedAction" value="selectedAction" class="btn btn-primary">Submit</button>
-					</div>
-				</form>
+				<div class="col-md-12">
+					<form method="post" th:action="${flowExecutionUrl}" th:object="${action}">
+						<p class="alert alert-danger" th:each="err : ${#fields.errors('actionId')}" th:text="${err}"></p>
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th></th>
+									<th>Action Id</th>
+									<th>Action Name</th>
+									<th>Path</th>
+									<th>Method</th>
+									<th>Service Id</th>
+									<th>Service Name</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="action : ${actions}">
+									<td><input type="radio" th:field="*{actionId}" th:value="${action.actionId}" /></td>
+									<td th:text="${action.actionId}" />
+									<td th:text="${action.name}" />
+									<td th:text="${action.path}" />
+									<td th:text="${action.method}" />
+									<td th:text="${action.service.serviceId}" />
+									<td th:text="${action.service.name}" />
+								</tr>
+							</tbody>
+						</table>
+						<button type="submit" name="_eventId_cancel" value="cancel" class="btn btn-link">Cancel</button>
+						<div class="btn-group pull-right" role="group">
+							<button type="submit" name="_eventId_goBack" value="goBack" class="btn">Back</button>
+							<button type="submit" name="_eventId_selectedActionAndAddAnother" value="selectedActionAndAddAnother" class="btn btn-default">Submit & Add More</button>
+							<button type="submit" name="_eventId_selectedAction" value="selectedAction" class="btn btn-primary">Submit</button>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>

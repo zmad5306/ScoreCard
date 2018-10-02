@@ -16,8 +16,11 @@ public class ActionHandler {
 		return actionApiService.getAction(actionId);
 	}
 	
-	public void delete(Long actionId) {
+	public Long delete(Long actionId) {
+		Action action = actionApiService.getAction(actionId);
+		Long serviceId = action.getService().getServiceId();
 		actionApiService.delete(actionId);
+		return serviceId;
 	}
 	
 }
