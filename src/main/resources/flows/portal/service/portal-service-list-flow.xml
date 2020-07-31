@@ -24,7 +24,7 @@
 		<transition on-exception="us.zacharymaddox.scorecard.api.domain.exception.ServiceNameTakenException" to="addService">
 			<set name="flashScope.serviceNameTaken" value="true" />
 		</transition>
-		<transition on="cancel" to="list" />
+		<transition on="cancel" to="list" validate="false" />
 	</view-state>
 	
 	<subflow-state id="serviceDetailSub" subflow="portal/service/detail">
