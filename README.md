@@ -40,8 +40,10 @@ This example is a JMS based example of a bank transfer. It includes processing a
 
 | Name | Description |
 | --- | --- |
-| `api` | Enables the core API. |
-| `monitor` | Enables the monitor application. |
-| `portal` |  Enables the portal application. |
+| `api` | Enables the core API module. |
+| `monitor` | Enables the monitor module. |
+| `portal` |  Enables the portal module. |
 | `example` | Enables the exmaple application for testing. |
 | `dev` | Adds base data to the database on startup, used in conjunction with the example application. |
+
+At lest one profile is required to start the application. Multiple profiles may be provided to enable multiple modules. Typically in development all profiles will be set.
