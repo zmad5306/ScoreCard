@@ -26,6 +26,9 @@
 		<transition on="backToDetail" to="transactionDetailSub">
 			<evaluate expression="transactionsHandler.loadTransactions()" result="flowScope.transactions" />
 		</transition>
+		<transition on="backToList" to="list">
+			<evaluate expression="transactionsHandler.loadTransactions()" result="flowScope.transactions" />
+		</transition>
 	</subflow-state>
 	
 </flow>
