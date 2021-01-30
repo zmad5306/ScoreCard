@@ -47,3 +47,7 @@ This example is a JMS based example of a bank transfer. It includes processing a
 | `dev` | Adds base data to the database on startup, used in conjunction with the example application. |
 
 At lest one profile is required to start the application. Multiple profiles may be provided to enable multiple modules. Typically in development all profiles will be set.
+
+### Developer Notes
+
+- [Spring Boot Dev Tools Auto Reload in IntelliJ](https://medium.com/@bhanuchaddha/spring-boot-devtools-on-intellij-c0ab3f9afa63)
