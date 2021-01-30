@@ -51,3 +51,9 @@ At lest one profile is required to start the application. Multiple profiles may 
 ### Developer Notes
 
 - [Spring Boot Dev Tools Auto Reload in IntelliJ](https://medium.com/@bhanuchaddha/spring-boot-devtools-on-intellij-c0ab3f9afa63)
+
+## API
+
+### Swagger Docs
+
+Access Swagger UI at `http://localhost:8080/swagger-ui/index.html#/`
