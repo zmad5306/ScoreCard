@@ -1,19 +1,9 @@
-buildscript {
-	ext {
-		springBootVersion = '2.0.5.RELEASE'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+plugins {
+	id 'org.springframework.boot' version '2.4.2'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'eclipse'
 }
-
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
 
 group = 'us.zacharymaddox'
 version = '0.0.1-SNAPSHOT'
@@ -24,22 +14,28 @@ repositories {
 }
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-activemq')
-	compile("org.apache.activemq:activemq-broker")
-	compile('org.springframework.boot:spring-boot-starter-web')
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
-	compile("org.springframework.boot:spring-boot-devtools")
-	compile('org.apache.commons:commons-lang3:3.8')
-	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
-	compile group: 'commons-io', name: 'commons-io', version: '2.5'
-	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-	compile 'org.springframework.webflow:spring-webflow:2.5.1.RELEASE'
-	compile group: 'org.springframework.webflow', name: 'org.springframework.js', version: '2.0.5.RELEASE'
-	testCompile('org.springframework.boot:spring-boot-starter-test')
-	runtime('com.h2database:h2')
+	implementation 'org.springframework.boot:spring-boot-starter-activemq'
+	implementation 'org.apache.activemq:activemq-broker'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-devtools'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.apache.commons:commons-lang3:3.11'
+	implementation 'commons-io:commons-io:2.8.0'
+	implementation 'io.springfox:springfox-swagger2:3.0.0'
+	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+	implementation 'org.springframework.webflow:spring-webflow:2.5.1.RELEASE'
+	implementation 'org.springframework.webflow:org.springframework.js:2.0.5.RELEASE'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'junit:junit:4.13.1'
+	runtime 'com.h2database:h2'
 }
 
 bootRun {
 	systemProperty 'spring.profiles.active', 'api,monitor,portal,example,dev'
+}
+
+test {
+	useJUnitPlatform()
 }
