@@ -58,7 +58,7 @@ public class TransactionProcessingService {
 	@JmsListener(destination="account", selector="ACTION='debit'", containerFactory="myFactory")
 	@Transactional
 	public void debit(DebitRequest request, @Header("SCORE_CARD") String scoreCardHeader) {
-		logger.info("processing debit reqeust");
+		logger.info("processing debit request");
 		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
 		switch (auth) {
 			case CANCEL:
@@ -92,7 +92,7 @@ public class TransactionProcessingService {
 	@JmsListener(destination="account", selector="ACTION='credit'", containerFactory="myFactory")
 	@Transactional
 	public void credit(CreditRequest request, @Header("SCORE_CARD") String scoreCardHeader) {
-		logger.info("processing credit reqeust");
+		logger.info("processing credit request");
 		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
 		switch (auth) {
 			case CANCEL:
