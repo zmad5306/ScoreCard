@@ -23,7 +23,6 @@ repositories {
 	mavenCentral()
 }
 
-
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-activemq')
 	compile("org.apache.activemq:activemq-broker")
@@ -39,6 +38,8 @@ dependencies {
 	compile group: 'org.springframework.webflow', name: 'org.springframework.js', version: '2.0.5.RELEASE'
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	runtime('com.h2database:h2')
-	
-	
+}
+
+bootRun {
+	systemProperty 'spring.profiles.active', 'api,monitor,portal,example,dev'
 }
