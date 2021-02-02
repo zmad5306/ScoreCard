@@ -24,7 +24,7 @@ import us.zacharymaddox.scorecard.example.bank.domain.CreditRequest;
 
 @Service
 @Profile({"example"})
-public class TransferReapirService {
+public class TransferRepairService {
 	
 	@Autowired
 	private ScoreCardApiService scoreCardApiService;
@@ -33,7 +33,7 @@ public class TransferReapirService {
 	@Autowired
 	private BankTransactionService bankTransactionService;
 	
-	private Logger logger = LoggerFactory.getLogger(TransferReapirService.class);
+	private Logger logger = LoggerFactory.getLogger(TransferRepairService.class);
 	private final String creditTransactionName = "bank-credit";
 	private final String transactionIdKey = "transaction_id";
 	private final String transferTransactionName = "bank-transfer";
