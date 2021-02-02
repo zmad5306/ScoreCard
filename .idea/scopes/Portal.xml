@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Portal" pattern="src[score-card.main]:templates.portal.*||src[score-card.main]:templates.portal.fragments.*||src[score-card.main]:templates.portal.service.*||src[score-card.main]:templates.portal.service.action.*||src[score-card.main]:templates.portal.transaction.*||src[score-card.main]:us.zacharymaddox.scorecard.portal.domain.*||src[score-card.main]:us.zacharymaddox.scorecard.portal.web.*||src[score-card.main]:flows.portal.service.action.*||src[score-card.main]:flows.portal.service.*||src[score-card.main]:flows.portal.transaction.*" />
+</component>

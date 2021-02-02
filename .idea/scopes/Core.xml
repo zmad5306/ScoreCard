@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Core" pattern="src[score-card.main]:us.zacharymaddox.scorecard.core.domain.*||src[score-card.main]:us.zacharymaddox.scorecard.core.messaging.*||src[score-card.main]:us.zacharymaddox.scorecard.core.repository.*||src[score-card.main]:us.zacharymaddox.scorecard.core.service.*||src[score-card.main]:us.zacharymaddox.scorecard.core.web.api.*" />
+</component>

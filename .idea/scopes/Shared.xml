@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Shared" pattern="src[score-card.main]:static.*||src[score-card.main]:templates.*||src[score-card.main]:templates.fragments.*||src[score-card.main]:us.zacharymaddox.scorecard.web.*" />
+</component>

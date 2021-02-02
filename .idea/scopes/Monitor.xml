@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Monitor" pattern="src[score-card.main]:us.zacharymaddox.scorecard.monitor.web.*||src[score-card.main]:templates.monitor.*||src[score-card.main]:templates.monitor.fragments.*||src[score-card.main]:templates.monitor.scorecard.*" />
+</component>
