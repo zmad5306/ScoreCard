@@ -192,6 +192,9 @@ public class ScoreCardService {
 				Long failedActionsInScoreCard = scoreCardActionRepository.countByScoreCardAndStatusIn(scoreCard, failedStatus);
 				
 				// check for other actions that ended abnormally, cancel all further actions
+				/** TODO make failed action authorization outcome extensible
+				 	In some use cases it might be appropriate to process the other services and repair the failed steps
+				 	later. However, if there are dependencies this might get complicated... **/
 				if (failedActionsInScoreCard > 0) {
 					return new AuthorizationResult(Authorization.CANCEL);
 				} else {
@@ -245,13 +248,13 @@ public class ScoreCardService {
 		//calling from the outside world (public overload), the action must be in processing status to complete
 		//internal updates are allowed w/o the score card being in processing status
 		if (mustBeProcessing && ScoreCardActionStatus.COMPLETED.equals(status) && !ScoreCardActionStatus.PROCESSING.equals(sca.getStatus())) {
-			// TODO design says to update this to UNKNOWN state not blow up
+			// TODO design says to update this to UNKNOWN state, not blow up
 			throw new ScoreCardClientException(ScoreCardErrorCode.ILLEGAL_STATE_CHANGE_NOT_AUTHORIZED);
 		}
 		
 		List<ScoreCardActionStatus> valid = ScoreCardService.VALID_STATE_CHANGES.get(sca.getStatus());
 		if (!valid.contains(status)) {
-			// TODO design says to update this to UNKNOWN state not blow up
+			// TODO design says to update this to UNKNOWN state, not blow up
 			throw new ScoreCardClientException(ScoreCardErrorCode.ILLEGAL_STATE_CHANGE);
 		}
 		
