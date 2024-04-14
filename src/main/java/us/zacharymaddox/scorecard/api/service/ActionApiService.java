@@ -36,7 +36,7 @@ public class ActionApiService {
 				baseUrl + "/action/list", 
 				HttpMethod.GET, 
 				null, //requestEntity
-				new ParameterizedTypeReference<List<Action>>() {}
+				new ParameterizedTypeReference<>() {}
 			);
 		return response.getBody();
 	}
@@ -55,7 +55,7 @@ public class ActionApiService {
 				baseUrl + "/action/list/{service_id}", 
 				HttpMethod.GET, 
 				null, //requestEntity
-				new ParameterizedTypeReference<List<Action>>() {},
+				new ParameterizedTypeReference<>() {},
 				serviceId
 			);
 		return response.getBody();

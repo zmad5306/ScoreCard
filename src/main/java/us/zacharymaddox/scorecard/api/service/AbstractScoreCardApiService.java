@@ -61,7 +61,7 @@ public abstract class AbstractScoreCardApiService implements ScoreCardApiService
 				baseUrl + "/scorecard?rows={rows}&page={page}", 
 				HttpMethod.GET, 
 				null, //requestEntity
-				new ParameterizedTypeReference<DataPage<ScoreCard>>() {},
+				new ParameterizedTypeReference<>() {},
 				rows, page
 			);
 		return response.getBody();
@@ -77,7 +77,7 @@ public abstract class AbstractScoreCardApiService implements ScoreCardApiService
 				baseUrl + "/scorecard/filter?transaction_name={transactionName}&rows={rows}&page={page}", 
 				HttpMethod.GET, 
 				null, //requestEntity
-				new ParameterizedTypeReference<DataPage<ScoreCard>>() {},
+				new ParameterizedTypeReference<>() {},
 				transactionName, rows, page
 			);
 		return response.getBody();
@@ -88,7 +88,7 @@ public abstract class AbstractScoreCardApiService implements ScoreCardApiService
 				baseUrl + "/scorecard/status?score_card_action_status={status}&transaction_name={transactionName}&rows={rows}&page={page}", 
 				HttpMethod.GET, 
 				null, //requestEntity
-				new ParameterizedTypeReference<List<ScoreCard>>() {},
+				new ParameterizedTypeReference<>() {},
 				status, transactionName, rows, page
 			);
 		return response.getBody();

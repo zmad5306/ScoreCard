@@ -38,7 +38,7 @@ public class ScoreCardApiServiceHttp extends AbstractScoreCardApiService impleme
 		}
 		
 		RequestEntity<UpdateRequest> requestEntity = RequestEntity.post(uri).body(request);
-		restTemplate.exchange(requestEntity, new ParameterizedTypeReference<Object>() {});
+		restTemplate.exchange(requestEntity, new ParameterizedTypeReference<>() {});
 	}
 	
 	@Override

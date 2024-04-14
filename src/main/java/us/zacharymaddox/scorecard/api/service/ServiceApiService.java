@@ -30,7 +30,7 @@ public class ServiceApiService {
 				baseUrl + "/service/list", 
 				HttpMethod.GET, 
 				null, //requestEntity
-				new ParameterizedTypeReference<List<Service>>() {}
+				new ParameterizedTypeReference<>() {}
 			);
 		return response.getBody();
 	}

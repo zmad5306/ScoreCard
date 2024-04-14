@@ -27,7 +27,7 @@ public class TransactionApiService {
 				baseUrl + "/transaction/list", 
 				HttpMethod.GET, 
 				null, //requestEntity
-				new ParameterizedTypeReference<List<Transaction>>() {}
+				new ParameterizedTypeReference<>() {}
 			);
 		return response.getBody();
 	}
