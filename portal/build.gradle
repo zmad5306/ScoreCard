@@ -1,0 +1,15 @@
+
+plugins {
+    id 'java-library'
+}
+dependencies {
+    implementation project(':common')
+    implementation project(':lib')
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-activemq'
+    implementation 'org.apache.activemq:activemq-client-jakarta:5.18.4'
+    implementation 'org.springframework.webflow:spring-webflow:3.0.1'
+    runtimeOnly 'com.h2database:h2'
+}

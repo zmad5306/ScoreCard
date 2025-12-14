@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PersistenceUnitSettings">
+    <persistence-units>
+      <persistence-unit moduleName="score-card.main" name="score-card.main" framework="JPA" ormUnit="score-card.main:score-card.main" defaultDataSourceId="37a2f61e-7a79-4cf8-ac48-0e886bfce532" />
+    </persistence-units>
+  </component>
+</project>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow.xsd">
+                          
+	<on-start>
+		<evaluate expression="servicesHandler.loadServices()" result="flowScope.services" />
+	</on-start>
+                          
+	<view-state id="list" view="service/list" model="services">
+		<transition on="selectService" to="serviceDetailSub">
+			<set name="flashScope.service_id" value="requestParameters.service_id" />
+		</transition>
+		<transition on="addService" to="addService">
+			<evaluate expression="servicesHandler.newService()" result="flowScope.service" />
+		</transition>
+	</view-state>
+	
+	<view-state id="addService" view="service/add" model="service">
+		<transition on="saveService" to="serviceDetailSub">
+			<evaluate expression="servicesHandler.save(service)" result="flashScope.service_id"/>
+		</transition>
+		<transition on-exception="dev.zachmaddox.scorecard.lib.domain.exception.ServiceNameTakenException" to="addService">
+			<set name="flashScope.serviceNameTaken" value="true" />
+		</transition>
+		<transition on="cancel" to="list" validate="false" />
+	</view-state>
+	
+	<subflow-state id="serviceDetailSub" subflow="service/detail">
+		<input name="service_id" />
+		<transition on="backToList" to="list">
+			<evaluate expression="servicesHandler.loadServices()" result="flowScope.services" />
+		</transition>
+	</subflow-state>
+	
+</flow>

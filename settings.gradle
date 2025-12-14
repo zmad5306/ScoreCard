@@ -1,1 +1,9 @@
-rootProject.name = 'score-card'
+
+rootProject.name = 'scorecard'
+
+include 'common'
+include 'lib'
+include 'api'
+include 'monitor'
+include 'portal'
+include 'example'

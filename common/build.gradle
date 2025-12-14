@@ -1,0 +1,6 @@
+plugins { id 'java-library' }
+
+dependencies {
+    implementation 'org.springframework:spring-web'
+    implementation 'io.swagger.core.v3:swagger-annotations:2.2.22'
+}

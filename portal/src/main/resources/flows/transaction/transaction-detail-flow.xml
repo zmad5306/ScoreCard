@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow.xsd">
+                          
+	<input name="transaction_id" required="true" type="java.lang.Long" />
+   
+	<on-start>
+		<evaluate expression="transactionHandler.lookup(transaction_id)" result="flowScope.transaction" />
+	</on-start>
+	
+	<view-state id="detail" view="transaction/detail" model="transaction">
+		<transition on="deleteTransaction" to="confirmDelete" />
+		<transition on="actionDetails" to="actionDetailsSub">
+			<set name="flashScope.action_id" value="requestParameters.action_id" />
+		</transition>
+		<transition on="serviceDetails" to="serviceDetailSub">
+			<set name="flashScope.service_id" value="requestParameters.service_id" />
+		</transition>
+	</view-state>
+
+	<view-state id="confirmDelete" view="transaction/confirm-delete" model="transaction">
+		<transition on="confirm" to="backToList">
+			<evaluate expression="transactionHandler.delete(transaction_id)" />
+		</transition>
+		<transition on="deny" to="detail" />
+	</view-state>
+	
+	<subflow-state id="actionDetailsSub" subflow="service/action/detail">
+		<input name="action_id"/>
+		<transition on="back" to="detail">
+			<!-- this transition should not be possible, back in only invoked when the action is deleted, an 
+				 action that belongs to a transaction cannot be deleted -->
+			<evaluate expression="transactionHandler.lookup(transaction_id)" result="flowScope.transaction" />
+		</transition>
+	</subflow-state>
+	
+	<subflow-state id="serviceDetailSub" subflow="service/detail">
+		<input name="service_id" />
+		<transition on="backToList" to="detail">
+			<evaluate expression="transactionHandler.lookup(transaction_id)" result="flowScope.transaction" />
+		</transition>
+	</subflow-state>
+	
+	<end-state id="backToList" />
+	
+</flow>

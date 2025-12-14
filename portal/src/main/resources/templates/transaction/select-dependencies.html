@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Add Transaction - Select Dependencies - Score Card Portal</title>
+<!--/*/ <th:block th:insert="~{fragments/headerinc :: head}"></th:block> /*/-->
+</head>
+<body>
+	<!--/*/ <th:block th:insert="~{fragments/header :: header}"></th:block> /*/-->
+	<div class="container">
+		<div class="starter-template">
+			<div class="row">
+				<div class="col-md-12">
+					<h1>Select Dependencies</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<h2>Action</h2>
+					<div class="control-group">
+						<label class="control-label">Id:</label>
+						<span class="controls readonly" th:text="${action.actionId}"></span>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Service Id:</label>
+						<span class="controls readonly" th:text="${action.service.serviceId}"></span>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Name:</label>
+						<span class="controls readonly" th:text="${action.name}"></span>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Path:</label>
+						<span class="controls readonly" th:text="${action.path}"></span>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Method:</label>
+						<span class="controls readonly" th:text="${action.method}"></span>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<form method="post" th:action="${flowExecutionUrl}" th:object="${action}">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th></th>
+									<th>Action Id</th>
+									<th>Action Name</th>
+									<th>Path</th>
+									<th>Method</th>
+									<th>Service Id</th>
+									<th>Service Name</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="actn,iter : ${transaction.actions}" th:if="${iter.index != T(java.lang.Integer).parseInt(selectedActionIndex)}">
+									<td>
+										<input type="checkbox" th:field="*{dependsOn}" th:value="${actn.actionId}" th:if="${actn.dependsOn != null && actn.dependsOn.contains(action.actionId)}" disabled data-toggle="tooltip" data-placement="right" title="Adding this action would result in a circular dependency." />
+										<input type="checkbox" th:field="*{dependsOn}" th:value="${actn.actionId}" th:if="${actn.dependsOn == null || !actn.dependsOn.contains(action.actionId)}" />
+									</td>
+									<td th:text="${actn.actionId}" />
+									<td th:text="${actn.name}" />
+									<td th:text="${actn.path}" />
+									<td th:text="${actn.method}" />
+									<td th:text="${actn.service.serviceId}" />
+									<td th:text="${actn.service.name}" />
+								</tr>
+							</tbody>
+						</table>
+						<button type="submit" name="_eventId_cancel" value="cancel" class="btn btn-link">Cancel</button>
+						<div class="btn-group pull-right" role="group">
+							<button type="submit" name="_eventId_goBack" value="goBack" class="btn">Back</button>
+							<button type="submit" name="_eventId_selectedDependencies" value="selectedDependencies" class="btn btn-primary">Submit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

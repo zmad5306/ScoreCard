@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/score-card.main.iml" filepath="$PROJECT_DIR$/.idea/modules/score-card.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/api/scorecard.api.main.iml" filepath="$PROJECT_DIR$/.idea/modules/api/scorecard.api.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/scorecard.common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/common/scorecard.common.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/example/scorecard.example.main.iml" filepath="$PROJECT_DIR$/.idea/modules/example/scorecard.example.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lib/scorecard.lib.main.iml" filepath="$PROJECT_DIR$/.idea/modules/lib/scorecard.lib.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/monitor/scorecard.monitor.main.iml" filepath="$PROJECT_DIR$/.idea/modules/monitor/scorecard.monitor.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/portal/scorecard.portal.main.iml" filepath="$PROJECT_DIR$/.idea/modules/portal/scorecard.portal.main.iml" />
+    </modules>
+  </component>
+</project>
