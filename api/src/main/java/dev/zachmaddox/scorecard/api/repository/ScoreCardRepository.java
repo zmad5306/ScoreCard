@@ -13,6 +13,9 @@ public interface ScoreCardRepository extends JpaRepository<ScoreCard, Long> {
 	
 	@Query(value="select nextval('score_card.score_card_id_sequence')", nativeQuery=true)
 	Long fetchNextScoreCardId();
+
+    @Query(value="SELECT last_value FROM score_card.score_card_id_sequence", nativeQuery = true)
+    Long fetchMaxScoreCardId();
 	
 	List<ScoreCard> findByTransactionNameOrderByScoreCardIdDesc(String transactionName, Pageable pageable);
 	

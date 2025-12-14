@@ -43,7 +43,7 @@ public class ServiceService {
 	public Service saveService(Service service) {
 		Optional<Service> svc = serviceRepository.findByName(service.getName());
 		if (svc.isPresent()) {
-			throw new ScoreCardClientException(ScoreCardErrorCode.SERVICE_NAME_TAKEN);
+			throw new ScoreCardClientException(ScoreCardErrorCode.SERVICE_NAME_IN_USE);
 		}
 		return serviceRepository.save(service);
 	}

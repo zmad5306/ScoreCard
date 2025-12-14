@@ -68,6 +68,17 @@ public class ScoreCardService {
 	
 	@Transactional
 	public ScoreCard createScoreCard(Long scoreCardId, Long transactionId) {
+        scoreCardRepository.findById(scoreCardId).ifPresent(scoreCard -> {
+            throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_ID_IN_UES);
+        });
+
+        Long maxId = scoreCardRepository.fetchMaxScoreCardId();
+        if (scoreCardId > maxId) {
+            throw new ScoreCardClientException(ScoreCardErrorCode.SCORE_CARD_ID_NOT_REQUESTED);
+        }
+
+
+
 		Transaction transaction = transactionRepository.findById(transactionId)
                 .orElseThrow(() -> new ScoreCardClientException(ScoreCardErrorCode.TRANSACTION_DNE));
 

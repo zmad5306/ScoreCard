@@ -7,11 +7,27 @@ databaseChangeLog:
             tableName: ACCOUNT
             columns:
               - column:
+                  name: ACCOUNT_ID
+                  valueNumeric: 1
+              - column:
                   name: BALANCE
                   valueNumeric: 1000.00
         - insert:
             tableName: ACCOUNT
             columns:
               - column:
+                  name: ACCOUNT_ID
+                  valueNumeric: 2
+              - column:
                   name: BALANCE
                   valueNumeric: 1000.00
+
+  - changeSet:
+      id: 0003-reset-account-sequence
+      author: zmad5306
+      changes:
+        - sql:
+            dbms: postgresql
+            splitStatements: false
+            sql: |
+              SELECT setval('bank.account_account_id_seq', (SELECT COALESCE(MAX(account_id), 0) FROM bank.account));

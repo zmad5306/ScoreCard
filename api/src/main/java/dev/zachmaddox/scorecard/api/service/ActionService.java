@@ -35,7 +35,7 @@ public class ActionService {
 	public Action saveAction(Action action) {
 		Optional<Action> act = actionRepository.findByServiceAndName(action.getService(), action.getName());
 		if (act.isPresent()) {
-			throw new ScoreCardClientException(ScoreCardErrorCode.ACTION_NAME_TAKEN);
+			throw new ScoreCardClientException(ScoreCardErrorCode.ACTION_NAME_IN_USE);
 		} else {
 			return actionRepository.save(action);
 		}

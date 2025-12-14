@@ -37,10 +37,10 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n\t\"score_card_id\": 1,\n\t\"transaction_id\": 201\n}",
+          "raw": "{\r\n    \"score_card_id\": 1,\r\n    \"transaction_id\": 1\r\n}",
           "options": {
             "raw": {
-              "language": "text"
+              "language": "json"
             }
           }
         },

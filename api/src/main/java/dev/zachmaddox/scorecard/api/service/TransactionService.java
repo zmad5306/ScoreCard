@@ -42,7 +42,7 @@ public class TransactionService {
 	public Transaction save(Transaction transaction) {
 		transactionRepository.findByName(transaction.getName())
                 .ifPresent(t -> {
-                    throw new ScoreCardClientException(ScoreCardErrorCode.TRANSACTION_NAME_TAKEN);
+                    throw new ScoreCardClientException(ScoreCardErrorCode.TRANSACTION_NAME_IN_USE);
                 });
 
 		for (TransactionAction a : transaction.getActions()) {
