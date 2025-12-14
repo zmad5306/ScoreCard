@@ -19,15 +19,17 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name="TRANSACTION_ACTION", schema="SCORE_CARD")
 @Schema(description = "Join between transaction and action, including dependencies")
-public class TransactionAction extends DomainObject implements Serializable {
+public class TransactionAction implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -54,9 +56,5 @@ public class TransactionAction extends DomainObject implements Serializable {
 	@ManyToMany(mappedBy="dependsOn")
 	@Schema(description = "Reverse dependencies")
 	private Set<TransactionAction> dependencyOf = new HashSet<>();
-	
-	public TransactionAction() {
-		super("transaction_action");
-	}
 	
 }

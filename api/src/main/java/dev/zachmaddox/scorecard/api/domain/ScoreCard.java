@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -20,9 +21,10 @@ import lombok.Setter;
 })
 @Getter
 @Setter
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Schema(description = "Score card instance tracking transaction execution")
-public class ScoreCard extends DomainObject implements Serializable {
+public class ScoreCard  implements Serializable {
 
 	@Id
 	@JsonProperty("score_card_id")
@@ -39,7 +41,4 @@ public class ScoreCard extends DomainObject implements Serializable {
 	@Schema(description = "Actions under this score card")
 	private List<ScoreCardAction> actions;
 	
-	public ScoreCard() {
-		super("score_card");
-	}
 }

@@ -20,10 +20,12 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
 @Table(name="ACTION", schema="SCORE_CARD",
@@ -36,7 +38,7 @@ import lombok.Setter;
 		}
 	)
 @Schema(description = "Action definition belonging to a service")
-public class Action extends DomainObject implements Serializable {
+public class Action implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -62,8 +64,4 @@ public class Action extends DomainObject implements Serializable {
 	@Schema(description = "HTTP method to invoke")
 	private Method method;
 
-	public Action() {
-		super("action");
-	}
-	
 }

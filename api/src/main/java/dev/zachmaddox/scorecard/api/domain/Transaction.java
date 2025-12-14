@@ -31,7 +31,7 @@ import lombok.Setter;
 		@Index(columnList="NAME", unique=true)
 })
 @Schema(description = "Transaction definition composed of actions")
-public class Transaction extends DomainObject implements Serializable {
+public class Transaction implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

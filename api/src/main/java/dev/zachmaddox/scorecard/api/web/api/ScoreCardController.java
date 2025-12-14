@@ -3,7 +3,6 @@ package dev.zachmaddox.scorecard.api.web.api;
 import java.util.List;
 
 import dev.zachmaddox.scorecard.api.domain.ScoreCard;
-import dev.zachmaddox.scorecard.api.domain.ScoreCardAction;
 import dev.zachmaddox.scorecard.api.domain.ScoreCardId;
 import dev.zachmaddox.scorecard.api.service.ScoreCardService;
 import dev.zachmaddox.scorecard.common.domain.AuthorizationRequest;

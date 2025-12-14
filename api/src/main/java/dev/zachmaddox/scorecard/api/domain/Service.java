@@ -12,17 +12,19 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Setter
 @Getter
+@NoArgsConstructor
 @Entity
 @Table(name="SERVICE", schema="SCORE_CARD", indexes= {
 		@Index(columnList="NAME", unique=true)
 })
 @Schema(description = "Service definition")
-public class Service extends DomainObject implements Serializable {
+public class Service implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -47,9 +49,5 @@ public class Service extends DomainObject implements Serializable {
 	@JsonSerialize(using=ServiceActionListSerializer.class)
 	@Schema(description = "Actions belonging to the service")
 	private List<Action> actions;
-	
-	public Service() {
-		super("service");
-	}
 	
 }

@@ -28,6 +28,7 @@ import jakarta.persistence.Table;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -37,11 +38,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name="SCORE_CARD_ACTION", schema="SCORE_CARD", indexes= {
 		@Index(columnList="STATUS")
 })
-public class ScoreCardAction extends DomainObject implements Serializable {
+public class ScoreCardAction implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -84,9 +86,5 @@ public class ScoreCardAction extends DomainObject implements Serializable {
 	@MapKeyColumn(name="NAME")
 	@Column(name="METADATA_VALUE")
 	private Map<String, String> metadata;
-	
-	public ScoreCardAction() {
-		super("score_card_action");
-	}
 	
 }

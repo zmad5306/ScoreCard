@@ -22,7 +22,6 @@ public class TransactionActionListSerializer extends StdSerializer<List<Transact
 			gen.writeStartArray();
 			for (TransactionAction a : value) {
 				gen.writeStartObject();
-				gen.writeStringField("type", a.getType());
 				gen.writeStringField("name", a.getAction().getName());
 				gen.writeObjectFieldStart("service");
 				gen.writeNumberField("service_id", a.getAction().getService().getServiceId());
