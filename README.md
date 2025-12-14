@@ -28,8 +28,6 @@ Score Card is a sample implementation of the “score card” pattern: track lon
 ## Need Setup Details?
 See `GETTING_STARTED.md` for environment, Docker Compose, profiles, and run commands. This README stays focused on what the system does; the setup guide covers how to run it.***
 
----
-
 # Score Card: Observability-Driven Composition of Loosely Coupled Services into Complex Transactions
 
 _Zach Maddox (zmad5306)_
@@ -59,7 +57,36 @@ In summary, the problem is to enable **end-to-end transactional reasoning withou
 
 ## 3\. System Overview
 
-Score Card is designed as a modular system with clearly separated concerns, akin to components in an academic prototype. The core is a **Score Card API service** ("Core API"), which houses the domain model and transaction logic. Surrounding it are optional components: a **Monitor** service that provides a real-time dashboard UI, a **Portal** service that provides a UI for configuring the model (services, actions, transactions), and a set of **Example services** that simulate external microservices participating in transactions[\[2\]](https://github.com/zmad5306/ScoreCard/blob/b4a6880f80c062c412b1165725aa434bd4c7219b/README.md#L5-L10).
+Score Card is designed as a modular system with clearly separated concerns, akin to components in an academic prototype. The core is a **Score Card API service** ("Core API"), which houses the domain model and transaction logic. Surrounding it are optional components: a **Monitor** service that provides a real-time dashboard UI, a **Portal** service that provides a UI for configuring the model (services, actions, transactions), and a set of **Example services** that simulate external microservices participating in transactions[\[2\]](https://github.com/zmad5306/ScoreCard/blob/b4a6880f80c062c412b1165725aa434bd4c7219b/README.md#L5-L10). A high-level architecture is illustrated below:
+
+```mermaid
+graph LR
+  subgraph Core
+    API[Score Card API<br/>Core engine]
+    DB[(PostgreSQL<br/>ScoreCard schema)]
+    API --> DB
+  end
+
+  subgraph UIs
+    MON[Monitor<br/>Live scoreboard]
+    PORT[Portal<br/>Model designer]
+  end
+
+  subgraph ExampleServices[Example services]
+    SVC1[Service1<br/>3-step demo]
+    BANK[Account Service<br/>Bank transfer]
+  end
+
+  Client[Client apps] --> API
+  PORT --> API
+  MON --> API
+
+  API -->|JMS messages| SVC1
+  API -->|JMS messages| BANK
+
+  SVC1 -->|Status updates| API
+  BANK -->|Status updates<br/>+ metadata| API
+```
 
 **Core API (ScoreCard API)** - This Spring Boot service implements the main Score Card logic. It exposes a RESTful API (under /api/v1/...) through which clients or services can manage transactions and report status. It also connects to a relational **PostgreSQL database** (the "ScoreCard" schema) that stores all definitions (services, actions, transaction blueprints) and records of each transaction execution (the score cards). In addition to HTTP, the Core API listens on a **JMS message queue** (ActiveMQ is used) for integration events: specifically, a queue named **scorecard** where it expects messages to create new score cards or update action statuses[\[3\]](https://github.com/zmad5306/ScoreCard/blob/b4a6880f80c062c412b1165725aa434bd4c7219b/JMS.md#L11-L19). The Core API's responsibilities include: persisting and retrieving the model, initiating transactions (score cards), correlating incoming events to the correct transaction, and enforcing any global logic such as dependency ordering or cancellation policy.
 
