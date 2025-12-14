@@ -1,0 +1,276 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0002-seed-services
+      author: zmad5306
+      changes:
+        - insert:
+            tableName: SERVICE
+            columns:
+              - column:
+                  name: SERVICE_ID
+                  valueNumeric: 100
+              - column:
+                  name: NAME
+                  value: account-service
+              - column:
+                  name: TRANSPORT
+                  value: QUEUE
+              - column:
+                  name: PATH
+                  value: account
+        - insert:
+            tableName: SERVICE
+            columns:
+              - column:
+                  name: SERVICE_ID
+                  valueNumeric: 110
+              - column:
+                  name: NAME
+                  value: service1
+              - column:
+                  name: TRANSPORT
+                  value: QUEUE
+              - column:
+                  name: PATH
+                  value: service1
+
+  - changeSet:
+      id: 0003-seed-actions-account-service
+      author: zmad5306
+      changes:
+        - insert:
+            tableName: ACTION
+            columns:
+              - column:
+                  name: ACTION_ID
+                  valueNumeric: 101
+              - column:
+                  name: NAME
+                  value: debit
+              - column:
+                  name: SERVICE_ID
+                  valueNumeric: 100
+              - column:
+                  name: PATH
+                  value: debit
+              - column:
+                  name: METHOD
+                  value: POST
+        - insert:
+            tableName: ACTION
+            columns:
+              - column:
+                  name: ACTION_ID
+                  valueNumeric: 102
+              - column:
+                  name: NAME
+                  value: credit
+              - column:
+                  name: SERVICE_ID
+                  valueNumeric: 100
+              - column:
+                  name: PATH
+                  value: credit
+              - column:
+                  name: METHOD
+                  value: POST
+
+  - changeSet:
+      id: 0004-seed-actions-service1
+      author: zmad5306
+      changes:
+        - insert:
+            tableName: ACTION
+            columns:
+              - column:
+                  name: ACTION_ID
+                  valueNumeric: 111
+              - column:
+                  name: NAME
+                  value: action1
+              - column:
+                  name: SERVICE_ID
+                  valueNumeric: 110
+              - column:
+                  name: PATH
+                  value: action1
+              - column:
+                  name: METHOD
+                  value: POST
+        - insert:
+            tableName: ACTION
+            columns:
+              - column:
+                  name: ACTION_ID
+                  valueNumeric: 112
+              - column:
+                  name: NAME
+                  value: action2
+              - column:
+                  name: SERVICE_ID
+                  valueNumeric: 110
+              - column:
+                  name: PATH
+                  value: action2
+              - column:
+                  name: METHOD
+                  value: POST
+        - insert:
+            tableName: ACTION
+            columns:
+              - column:
+                  name: ACTION_ID
+                  valueNumeric: 113
+              - column:
+                  name: NAME
+                  value: action3
+              - column:
+                  name: SERVICE_ID
+                  valueNumeric: 110
+              - column:
+                  name: PATH
+                  value: action3
+              - column:
+                  name: METHOD
+                  value: POST
+
+  - changeSet:
+      id: 0005-seed-transactions
+      author: zmad5306
+      changes:
+        - insert:
+            tableName: TRANSACTION
+            columns:
+              - column:
+                  name: TRANSACTION_ID
+                  valueNumeric: 201
+              - column:
+                  name: NAME
+                  value: bank-transfer
+        - insert:
+            tableName: TRANSACTION
+            columns:
+              - column:
+                  name: TRANSACTION_ID
+                  valueNumeric: 202
+              - column:
+                  name: NAME
+                  value: bank-credit
+        - insert:
+            tableName: TRANSACTION
+            columns:
+              - column:
+                  name: TRANSACTION_ID
+                  valueNumeric: 210
+              - column:
+                  name: NAME
+                  value: transaction1
+
+  - changeSet:
+      id: 0006-seed-transaction-actions
+      author: zmad5306
+      changes:
+        - insert:
+            tableName: TRANSACTION_ACTION
+            columns:
+              - column:
+                  name: TRANSACTION_ACTION_ID
+                  valueNumeric: 301
+              - column:
+                  name: TRANSACTION_ID
+                  valueNumeric: 201
+              - column:
+                  name: ACTION_ID
+                  valueNumeric: 101
+        - insert:
+            tableName: TRANSACTION_ACTION
+            columns:
+              - column:
+                  name: TRANSACTION_ACTION_ID
+                  valueNumeric: 302
+              - column:
+                  name: TRANSACTION_ID
+                  valueNumeric: 201
+              - column:
+                  name: ACTION_ID
+                  valueNumeric: 102
+        - insert:
+            tableName: TRANSACTION_ACTION
+            columns:
+              - column:
+                  name: TRANSACTION_ACTION_ID
+                  valueNumeric: 303
+              - column:
+                  name: TRANSACTION_ID
+                  valueNumeric: 202
+              - column:
+                  name: ACTION_ID
+                  valueNumeric: 102
+        - insert:
+            tableName: TRANSACTION_ACTION
+            columns:
+              - column:
+                  name: TRANSACTION_ACTION_ID
+                  valueNumeric: 304
+              - column:
+                  name: TRANSACTION_ID
+                  valueNumeric: 210
+              - column:
+                  name: ACTION_ID
+                  valueNumeric: 111
+        - insert:
+            tableName: TRANSACTION_ACTION
+            columns:
+              - column:
+                  name: TRANSACTION_ACTION_ID
+                  valueNumeric: 305
+              - column:
+                  name: TRANSACTION_ID
+                  valueNumeric: 210
+              - column:
+                  name: ACTION_ID
+                  valueNumeric: 112
+        - insert:
+            tableName: TRANSACTION_ACTION
+            columns:
+              - column:
+                  name: TRANSACTION_ACTION_ID
+                  valueNumeric: 306
+              - column:
+                  name: TRANSACTION_ID
+                  valueNumeric: 210
+              - column:
+                  name: ACTION_ID
+                  valueNumeric: 113
+
+  - changeSet:
+      id: 0007-seed-transaction-action-deps
+      author: zmad5306
+      changes:
+        - insert:
+            tableName: TRANSACTION_ACTION_DEPENDENCY
+            columns:
+              - column:
+                  name: TRANSACTION_ACTION_ID
+                  valueNumeric: 302
+              - column:
+                  name: DEPENDS_ON_TRANSACTION_ACTION_ID
+                  valueNumeric: 301
+        - insert:
+            tableName: TRANSACTION_ACTION_DEPENDENCY
+            columns:
+              - column:
+                  name: TRANSACTION_ACTION_ID
+                  valueNumeric: 305
+              - column:
+                  name: DEPENDS_ON_TRANSACTION_ACTION_ID
+                  valueNumeric: 304
+        - insert:
+            tableName: TRANSACTION_ACTION_DEPENDENCY
+            columns:
+              - column:
+                  name: TRANSACTION_ACTION_ID
+                  valueNumeric: 306
+              - column:
+                  name: DEPENDS_ON_TRANSACTION_ACTION_ID
+                  valueNumeric: 305

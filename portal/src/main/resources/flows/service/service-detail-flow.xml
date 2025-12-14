@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow.xsd">
+                          
+	<input name="service_id" required="true" type="java.lang.Long" />
+   
+	<on-start>
+		<evaluate expression="serviceHandler.lookup(service_id)" result="flowScope.service" />
+	</on-start>
+	
+	<view-state id="detail" view="service/detail" model="service">
+		<transition on="deleteService" to="confirmDelete" />
+		<transition on="addAction" to="addActionSub" />
+		<transition on="actionDetails" to="actionDetailsSub">
+			<set name="flashScope.action_id" value="requestParameters.action_id" />
+		</transition>
+	</view-state>
+
+	<view-state id="confirmDelete" view="service/confirm-delete" model="service">
+		<transition on="confirm" to="backToList">
+			<evaluate expression="serviceHandler.delete(service_id)" />
+		</transition>
+		<transition on-exception="dev.zachmaddox.scorecard.lib.domain.exception.ActionInUseException" to="detail">
+			<set name="flashScope.actionInUse" value="true" />
+		</transition>
+		<transition on="deny" to="detail" />
+	</view-state>
+	
+	<subflow-state id="addActionSub" subflow="service/action/add">
+		<input name="service_id" />
+		<transition on="backToDetails" to="detail">
+			<evaluate expression="serviceHandler.lookup(service_id)" result="flowScope.service" />
+		</transition>
+	</subflow-state>
+	
+	<subflow-state id="actionDetailsSub" subflow="service/action/detail">
+		<input name="action_id"/>
+		<transition on="back" to="detail">
+			<evaluate expression="serviceHandler.lookup(service_id)" result="flowScope.service" />
+		</transition>
+	</subflow-state>
+	
+	<end-state id="backToList" />
+	
+</flow>

@@ -1,0 +1,29 @@
+package dev.zachmaddox.scorecard.api.domain;
+
+import java.io.IOException;
+import java.util.Set;
+
+import org.apache.commons.lang3.ArrayUtils;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+
+public class DependencySerializer extends StdSerializer<Set<ScoreCardAction>> {
+
+	public DependencySerializer() {
+		super((Class<Set<ScoreCardAction>>) null);
+	}
+
+	@Override
+	public void serialize(Set<ScoreCardAction> value, JsonGenerator gen, SerializerProvider provider)
+			throws IOException {
+		if (null == value) {
+			gen.writeNull();
+		} else {
+			Long[] values = value.stream().map(ScoreCardAction::getActionId).toArray(Long[]::new);
+			gen.writeArray(ArrayUtils.toPrimitive(values), 0, values.length);
+		}
+	}
+
+}

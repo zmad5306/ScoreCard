@@ -1,0 +1,32 @@
+services:
+  activemq:
+    image: apache/activemq-classic:5.18.4
+    container_name: activemq
+    environment:
+      ACTIVEMQ_ADMIN_LOGIN: admin
+      ACTIVEMQ_ADMIN_PASSWORD: admin
+    ports:
+      - "61616:61616" # OpenWire
+      - "5672:5672"   # AMQP
+      - "61613:61613" # STOMP
+      - "8161:8161"   # Web console
+      - "1883:1883"   # MQTT
+    volumes:
+      - activemq-data:/opt/activemq/data
+    restart: unless-stopped
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_DB: scorecard
+      POSTGRES_USER: scorecard
+      POSTGRES_PASSWORD: scorecard
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  activemq-data:
+  postgres-data:

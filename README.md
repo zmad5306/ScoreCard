@@ -205,15 +205,13 @@ Score Card uses JMS to orchestrate work:
 
 ```java
 @Component
-@Profile({"example"})
 public class Service1 {
 
     @Autowired
     private ScoreCardApiService scoreCardApiService;
 
     @JmsListener(destination = "service1",
-                 selector = "ACTION='action1'",
-                 containerFactory = "myFactory")
+                 selector = "ACTION='action1'")
     @Transactional
     public void action1(String message,
                         @Header("SCORE_CARD") String scoreCardHeader) {
@@ -299,3 +297,4 @@ Some ideas for extending Score Card:
 * Integrate with external JMS broker(s)
 * Add authentication/authorization around the APIs and UIs
 * Extend the example domain(s) with real-world workflows
+

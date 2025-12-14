@@ -1,0 +1,363 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0001-create-schema
+      author: zmad5306
+      changes:
+        - sql:
+            sql: CREATE SCHEMA IF NOT EXISTS SCORE_CARD;
+        - createSequence:
+            schemaName: SCORE_CARD
+            sequenceName: score_card_id_sequence
+            startValue: 1
+            incrementBy: 1
+
+  - changeSet:
+      id: 0002-service-table
+      author: zmad5306
+      changes:
+        - createTable:
+            tableName: SERVICE
+            columns:
+              - column:
+                  name: SERVICE_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: NAME
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: TRANSPORT
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PATH
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: SERVICE
+            indexName: IDX_SERVICE_NAME
+            unique: true
+            columns:
+              - column:
+                  name: NAME
+
+  - changeSet:
+      id: 0003-action-table
+      author: zmad5306
+      changes:
+        - createTable:
+            tableName: ACTION
+            columns:
+              - column:
+                  name: ACTION_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: NAME
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: SERVICE_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PATH
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: METHOD
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: ACTION
+            columnNames: SERVICE_ID,NAME
+            constraintName: UK_ACTION_SERVICE_NAME
+        - createIndex:
+            tableName: ACTION
+            indexName: IDX_ACTION_NAME
+            columns:
+              - column:
+                  name: NAME
+        - createIndex:
+            tableName: ACTION
+            indexName: IDX_ACTION_SERVICE_NAME
+            unique: true
+            columns:
+              - column:
+                  name: SERVICE_ID
+              - column:
+                  name: NAME
+        - addForeignKeyConstraint:
+            baseTableName: ACTION
+            baseColumnNames: SERVICE_ID
+            constraintName: FK_ACTION_SERVICE
+            referencedTableName: SERVICE
+            referencedColumnNames: SERVICE_ID
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 0004-transaction-table
+      author: zmad5306
+      changes:
+        - createTable:
+            tableName: TRANSACTION
+            columns:
+              - column:
+                  name: TRANSACTION_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: NAME
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: TRANSACTION
+            columnNames: NAME
+            constraintName: UK_TRANSACTION_NAME
+        - createIndex:
+            tableName: TRANSACTION
+            indexName: IDX_TRANSACTION_NAME
+            unique: true
+            columns:
+              - column:
+                  name: NAME
+
+  - changeSet:
+      id: 0005-transaction-action-table
+      author: zmad5306
+      changes:
+        - createTable:
+            tableName: TRANSACTION_ACTION
+            columns:
+              - column:
+                  name: TRANSACTION_ACTION_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: TRANSACTION_ID
+                  type: BIGINT
+              - column:
+                  name: ACTION_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: TRANSACTION_ACTION
+            baseColumnNames: TRANSACTION_ID
+            constraintName: FK_TRANSACTION_ACTION_TRANSACTION
+            referencedTableName: TRANSACTION
+            referencedColumnNames: TRANSACTION_ID
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: TRANSACTION_ACTION
+            baseColumnNames: ACTION_ID
+            constraintName: FK_TRANSACTION_ACTION_ACTION
+            referencedTableName: ACTION
+            referencedColumnNames: ACTION_ID
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 0006-transaction-action-dependency
+      author: zmad5306
+      changes:
+        - createTable:
+            tableName: TRANSACTION_ACTION_DEPENDENCY
+            columns:
+              - column:
+                  name: TRANSACTION_ACTION_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DEPENDS_ON_TRANSACTION_ACTION_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: TRANSACTION_ACTION_DEPENDENCY
+            columnNames: TRANSACTION_ACTION_ID,DEPENDS_ON_TRANSACTION_ACTION_ID
+            constraintName: PK_TRANSACTION_ACTION_DEP
+        - addForeignKeyConstraint:
+            baseTableName: TRANSACTION_ACTION_DEPENDENCY
+            baseColumnNames: TRANSACTION_ACTION_ID
+            constraintName: FK_TX_ACTION_DEP_TX_ACTION
+            referencedTableName: TRANSACTION_ACTION
+            referencedColumnNames: TRANSACTION_ACTION_ID
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: TRANSACTION_ACTION_DEPENDENCY
+            baseColumnNames: DEPENDS_ON_TRANSACTION_ACTION_ID
+            constraintName: FK_TX_ACTION_DEPENDS_ON
+            referencedTableName: TRANSACTION_ACTION
+            referencedColumnNames: TRANSACTION_ACTION_ID
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 0007-score-card
+      author: zmad5306
+      changes:
+        - createTable:
+            tableName: SCORE_CARD
+            columns:
+              - column:
+                  name: SCORE_CARD_ID
+                  type: BIGINT
+                  defaultValueSequenceNext: score_card_id_sequence
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: TRANSACTION_ID
+                  type: BIGINT
+              - column:
+                  name: TRANSACTION_NAME
+                  type: VARCHAR(255)
+        - createIndex:
+            tableName: SCORE_CARD
+            indexName: IDX_SCORE_CARD_TX_NAME
+            columns:
+              - column:
+                  name: TRANSACTION_NAME
+
+  - changeSet:
+      id: 0008-score-card-action
+      author: zmad5306
+      changes:
+        - createTable:
+            tableName: SCORE_CARD_ACTION
+            columns:
+              - column:
+                  name: SCORE_CARD_ACTION_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: SCORE_CARD_ID
+                  type: BIGINT
+              - column:
+                  name: ACTION_ID
+                  type: BIGINT
+              - column:
+                  name: NAME
+                  type: VARCHAR(255)
+              - column:
+                  name: PATH
+                  type: VARCHAR(255)
+              - column:
+                  name: METHOD
+                  type: VARCHAR(50)
+              - column:
+                  name: STATUS
+                  type: VARCHAR(50)
+              - column:
+                  name: START_TIMESTAMP
+                  type: TIMESTAMP
+              - column:
+                  name: END_TIMESTAMP
+                  type: TIMESTAMP
+        - createIndex:
+            tableName: SCORE_CARD_ACTION
+            indexName: IDX_SCORE_CARD_ACTION_STATUS
+            columns:
+              - column:
+                  name: STATUS
+        - addForeignKeyConstraint:
+            baseTableName: SCORE_CARD_ACTION
+            baseColumnNames: SCORE_CARD_ID
+            constraintName: FK_SCORE_CARD_ACTION_SCORE_CARD
+            referencedTableName: SCORE_CARD
+            referencedColumnNames: SCORE_CARD_ID
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 0009-score-card-action-dependency
+      author: zmad5306
+      changes:
+        - createTable:
+            tableName: SCORE_CARD_ACTION_DEPENDENCY
+            columns:
+              - column:
+                  name: SCORE_CARD_ACTION_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DEPENDS_ON_SCORE_CARD_ACTION_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: SCORE_CARD_ACTION_DEPENDENCY
+            columnNames: SCORE_CARD_ACTION_ID,DEPENDS_ON_SCORE_CARD_ACTION_ID
+            constraintName: PK_SCORE_CARD_ACTION_DEP
+        - addForeignKeyConstraint:
+            baseTableName: SCORE_CARD_ACTION_DEPENDENCY
+            baseColumnNames: SCORE_CARD_ACTION_ID
+            constraintName: FK_SC_ACTION_DEP_SC_ACTION
+            referencedTableName: SCORE_CARD_ACTION
+            referencedColumnNames: SCORE_CARD_ACTION_ID
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: SCORE_CARD_ACTION_DEPENDENCY
+            baseColumnNames: DEPENDS_ON_SCORE_CARD_ACTION_ID
+            constraintName: FK_SC_ACTION_DEPENDS_ON
+            referencedTableName: SCORE_CARD_ACTION
+            referencedColumnNames: SCORE_CARD_ACTION_ID
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 0010-score-card-action-metadata
+      author: zmad5306
+      changes:
+        - createTable:
+            tableName: SCORE_CARD_ACTION_METADATA
+            columns:
+              - column:
+                  name: SCORE_CARD_ACTION_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: NAME
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: METADATA_VALUE
+                  type: VARCHAR(1024)
+        - addPrimaryKey:
+            tableName: SCORE_CARD_ACTION_METADATA
+            columnNames: SCORE_CARD_ACTION_ID,NAME
+            constraintName: PK_SCORE_CARD_ACTION_METADATA
+        - addForeignKeyConstraint:
+            baseTableName: SCORE_CARD_ACTION_METADATA
+            baseColumnNames: SCORE_CARD_ACTION_ID
+            constraintName: FK_SC_ACTION_METADATA_ACTION
+            referencedTableName: SCORE_CARD_ACTION
+            referencedColumnNames: SCORE_CARD_ACTION_ID
+            onDelete: CASCADE

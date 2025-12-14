@@ -1,7 +1,0 @@
-{"properties": [
-  {
-    "name": "scorecard.api.baseurl",
-    "type": "java.lang.String",
-    "description": "The base URL for the Score Card API."
-  }
-]}

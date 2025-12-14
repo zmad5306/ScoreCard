@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Add Review - Transaction - Score Card Portal</title>
+<!--/*/ <th:block th:insert="~{fragments/headerinc :: head}"></th:block> /*/-->
+</head>
+<body>
+	<!--/*/ <th:block th:insert="~{fragments/header :: header}"></th:block> /*/-->
+	<div class="container">
+		<div class="starter-template">
+			<div class="row">
+				<div class="col-md-12">
+					<h1>Add Transaction Review</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<form method="post">
+						<div class="row">
+							<p th:if="${transaction.actions.size() > 0}" class="alert alert-warning"><span class="glyphicon glyphicon-warning-sign"></span> This transaction has not been saved. Once all actions are configured click Submit below.</p>
+							<p th:if="${transaction.actions.size() < 1}" class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> This transaction cannot been saved, it does not contain any actions. Add actions below.</p>
+						</div>
+						<div class="row">
+							<div class="control-group">
+								<label class="control-label">Transaction Name:</label> <span
+									class="controls readonly" th:text="${transaction.name}"></span>
+									<button type='submit' class="btn btn-sm" name="_eventId_editName" value="editName"><span class="glyphicon glyphicon-pencil"></span></button>
+							</div>
+						</div>
+						<div class="row">
+							<h3>Actions</h3>
+							<div class="btn-group pull-right">
+								<button type="submit" class="btn btn-primary" name="_eventId_addNewAction" value="addNewAction"><i class="glyphicon glyphicon-plus" aria-hidden="true" th:formaction="${flowExecutionUrl}"></i> Add Action</button>
+							</div>
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>Action Id</th>
+										<th>Action Name</th>
+										<th>Action Path</th>
+										<th>Action Method</th>
+										<th>Service Id</th>
+										<th>Service Name</th>
+										<th>Service Path</th>
+										<th>Service Transport</th>
+										<th>Depends On</th>
+										<th>Options</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="action,iter : ${transaction.actions}">
+										<td th:text="${action.actionId}" />
+										<td th:text="${action.name}" />
+										<td th:text="${action.path}" />
+										<td th:text="${action.method}" />
+										<td th:text="${action.service.serviceId}" />
+										<td th:text="${action.service.name}" />
+										<td th:text="${action.service.path}" />
+										<td th:text="${action.service.transport}" />
+										<td>
+											<ul class="comma-list">
+												<li th:each="dep : ${action.dependsOn}" th:text="${dep}"></li>
+											</ul>
+											<button th:if="${action.dependsOn == null || action.dependsOn.size() < 1}" type="submit" class="btn btn-sm" name="_eventId_addDependencies" value="addDependencies" th:formaction="${flowExecutionUrl + '&selected_action_index=' + iter.index}"><i class="glyphicon glyphicon-plus" aria-hidden="true"></i></button>
+											<button th:if="${action.dependsOn != null && action.dependsOn.size() > 0}" type="submit" class="btn btn-sm" name="_eventId_addDependencies" value="addDependencies" th:formaction="${flowExecutionUrl + '&selected_action_index=' + iter.index}"><i class="glyphicon glyphicon-pencil" aria-hidden="true"></i></button>
+										</td>
+										<td>
+											<button type="submit" class="btn btn-sm" name="_eventId_removeAction" value="removeAction" th:formaction="${flowExecutionUrl + '&selected_action_index=' + iter.index}"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></button> 
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<button type="submit" name="_eventId_cancel" value="cancel" class="btn btn-link" th:formaction="${flowExecutionUrl}">Cancel</button>
+						<button type="submit" name="_eventId_submitToServer" value="submitToServer" class="btn btn-primary pull-right" th:disabled="${transaction.actions.size() < 1}" th:formaction="${flowExecutionUrl}">Submit</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

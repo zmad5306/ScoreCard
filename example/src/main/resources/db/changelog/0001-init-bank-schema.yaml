@@ -1,0 +1,65 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0001-create-schema
+      author: zmad5306
+      changes:
+        - sql:
+              sql: CREATE SCHEMA IF NOT EXISTS BANK;
+
+  - changeSet:
+      id: 0002-account-table
+      author: zmad5306
+      changes:
+        - createTable:
+            tableName: ACCOUNT
+            columns:
+              - column:
+                  name: ACCOUNT_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: BALANCE
+                  type: NUMERIC(19,2)
+        - createIndex:
+            tableName: ACCOUNT
+            indexName: IDX_ACCOUNT_ID
+            columns:
+              - column:
+                  name: ACCOUNT_ID
+
+  - changeSet:
+      id: 0003-bank-transaction-table
+      author: zmad5306
+      changes:
+        - createTable:
+            tableName: BANK_TRANSACTION
+            columns:
+              - column:
+                  name: TRANSACTION_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ACCOUNT_ID
+                  type: BIGINT
+              - column:
+                  name: TRANSACTION_TYPE
+                  type: VARCHAR(50)
+              - column:
+                  name: TIMESTAMP
+                  type: TIMESTAMP
+              - column:
+                  name: AMOUNT
+                  type: NUMERIC(19,2)
+        - addForeignKeyConstraint:
+            baseTableName: BANK_TRANSACTION
+            baseColumnNames: ACCOUNT_ID
+            constraintName: FK_BANK_TX_ACCOUNT
+            referencedTableName: ACCOUNT
+            referencedColumnNames: ACCOUNT_ID
+            onDelete: SET NULL

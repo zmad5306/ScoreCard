@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0002-seed-accounts
+      author: zmad5306
+      changes:
+        - insert:
+            tableName: ACCOUNT
+            columns:
+              - column:
+                  name: BALANCE
+                  valueNumeric: 1000.00
+        - insert:
+            tableName: ACCOUNT
+            columns:
+              - column:
+                  name: BALANCE
+                  valueNumeric: 1000.00

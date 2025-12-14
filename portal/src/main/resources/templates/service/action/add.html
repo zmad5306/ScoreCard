@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Add - Action - Score Card Portal</title>
+<!--/*/ <th:block th:insert="~{fragments/headerinc :: head}"></th:block> /*/-->
+</head>
+<body>
+	<!--/*/ <th:block th:insert="~{fragments/header :: header}"></th:block> /*/-->
+	<div class="container">
+		<div class="starter-template">
+			<div class="row">
+				<div class="col-md-12">
+					<h1>Add Action</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<p class="alert alert-danger" th:if="${actionNameTaken}">Action name already taken. Please try a different name.</p>
+					<div class="control-group">
+						<label class="control-label">Service Id:</label>
+						<span class="controls readonly" th:text="${action.service.serviceId}"></span>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Service Name:</label>
+						<span class="controls readonly" th:text="${action.service.name}"></span>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Service Path:</label>
+						<span class="controls readonly" th:text="${action.service.path}"></span>
+					</div>
+					<div class="control-group">
+						<label class="control-label">Service Transport:</label>
+						<span class="controls readonly" th:text="${action.service.transport}"></span>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<form method="post" th:action="${flowExecutionUrl}" th:object="${action}">
+						<div class="form-group" th:classappend="${#fields.hasErrors('name') ? 'has-error' : ''}">
+							<label for="service_name">Name</label>
+							<input type="text" class="form-control" id="service_name" placeholder="Action name" th:field="*{name}">
+							<span th:each="err : ${#fields.errors('name')}" th:text="${err}" class="help-block"></span>
+						</div>
+						<div class="form-group" th:classappend="${#fields.hasErrors('path') ? 'has-error' : ''}">
+							<label for="path">Path</label>
+							<input type="text" class="form-control" id="path" placeholder="Path" th:field="*{path}">
+							<span th:each="err : ${#fields.errors('path')}" th:text="${err}" class="help-block"></span>
+						</div>
+						<div class="form-group" th:classappend="${#fields.hasErrors('method') ? 'has-error' : ''}">
+							<label for="method">Method</label>
+							<select id="method" class="form-control" th:field="*{method}">
+								<option th:each="method : ${T(dev.zachmaddox.scorecard.common.domain.Method).values()}"
+									th:value="${method}"
+									th:text="${method}"></option>
+							</select>
+							<span th:each="err : ${#fields.errors('method')}" th:text="${err}" class="help-block"></span>
+						</div>
+						<button type="submit" class="btn btn-link" name="_eventId_cancel" value="cancel">Cancel</button>
+						<button type="submit" class="btn btn-primary pull-right" name="_eventId_save" value="save">Submit</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

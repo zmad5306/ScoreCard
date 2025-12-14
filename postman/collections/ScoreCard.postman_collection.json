@@ -1,0 +1,297 @@
+{
+  "info": {
+    "_postman_id": "84db642e-eb87-40b8-b861-ef98bc637d9f",
+    "name": "ScoreCard",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GetCardId",
+      "id": "5ad073ab-fac0-42b1-af90-e74bcc4f64ac",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{api.baseURL}}/api/v1/scorecard/id",
+          "host": [
+            "{{api.baseURL}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "scorecard",
+            "id"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "CreateCard",
+      "id": "03267d9b-b418-4840-b4aa-fc61a1d4c30f",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"score_card_id\": 1,\n\t\"transaction_id\": 201\n}",
+          "options": {
+            "raw": {
+              "language": "text"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{api.baseURL}}/api/v1/scorecard",
+          "host": [
+            "{{api.baseURL}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "scorecard"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetScoreCard",
+      "id": "43c695ad-6db2-4a8c-b5fe-c31a63b939ba",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{api.baseURL}}/api/v1/scorecard/1",
+          "host": [
+            "{{api.baseURL}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "scorecard",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "AuthorizeAction",
+      "id": "f6f926c8-3e17-4de5-855f-193f3cafa6e2",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"score_card_id\": 1,\n\t\"action_id\": 4\n}",
+          "options": {
+            "raw": {
+              "language": "text"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{api.baseURL}}/api/v1/scorecard",
+          "host": [
+            "{{api.baseURL}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "scorecard"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "UpdateStatus",
+      "id": "2b38db76-7d10-44ff-b649-d96def028584",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"score_card_id\": 1,\n\t\"action_id\": 2,\n\t\"status\": \"COMPLETED\"\n}",
+          "options": {
+            "raw": {
+              "language": "text"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{api.baseURL}}/api/v1/scorecard/1",
+          "host": [
+            "{{api.baseURL}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "scorecard",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetTransaction",
+      "id": "aa137afb-dacf-45c5-9895-db8aa7bd4362",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{api.baseURL}}/api/v1/transaction/1",
+          "host": [
+            "{{api.baseURL}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "transaction",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "StartExample",
+      "id": "888cfce1-0903-4a3c-8e8e-9b5c1ef4be8f",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{example.baseURL}}/app/example",
+          "host": [
+            "{{example.baseURL}}"
+          ],
+          "path": [
+            "app",
+            "example"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetScoreCards",
+      "id": "5ebabc72-f7ff-492b-aa8c-615d46942af4",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{api.baseURL}}/api/v1/scorecard?score_card_status=COMPLETED&rows=10&page=0",
+          "host": [
+            "{{api.baseURL}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "scorecard"
+          ],
+          "query": [
+            {
+              "key": "score_card_status",
+              "value": "COMPLETED"
+            },
+            {
+              "key": "rows",
+              "value": "10"
+            },
+            {
+              "key": "page",
+              "value": "0"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetTransactionByName",
+      "id": "2035b480-b8f5-45e5-817f-936b39c9b42c",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{api.baseURL}}/api/v1/transaction?name=transaction1",
+          "host": [
+            "{{api.baseURL}}"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "transaction"
+          ],
+          "query": [
+            {
+              "key": "name",
+              "value": "transaction1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "StartBankTransfer",
+      "id": "7ed9200d-5687-4de0-bf5c-d86105a60530",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{example.baseURL}}/app/example/bank/transfer?from_account_id=1&to_account_id=2&amount=1.01",
+          "host": [
+            "{{example.baseURL}}"
+          ],
+          "path": [
+            "app",
+            "example",
+            "bank",
+            "transfer"
+          ],
+          "query": [
+            {
+              "key": "from_account_id",
+              "value": "1"
+            },
+            {
+              "key": "to_account_id",
+              "value": "2"
+            },
+            {
+              "key": "amount",
+              "value": "1.01"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "id": "fa5f70b6-912f-46a3-b9db-130d0f009205",
+      "key": "baseURL",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}
