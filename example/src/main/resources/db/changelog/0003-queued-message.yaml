@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0004-create-schema
+      author: zmad5306
+      changes:
+        - sql:
+            sql: CREATE SCHEMA IF NOT EXISTS EXAMPLE;
+
+  - changeSet:
+      id: 0005-create-queued-message
+      author: zmad5306
+      changes:
+        - createTable:
+            tableName: QUEUED_MESSAGE
+            schemaName: EXAMPLE
+            columns:
+              - column:
+                  name: QUEUED_MESSAGE_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: SCORE_CARD_HEADER
+                  type: jsonb
+                  constraints:
+                    nullable: false
+              - column:
+                  name: MESSAGE_BODY
+                  type: jsonb
+                  constraints:
+                    nullable: false
+              - column:
+                  name: QUEUED_AT
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: STATUS
+                  type: varchar(25)
+                  defaultValue: PENDING
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ERROR
+                  type: varchar(500)
+        - createIndex:
+            indexName: IDX_QUEUED_MESSAGE_QUEUED_AT
+            tableName: QUEUED_MESSAGE
+            schemaName: EXAMPLE
+            columns:
+              - column:
+                  name: QUEUED_AT
+        - createIndex:
+            indexName: IDX_QUEUED_MESSAGE_STATUS
+            tableName: QUEUED_MESSAGE
+            schemaName: EXAMPLE
+            columns:
+              - column:
+                  name: STATUS

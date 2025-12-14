@@ -27,15 +27,13 @@ public class OrderController {
         this.transactionApiService = transactionApiService;
     }
 
-    @GetMapping(produces="application/json")
-	public ScoreCardId place(@RequestParam(value="order_id") Long orderId) {
+    @PostMapping(produces="application/json")
+	public ScoreCardId place(@RequestBody OrderRequest orderRequest) {
         String transactionName = "http-order";
         Transaction transaction = transactionApiService.getTransactionByName(transactionName);
         Action validateAction = transaction.getAction("validate-order");
         Action finalizeAction = transaction.getAction("finalize-order");
 
-        OrderRequest orderRequest = new OrderRequest(orderId);
-        
         ScoreCardId id = scoreCardApiService.createScoreCard(transaction);
 
         scoreCardApiService.wrapAndSend(id, transaction, validateAction, orderRequest);

@@ -2,6 +2,7 @@ package dev.zachmaddox.scorecard.api.config;
 
 import jakarta.jms.ConnectionFactory;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,7 +41,7 @@ public class JmsConfig {
     }
 
     @Bean
-    public JmsListenerContainerFactory<?> jmsListenerContainerFactory(ConnectionFactory connectionFactory, MessageConverter messageConverter) {
+    public JmsListenerContainerFactory<?> jmsListenerContainerFactory(@Qualifier("activeMQConnectionFactory") ConnectionFactory connectionFactory, MessageConverter messageConverter) {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
         factory.setSessionTransacted(true);
@@ -49,7 +50,7 @@ public class JmsConfig {
     }
 
     @Bean
-    public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory, MessageConverter messageConverter) {
+    public JmsTemplate jmsTemplate(@Qualifier("activeMQConnectionFactory") ConnectionFactory connectionFactory, MessageConverter messageConverter) {
         JmsTemplate template = new JmsTemplate(connectionFactory);
         template.setMessageConverter(messageConverter);
         return template;

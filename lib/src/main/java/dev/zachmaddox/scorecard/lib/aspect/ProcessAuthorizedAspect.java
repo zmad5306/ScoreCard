@@ -1,7 +1,9 @@
 package dev.zachmaddox.scorecard.lib.aspect;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.zachmaddox.scorecard.common.domain.Authorization;
 import dev.zachmaddox.scorecard.common.domain.ScoreCardActionStatus;
 import dev.zachmaddox.scorecard.lib.annotation.ProcessAuthorized;
@@ -37,13 +39,15 @@ public class ProcessAuthorizedAspect {
 
     private final ScoreCardApiService jmsScoreCardApiService;
     private final ScoreCardApiService httpScoreCardApiService;
+    private final ObjectMapper objectMapper;
 
     public ProcessAuthorizedAspect(
             @Qualifier("scoreCardApiServiceJms") ScoreCardApiService jmsScoreCardApiService,
-            @Qualifier("scoreCardApiServiceHttp") ScoreCardApiService httpScoreCardApiService
-    ) {
+            @Qualifier("scoreCardApiServiceHttp") ScoreCardApiService httpScoreCardApiService,
+            ObjectMapper objectMapper) {
         this.jmsScoreCardApiService = jmsScoreCardApiService;
         this.httpScoreCardApiService = httpScoreCardApiService;
+        this.objectMapper = objectMapper;
     }
 
     private record HeaderValue(String rawHeader, ScoreCardHeader scoreCardHeader) {
@@ -120,6 +124,48 @@ public class ProcessAuthorizedAspect {
         return Optional.empty();
     }
 
+    private JsonNode convertBody(ProceedingJoinPoint joinPoint, boolean useJms) {
+        try {
+            if (useJms) {
+                Object[] args = joinPoint.getArgs();
+                for (int i = 0; i < args.length; i++) {
+                    Object arg = args[i];
+                    if (arg instanceof Message<?>) {
+                        try {
+                            Object body = arg.getClass().getMethod("getBody").invoke(arg);
+                            return objectMapper.convertValue(body, JsonNode.class);
+                        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+                            // skip
+                        }
+                    }
+                }
+            } else {
+                HttpServletRequest request = getCurrentHttpRequest();
+                if (request != null) {
+                    return objectMapper.readValue(request.getInputStream(), JsonNode.class);
+                }
+            }
+        } catch (Exception e) {
+            // skip
+        }
+
+        return objectMapper.createObjectNode();
+    }
+
+    private ObjectNode convertHeader(HeaderValue headerValue) {
+        try {
+            if (null != headerValue.scoreCardHeader()) {
+                return objectMapper.convertValue(headerValue.scoreCardHeader(), ObjectNode.class);
+            } else {
+                objectMapper.readValue(headerValue.rawHeader(), ObjectNode.class);
+            }
+        } catch (Exception e) {
+            // skip
+        }
+
+        return objectMapper.createObjectNode();
+    }
+
     private static Optional<Map<String, String>> extractMetadata(Object result) {
         Map<String, String> metadata = new HashMap<>();
 
@@ -194,7 +240,7 @@ public class ProcessAuthorizedAspect {
                     yield null;
                 }
                 case SKIP -> null;
-                case WAIT -> throw new WaitException();
+                case WAIT -> throw new WaitException(convertHeader(headerValue.get()), convertBody(joinPoint, useJms));
             };
         }
         else {

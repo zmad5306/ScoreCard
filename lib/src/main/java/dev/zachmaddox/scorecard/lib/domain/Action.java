@@ -26,7 +26,6 @@ public class Action implements Serializable {
     @JsonProperty("action_id")
     @EqualsAndHashCode.Include
 	private Long actionId;
-	private String type;
 	@NotNull
 	@NotEmpty
 	private String name;
