@@ -17,33 +17,50 @@ import java.util.Map;
 @Service
 public class ScoreCardApiServiceJms extends AbstractScoreCardApiService implements ScoreCardApiService {
 
-	private final JmsTemplate jmsTemplate;
+    private final JmsTemplate jmsTemplate;
+    private final Object connectionFactory;
 
     public ScoreCardApiServiceJms(RestTemplate restTemplate, ObjectMapper mapper, JmsTemplate jmsTemplate) {
         super(restTemplate, mapper);
         this.jmsTemplate = jmsTemplate;
+        this.connectionFactory = jmsTemplate.getConnectionFactory();
     }
 
     @Override
-	public void updateStatus(ScoreCardHeader scoreCardHeader, ScoreCardActionStatus status, Map<String, String> metadata) {
-		UpdateRequest request = new UpdateRequest(scoreCardHeader.getScoreCardId(), scoreCardHeader.getActionId(), status, metadata);
-		jmsTemplate.convertAndSend("scorecard", request, new MessageSelectorPostProcessor("UPDATE"));
-	}
-	
-	@Override
-	public ScoreCardId createScoreCard(Transaction transaction) {
-		ScoreCardId scoreCardId = getScoreCardId();
-		jmsTemplate.convertAndSend("scorecard", new CreateRequest(scoreCardId.getScoreCardId(), transaction.getTransactionId()), new MessageSelectorPostProcessor("CREATE"));
-		return scoreCardId;
-	}
-	
-	@Override
-	public void wrapAndSend(ScoreCardId id, Transaction transaction, Action action, Object message) {
-		jmsTemplate.convertAndSend(
-				action.getService().getPath(),
-				message,
-				new ScoreCardPostProcessor(new ScoreCardHeader(id.getScoreCardId(), action.getActionId(), action.getPath()), getMapper())
-			);
-	}
+    public void updateStatus(ScoreCardHeader scoreCardHeader, ScoreCardActionStatus status, Map<String, String> metadata) {
+        UpdateRequest request = new UpdateRequest(scoreCardHeader.getScoreCardId(), scoreCardHeader.getActionId(), status, metadata);
+        jmsTemplate.convertAndSend("scorecard", request, new MessageSelectorPostProcessor("UPDATE"));
+    }
+
+    @Override
+    public void updateStatus(ScoreCardHeader scoreCardHeader, ScoreCardActionStatus status) {
+        updateStatus(scoreCardHeader, status, null);
+    }
+
+    @Override
+    public void updateStatus(String scoreCardHeader, ScoreCardActionStatus status) {
+        updateStatus(convertHeader(scoreCardHeader), status, null);
+    }
+
+    @Override
+    public void updateStatus(String scoreCardHeader, ScoreCardActionStatus status, Map<String, String> metadata) {
+        updateStatus(convertHeader(scoreCardHeader), status, metadata);
+    }
+
+    @Override
+    public ScoreCardId createScoreCard(Transaction transaction) {
+        ScoreCardId scoreCardId = getScoreCardId();
+        jmsTemplate.convertAndSend("scorecard", new CreateRequest(scoreCardId.getScoreCardId(), transaction.getTransactionId()), new MessageSelectorPostProcessor("CREATE"));
+        return scoreCardId;
+    }
+
+    @Override
+    public void wrapAndSend(ScoreCardId id, Transaction transaction, Action action, Object message) {
+        jmsTemplate.convertAndSend(
+                action.getService().getPath(),
+                message,
+                new ScoreCardPostProcessor(new ScoreCardHeader(id.getScoreCardId(), action.getActionId(), action.getPath()), getMapper())
+        );
+    }
 
 }

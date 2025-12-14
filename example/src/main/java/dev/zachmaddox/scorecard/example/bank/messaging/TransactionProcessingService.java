@@ -4,14 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import dev.zachmaddox.scorecard.common.domain.Authorization;
-import dev.zachmaddox.scorecard.common.domain.ScoreCardActionStatus;
-import dev.zachmaddox.scorecard.lib.domain.WaitException;
-import dev.zachmaddox.scorecard.lib.service.ScoreCardApiService;
+import dev.zachmaddox.scorecard.lib.annotation.ProcessAuthorized;
+import dev.zachmaddox.scorecard.lib.domain.exception.ProcessingFailedException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.annotation.JmsListener;
-import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,96 +21,68 @@ import dev.zachmaddox.scorecard.example.bank.service.AccountService;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class TransactionProcessingService {
 
-    private final ScoreCardApiService scoreCardApiService;
 	private final AccountService accountService;
-
 	private final String errorKey = "error_code";
 
-    public TransactionProcessingService(@Qualifier("scoreCardApiServiceJms") ScoreCardApiService scoreCardApiService, AccountService accountService) {
-        this.scoreCardApiService = scoreCardApiService;
-        this.accountService = accountService;
-    }
-
-    private void nsf(String scoreCardHeader) {
+    private void nsf() {
 		Map<String, String> metadata = new HashMap<>();
 		metadata.put(errorKey, BankErrorCode.NSF.name());
-		scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.FAILED, metadata);
+        throw new ProcessingFailedException(metadata);
 	}
 	
-	private void accountDne(String scoreCardHeader) {
+	private void accountDne() {
 		Map<String, String> metadata = new HashMap<>();
 		metadata.put(errorKey, BankErrorCode.ACCOUNT_DNE.name());
-		scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.FAILED, metadata);
+        throw new ProcessingFailedException(metadata);
 	}
 	
-	private void performDebit(DebitRequest request, String scoreCardHeader, Account account) {
+	private Optional<Map<String, String>> performDebit(DebitRequest request, Account account) {
 		Long transactionId = accountService.debitAccount(request, account);
-		Map<String, String> metadata = new HashMap<>();
-		// set the transaction id in the metadata in case the transaction needs reversed later
-        String transactionIdKey = "transaction_id";
-        metadata.put(transactionIdKey, transactionId.toString());
-		scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.COMPLETED, metadata);
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("transaction_id", transactionId.toString());
+        return Optional.of(metadata);
 	}
+
+    private void performCredit(CreditRequest request, Account account) {
+        accountService.creditAccount(request, account);
+    }
 	
 	@JmsListener(destination="account", selector="ACTION='debit'")
 	@Transactional
-	public void debit(DebitRequest request, @Header("SCORE_CARD") String scoreCardHeader) {
+    @ProcessAuthorized(allowMissingHeader = false)
+	public Optional<Map<String, String>> debit(Message<DebitRequest> message) {
 		log.info("processing debit request");
-		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
-		switch (auth) {
-			case CANCEL:
-				scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.CANCELLED);
-				break;
-			case PROCESS:
-				Optional<Account> a = accountService.getAccount(request.getAccountId());
-				if (a.isPresent()) {
-					Account account = a.get();
-					if (0 > account.getBalance().compareTo(request.getAmount())) {
-						nsf(scoreCardHeader);
-					} else {
-						performDebit(request, scoreCardHeader, account);
-					}
-				} else {
-					accountDne(scoreCardHeader);					
-				}
-				break;
-			case SKIP:
-				break;
-			case WAIT:
-				throw new WaitException();
-		}
-	}
-	
-	private void performCredit(CreditRequest request, String scoreCardHeader, Account account) {
-		accountService.creditAccount(request, account);
-		scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.COMPLETED);
+        DebitRequest request = message.getPayload();
+        Optional<Account> account = accountService.getAccount(request.getAccountId());
+        if (account.isPresent()) {
+            Account foundAccount = account.get();
+            if (0 > foundAccount.getBalance().compareTo(request.getAmount())) {
+                nsf();
+            } else {
+                return performDebit(request, foundAccount);
+            }
+        } else {
+            accountDne();
+        }
+
+        return Optional.empty();
 	}
 
 	@JmsListener(destination="account", selector="ACTION='credit'")
 	@Transactional
-	public void credit(CreditRequest request, @Header("SCORE_CARD") String scoreCardHeader) {
+    @ProcessAuthorized(allowMissingHeader = false)
+	public void credit(Message<CreditRequest> message) {
 		log.info("processing credit request");
-		Authorization auth = scoreCardApiService.authorize(scoreCardHeader);
-		switch (auth) {
-			case CANCEL:
-				scoreCardApiService.updateStatus(scoreCardHeader, ScoreCardActionStatus.CANCELLED);
-				break;
-			case PROCESS:
-				Optional<Account> a = accountService.getAccount(request.getAccountId());
-				if (a.isPresent()) {
-					performCredit(request, scoreCardHeader, a.get());					
-				} else {
-					accountDne(scoreCardHeader);
-				}
-				break;
-			case SKIP:
-				break;
-			case WAIT:
-				throw new WaitException();
-		}
-		
+        CreditRequest request = message.getPayload();
+        Optional<Account> account = accountService.getAccount(request.getAccountId());
+        if (account.isPresent()) {
+            performCredit(request, account.get());
+        } else {
+            accountDne();
+        }
 	}
-	
+
 }
