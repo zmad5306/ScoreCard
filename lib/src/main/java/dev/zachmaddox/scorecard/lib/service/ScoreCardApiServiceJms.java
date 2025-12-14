@@ -18,12 +18,10 @@ import java.util.Map;
 public class ScoreCardApiServiceJms extends AbstractScoreCardApiService implements ScoreCardApiService {
 
     private final JmsTemplate jmsTemplate;
-    private final Object connectionFactory;
 
     public ScoreCardApiServiceJms(RestTemplate restTemplate, ObjectMapper mapper, JmsTemplate jmsTemplate) {
         super(restTemplate, mapper);
         this.jmsTemplate = jmsTemplate;
-        this.connectionFactory = jmsTemplate.getConnectionFactory();
     }
 
     @Override

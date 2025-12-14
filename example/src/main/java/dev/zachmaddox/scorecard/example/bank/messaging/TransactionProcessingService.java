@@ -52,7 +52,7 @@ public class TransactionProcessingService {
 	
 	@JmsListener(destination="account", selector="ACTION='debit'")
 	@Transactional
-    @ProcessAuthorized(allowMissingHeader = false)
+    @ProcessAuthorized(allowMissingHeader = false, useJms = true)
 	public Optional<Map<String, String>> debit(Message<DebitRequest> message) {
 		log.info("processing debit request");
         DebitRequest request = message.getPayload();
@@ -73,7 +73,7 @@ public class TransactionProcessingService {
 
 	@JmsListener(destination="account", selector="ACTION='credit'")
 	@Transactional
-    @ProcessAuthorized(allowMissingHeader = false)
+    @ProcessAuthorized(allowMissingHeader = false, useJms = true)
 	public void credit(Message<CreditRequest> message) {
 		log.info("processing credit request");
         CreditRequest request = message.getPayload();

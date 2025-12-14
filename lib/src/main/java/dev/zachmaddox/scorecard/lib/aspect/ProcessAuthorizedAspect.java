@@ -9,6 +9,7 @@ import dev.zachmaddox.scorecard.lib.domain.ScoreCardHeader;
 import dev.zachmaddox.scorecard.lib.domain.WaitException;
 import dev.zachmaddox.scorecard.lib.domain.exception.ProcessingFailedException;
 import dev.zachmaddox.scorecard.lib.service.ScoreCardApiService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -17,9 +18,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -30,34 +35,43 @@ public class ProcessAuthorizedAspect {
 
     private static final String SCORE_CARD_HEADER = "SCORE_CARD";
 
-    private final ScoreCardApiService scoreCardApiService;
+    private final ScoreCardApiService jmsScoreCardApiService;
+    private final ScoreCardApiService httpScoreCardApiService;
 
-    public ProcessAuthorizedAspect(@Qualifier("scoreCardApiServiceJms") ScoreCardApiService scoreCardApiService) {
-        this.scoreCardApiService = scoreCardApiService;
+    public ProcessAuthorizedAspect(
+            @Qualifier("scoreCardApiServiceJms") ScoreCardApiService jmsScoreCardApiService,
+            @Qualifier("scoreCardApiServiceHttp") ScoreCardApiService httpScoreCardApiService
+    ) {
+        this.jmsScoreCardApiService = jmsScoreCardApiService;
+        this.httpScoreCardApiService = httpScoreCardApiService;
     }
 
     private record HeaderValue(String rawHeader, ScoreCardHeader scoreCardHeader) {
     }
 
-    private void updateStatus(HeaderValue headerValue, ScoreCardActionStatus status) {
-        updateStatus(headerValue, status, Optional.empty());
+    private void updateStatus(HeaderValue headerValue, ScoreCardActionStatus status, boolean useJms) {
+        updateStatus(headerValue, status, Optional.empty(), useJms);
     }
 
-    private void updateStatus(HeaderValue headerValue, ScoreCardActionStatus status, Optional<Map<String, String>> metadata) {
+    private ScoreCardApiService getScoreCardApiService(boolean useJms) {
+        return useJms ? jmsScoreCardApiService : httpScoreCardApiService;
+    }
+
+    private void updateStatus(HeaderValue headerValue, ScoreCardActionStatus status, Optional<Map<String, String>> metadata, boolean useJms) {
         if (headerValue.scoreCardHeader() != null) {
             if (metadata.isPresent()) {
-                scoreCardApiService.updateStatus(headerValue.scoreCardHeader(), status, metadata.get());
+                getScoreCardApiService(useJms).updateStatus(headerValue.scoreCardHeader(), status, metadata.get());
             }
             else {
-                scoreCardApiService.updateStatus(headerValue.scoreCardHeader(), status);
+                getScoreCardApiService(useJms).updateStatus(headerValue.scoreCardHeader(), status);
             }
 
         } else {
             if (metadata.isPresent()) {
-                scoreCardApiService.updateStatus(headerValue.rawHeader(), status, metadata.get());
+                getScoreCardApiService(useJms).updateStatus(headerValue.rawHeader(), status, metadata.get());
             }
             else {
-                scoreCardApiService.updateStatus(headerValue.rawHeader(), status);
+                getScoreCardApiService(useJms).updateStatus(headerValue.rawHeader(), status);
             }
 
         }
@@ -76,18 +90,29 @@ public class ProcessAuthorizedAspect {
         return Optional.empty();
     }
 
-    private Optional<HeaderValue> resolveHeader(ProceedingJoinPoint joinPoint) {
-        Object[] args = joinPoint.getArgs();
-
-        for (int i = 0; i < args.length; i++) {
-            Object arg = args[i];
-            if (arg instanceof Message<?>) {
-                try {
-                    Object headers = arg.getClass().getMethod("getHeaders").invoke(arg);
-                    Object scoreCardHeader = ((MessageHeaders) headers).get(SCORE_CARD_HEADER);
-                    return toHeaderValue(scoreCardHeader);
-                } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
-                    // skip
+    private Optional<HeaderValue> resolveHeader(ProceedingJoinPoint joinPoint, boolean useJms) {
+        if (useJms) {
+            Object[] args = joinPoint.getArgs();
+            for (int i = 0; i < args.length; i++) {
+                Object arg = args[i];
+                if (arg instanceof Message<?>) {
+                    try {
+                        Object headers = arg.getClass().getMethod("getHeaders").invoke(arg);
+                        Object scoreCardHeader = ((MessageHeaders) headers).get(SCORE_CARD_HEADER);
+                        return toHeaderValue(scoreCardHeader);
+                    } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+                        // skip
+                    }
+                }
+            }
+        }
+        else {
+            HttpServletRequest request = getCurrentHttpRequest();
+            if (request != null) {
+                Enumeration<String> headers = request.getHeaders(SCORE_CARD_HEADER);
+                if (headers.hasMoreElements()) {
+                    String value = headers.nextElement();
+                    return toHeaderValue(value);
                 }
             }
         }
@@ -117,44 +142,55 @@ public class ProcessAuthorizedAspect {
         }
     }
 
+    private static HttpServletRequest getCurrentHttpRequest() {
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        if (requestAttributes == null) {
+            return null; // No request (e.g., background thread)
+        }
+        return ((ServletRequestAttributes) requestAttributes).getRequest();
+    }
+
     @Around("@annotation(dev.zachmaddox.scorecard.lib.annotation.ProcessAuthorized)")
     public Object authorizeProcess(ProceedingJoinPoint joinPoint) throws Throwable {
-        Optional<HeaderValue> headerValue = resolveHeader(joinPoint);
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         ProcessAuthorized annotation = method.getAnnotation(ProcessAuthorized.class);
+        boolean allowMissingHeader = annotation.allowMissingHeader();
+        boolean useJms = annotation.useJms();
 
-        if (headerValue.isEmpty() && !annotation.allowMissingHeader()) {
+        Optional<HeaderValue> headerValue = resolveHeader(joinPoint, useJms);
+
+        if (headerValue.isEmpty() && !allowMissingHeader) {
             throw new IllegalArgumentException("Method requires valid Score Card header data.");
         }
 
         if (headerValue.isPresent()) {
             HeaderValue header = headerValue.get();
             Authorization authorization = header.scoreCardHeader() != null
-                    ? scoreCardApiService.authorize(header.scoreCardHeader())
-                    : scoreCardApiService.authorize(header.rawHeader());
+                    ? getScoreCardApiService(useJms).authorize(header.scoreCardHeader())
+                    : getScoreCardApiService(useJms).authorize(header.rawHeader());
 
             return switch (authorization) {
                 case PROCESS -> {
                     try {
                         Object result = joinPoint.proceed(joinPoint.getArgs());
                         Optional<Map<String, String>> metadata = extractMetadata(result);
-                        updateStatus(header, ScoreCardActionStatus.COMPLETED, metadata);
+                        updateStatus(header, ScoreCardActionStatus.COMPLETED, metadata, useJms);
                         yield null;
                     } catch (ProcessingFailedException ex) {
-                        updateStatus(header,  ScoreCardActionStatus.FAILED, ex.getMetadata());
+                        updateStatus(header,  ScoreCardActionStatus.FAILED, ex.getMetadata(), useJms);
                         yield null;
                     } catch (Exception e) {
                         // TODO log exception
                         // log.error(e.getMessage(), e);
                         Map<String, String> metadata = new HashMap<>();
                         metadata.put("errorMessage", e.getMessage());
-                        updateStatus(header,  ScoreCardActionStatus.FAILED, Optional.of(metadata));
+                        updateStatus(header,  ScoreCardActionStatus.FAILED, Optional.of(metadata), useJms);
                         yield null;
                     }
                 }
                 case CANCEL -> {
-                    updateStatus(header, ScoreCardActionStatus.CANCELLED);
+                    updateStatus(header, ScoreCardActionStatus.CANCELLED, useJms);
                     yield null;
                 }
                 case SKIP -> null;

@@ -25,7 +25,7 @@ public class BasicService {
 
     @JmsListener(destination="service1", selector="ACTION='action1'")
 	@Transactional
-    @ProcessAuthorized(allowMissingHeader = false)
+    @ProcessAuthorized(allowMissingHeader = false, useJms = true)
 	public Optional<Map<String, String>> action1(Message<String> message) {
 		log.info("service1/action1 invoked");
         return process(message.getPayload());
@@ -33,7 +33,7 @@ public class BasicService {
 
     @JmsListener(destination="service1", selector="ACTION='action2'")
 	@Transactional
-    @ProcessAuthorized(allowMissingHeader = false)
+    @ProcessAuthorized(allowMissingHeader = false, useJms = true)
 	public Optional<Map<String, String>> action2(Message<String> message) {
 		log.info("service1/action2 invoked");
         return process(message.getPayload());
@@ -42,7 +42,7 @@ public class BasicService {
 	
 	@JmsListener(destination="service1", selector="ACTION='action3'")
 	@Transactional
-    @ProcessAuthorized(allowMissingHeader = false)
+    @ProcessAuthorized(allowMissingHeader = false, useJms = true)
 	public Optional<Map<String, String>> action3(Message<String> message) {
 		log.info("service1/action3 invoked");
         return process(message.getPayload());

@@ -13,4 +13,5 @@ dependencies {
     implementation 'org.aspectj:aspectjweaver:1.9.22'
     implementation 'commons-io:commons-io:2.15.1'
     implementation 'org.apache.activemq:activemq-client'
+    implementation 'jakarta.servlet:jakarta.servlet-api'
 }

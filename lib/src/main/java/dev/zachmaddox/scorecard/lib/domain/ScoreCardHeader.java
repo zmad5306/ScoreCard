@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ScoreCardHeader implements Serializable {
 
 	@JsonProperty("score_card_id")
@@ -19,12 +21,5 @@ public class ScoreCardHeader implements Serializable {
 	private Long actionId;
 	@JsonIgnore
 	private String path;
-
-    public ScoreCardHeader(Long scoreCardId, Long actionId, String path) {
-		super();
-		this.scoreCardId = scoreCardId;
-		this.actionId = actionId;
-		this.path = path;
-	}
 	
 }

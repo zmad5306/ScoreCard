@@ -1,5 +1,6 @@
 package dev.zachmaddox.scorecard.lib.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.zachmaddox.scorecard.common.domain.CreateRequest;
 import dev.zachmaddox.scorecard.common.domain.ScoreCardActionStatus;
@@ -8,20 +9,33 @@ import dev.zachmaddox.scorecard.lib.domain.Action;
 import dev.zachmaddox.scorecard.lib.domain.ScoreCardHeader;
 import dev.zachmaddox.scorecard.lib.domain.ScoreCardId;
 import dev.zachmaddox.scorecard.lib.domain.Transaction;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Service
 public class ScoreCardApiServiceHttp extends AbstractScoreCardApiService implements ScoreCardApiService {
 
-    public ScoreCardApiServiceHttp(RestTemplate restTemplate, ObjectMapper mapper) {
+    private final TaskExecutor taskExecutor;
+
+    public ScoreCardApiServiceHttp(
+            RestTemplate restTemplate, ObjectMapper mapper,
+            @Qualifier("applicationTaskExecutor") TaskExecutor taskExecutor
+    ) {
         super(restTemplate, mapper);
+        this.taskExecutor = taskExecutor;
     }
 
     @Override
@@ -50,6 +64,22 @@ public class ScoreCardApiServiceHttp extends AbstractScoreCardApiService impleme
 
 	@Override
 	public void wrapAndSend(ScoreCardId id, Transaction transaction, Action action, Object message) {
-		throw new UnsupportedOperationException("not implemented yet");
+        taskExecutor.execute(() -> {
+            String url = action.getService().getPath() + action.getPath();
+
+            ScoreCardHeader scoreCardHeader = new ScoreCardHeader(
+                    id.getScoreCardId(), action.getActionId(), action.getPath()
+            );
+
+            HttpHeaders headers = new HttpHeaders();
+            try {
+                headers.put("SCORE_CARD", List.of(getMapper().writeValueAsString(scoreCardHeader)));
+            } catch (JsonProcessingException e) {
+                // skip
+            }
+
+            HttpEntity<?> requestEntity = new HttpEntity<>(message, headers);
+            getRestTemplate().exchange(url, HttpMethod.valueOf(action.getMethod().name()), requestEntity, Object.class);
+        });
 	}
 }
