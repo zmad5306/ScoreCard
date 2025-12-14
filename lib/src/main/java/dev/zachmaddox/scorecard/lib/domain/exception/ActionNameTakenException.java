@@ -5,6 +5,6 @@ import dev.zachmaddox.scorecard.common.domain.exception.ScoreCardErrorCode;
 
 public class ActionNameTakenException extends ScoreCardClientException {
 	public ActionNameTakenException() {
-		super(ScoreCardErrorCode.ACTION_NAME_TAKEN);
+		super(ScoreCardErrorCode.ACTION_NAME_IN_USE);
 	}
 }

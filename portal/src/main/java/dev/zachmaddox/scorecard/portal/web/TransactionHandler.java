@@ -77,7 +77,7 @@ public class TransactionHandler {
 		try {
 			t = transactionApiService.save(transaction);
 		} catch (ScoreCardClientException e) {
-			if (ScoreCardErrorCode.TRANSACTION_NAME_TAKEN.equals(e.getError())) {
+			if (ScoreCardErrorCode.TRANSACTION_NAME_IN_USE.equals(e.getError())) {
 				throw new TransactionNameNotUniqueException();
 			} else {
 				throw e;

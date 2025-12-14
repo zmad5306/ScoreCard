@@ -5,7 +5,7 @@ import dev.zachmaddox.scorecard.common.domain.exception.ScoreCardErrorCode;
 
 public class TransactionNameNotUniqueException extends ScoreCardClientException {
 	public TransactionNameNotUniqueException() {
-		super(ScoreCardErrorCode.TRANSACTION_NAME_TAKEN);
+		super(ScoreCardErrorCode.TRANSACTION_NAME_IN_USE);
 	}
 
 }

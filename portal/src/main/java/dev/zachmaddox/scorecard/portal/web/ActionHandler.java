@@ -38,7 +38,7 @@ public class ActionHandler {
 		try {
 			actionApiService.saveAction(action);
 		} catch (ScoreCardClientException e) {
-			if (ScoreCardErrorCode.ACTION_NAME_TAKEN.equals(e.getError())) {
+			if (ScoreCardErrorCode.ACTION_NAME_IN_USE.equals(e.getError())) {
 				throw new ActionNameTakenException();
 			} else {
 				throw e;

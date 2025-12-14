@@ -30,7 +30,7 @@ public class ServicesHandler {
 			Service svc = serviceApiService.saveService(service);
 			return svc.getServiceId();
 		} catch (ScoreCardClientException e) {
-			if (ScoreCardErrorCode.SERVICE_NAME_TAKEN.equals(e.getError())) {
+			if (ScoreCardErrorCode.SERVICE_NAME_IN_USE.equals(e.getError())) {
 				throw new ServiceNameTakenException();
 			} else {
 				throw e;
