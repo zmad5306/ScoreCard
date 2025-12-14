@@ -17,7 +17,6 @@ public class Transaction implements Serializable {
 	
 	@JsonProperty("transaction_id")
 	private Long transactionId;
-	private String type;
 	@NotEmpty
 	@NotNull
 	private String name;

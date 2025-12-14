@@ -14,5 +14,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface ProcessAuthorized {
+    boolean useJms() default false;
     boolean allowMissingHeader() default true;
 }

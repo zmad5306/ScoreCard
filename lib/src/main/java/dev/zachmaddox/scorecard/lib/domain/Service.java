@@ -17,7 +17,6 @@ public class Service implements Serializable {
 	
 	@JsonProperty("service_id")
 	private Long serviceId;
-	private String type;
 	@NotNull
 	@NotEmpty
 	private String name;

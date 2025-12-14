@@ -14,7 +14,6 @@ import lombok.Setter;
 @Setter
 public class ScoreCard implements Serializable {
 
-	private String type;
 	@JsonProperty("score_card_id")
 	private Long scoreCardId;
 	@JsonProperty("transaction_id")

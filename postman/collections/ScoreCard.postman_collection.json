@@ -268,6 +268,36 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "StartOrder",
+      "id": "4ec9e3ae-1a75-4b4f-bf9c-fe4337e0da6b",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"orderId\": 123\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{example.baseURL}}/app/example/store/order",
+          "host": [
+            "{{example.baseURL}}"
+          ],
+          "path": [
+            "app",
+            "example",
+            "store",
+            "order"
+          ]
+        }
+      },
+      "response": []
     }
   ],
   "variable": [

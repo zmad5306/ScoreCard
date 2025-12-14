@@ -8,6 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ScoreCardId implements Serializable {
     @JsonProperty("score_card_id")
     private Long scoreCardId;

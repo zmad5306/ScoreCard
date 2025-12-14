@@ -1,0 +1,121 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0009-seed-http-service
+      author: codex
+      changes:
+        - insert:
+            tableName: SERVICE
+            columns:
+              - column:
+                  name: SERVICE_ID
+                  valueNumeric: 3
+              - column:
+                  name: NAME
+                  value: http-demo
+              - column:
+                  name: TRANSPORT
+                  value: HTTP
+              - column:
+                  name: PATH
+                  value: http://localhost:8083/app/example/store/order
+
+  - changeSet:
+      id: 0010-seed-http-actions
+      author: codex
+      changes:
+        - insert:
+            tableName: ACTION
+            columns:
+              - column:
+                  name: ACTION_ID
+                  valueNumeric: 6
+              - column:
+                  name: NAME
+                  value: validate-order
+              - column:
+                  name: SERVICE_ID
+                  valueNumeric: 3
+              - column:
+                  name: PATH
+                  value: /validate
+              - column:
+                  name: METHOD
+                  value: POST
+        - insert:
+            tableName: ACTION
+            columns:
+              - column:
+                  name: ACTION_ID
+                  valueNumeric: 7
+              - column:
+                  name: NAME
+                  value: finalize-order
+              - column:
+                  name: SERVICE_ID
+                  valueNumeric: 3
+              - column:
+                  name: PATH
+                  value: /finalize
+              - column:
+                  name: METHOD
+                  value: POST
+
+  - changeSet:
+      id: 0011-seed-http-transaction
+      author: codex
+      changes:
+        - insert:
+            tableName: TRANSACTION
+            columns:
+              - column:
+                  name: TRANSACTION_ID
+                  valueNumeric: 4
+              - column:
+                  name: NAME
+                  value: http-order
+        - insert:
+            tableName: TRANSACTION_ACTION
+            columns:
+              - column:
+                  name: TRANSACTION_ACTION_ID
+                  valueNumeric: 7
+              - column:
+                  name: TRANSACTION_ID
+                  valueNumeric: 4
+              - column:
+                  name: ACTION_ID
+                  valueNumeric: 6
+        - insert:
+            tableName: TRANSACTION_ACTION
+            columns:
+              - column:
+                  name: TRANSACTION_ACTION_ID
+                  valueNumeric: 8
+              - column:
+                  name: TRANSACTION_ID
+                  valueNumeric: 4
+              - column:
+                  name: ACTION_ID
+                  valueNumeric: 7
+        - insert:
+            tableName: TRANSACTION_ACTION_DEPENDENCY
+            columns:
+              - column:
+                  name: TRANSACTION_ACTION_ID
+                  valueNumeric: 8
+              - column:
+                  name: DEPENDS_ON_TRANSACTION_ACTION_ID
+                  valueNumeric: 7
+
+  - changeSet:
+      id: 0012-reset-sequences-http-demo
+      author: codex
+      changes:
+        - sql:
+            dbms: postgresql
+            splitStatements: false
+            sql: |
+              SELECT setval('score_card.service_service_id_seq',           (SELECT COALESCE(MAX(service_id), 0)           FROM score_card.service));
+              SELECT setval('score_card.action_action_id_seq',            (SELECT COALESCE(MAX(action_id), 0)            FROM score_card.action));
+              SELECT setval('score_card.transaction_transaction_id_seq',  (SELECT COALESCE(MAX(transaction_id), 0)       FROM score_card.transaction));
+              SELECT setval('score_card.transaction_action_transaction_action_id_seq', (SELECT COALESCE(MAX(transaction_action_id), 0) FROM score_card.transaction_action));
