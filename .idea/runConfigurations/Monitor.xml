@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Monitor" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" value="dev" />
-    <module name="scorecard.monitor.main" />
+    <module name="dev.zachmaddox.scorecard.monitor.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="dev.zachmaddox.scorecard.monitor.MonitorApplication" />
     <method v="2">
       <option name="Make" enabled="true" />

@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Api" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" value="dev" />
-    <module name="scorecard.api.main" />
+    <module name="dev.zachmaddox.scorecard.api.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="dev.zachmaddox.scorecard.api.ApiApplication" />
     <method v="2">
       <option name="Make" enabled="true" />

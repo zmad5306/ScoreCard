@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Portal" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" value="dev" />
-    <module name="scorecard.portal.main" />
+    <module name="dev.zachmaddox.scorecard.portal.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="dev.zachmaddox.scorecard.portal.PortalApplication" />
     <method v="2">
       <option name="Make" enabled="true" />
